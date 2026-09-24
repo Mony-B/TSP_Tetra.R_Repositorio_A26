@@ -67,7 +67,7 @@
             background: #000;
         }
 
-        /* Posiciones manuales (hardcodeadas) */
+        /* Posiciones manuales (hardcodeadas), se asignan por slug */
         .introprog { top: 15%; left: 45%; transform: translateX(-50%); }
         .linux { top: 35%; right: 15%; }
         .calculo { top: 75%; right: 25%; }
@@ -79,14 +79,15 @@
 <body>
 
     <div class="pantalla-principal">
-        <!-- Vínculos que redirigen a la sección de subtemas -->
-        <a href="subtemas.html?tema=kernel" class="nodo kernel">Kernel</a>
-        
-        <a href="subtemas.html?tema=introprog" class="nodo introprog">Introducción a la <br>Programación</a>
-        <a href="subtemas.html?tema=linux" class="nodo linux">Linux</a>
-        <a href="subtemas.html?tema=calculo" class="nodo calculo">Cálculo</a>
-        <a href="subtemas.html?tema=logica" class="nodo logica">Lógica y<br>Algoritmos</a>
-        <a href="subtemas.html?tema=algebra" class="nodo algebra">Álgebra</a>
+        <!-- Kernel es decorativo, no lleva a ningún subtema -->
+        <div class="nodo kernel">Kernel</div>
+
+        <!-- Vínculos generados desde la base de datos (modelo Ruta) -->
+        {% for ruta in rutas %}
+        <a href="{% url 'lista_subtemas' ruta.id_ruta %}" class="nodo {{ ruta.slug }}">
+            {{ ruta.nombre_ruta|linebreaksbr }}
+        </a>
+        {% endfor %}
     </div>
 
 </body>

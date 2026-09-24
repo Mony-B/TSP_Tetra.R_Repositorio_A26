@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Reto completado</title>
+    <style>
+        body {
+            margin: 0; padding: 0; min-height: 100vh;
+            background-color: #0a0a0a; color: #00ff00;
+            font-family: 'Courier New', Courier, monospace;
+            display: flex; justify-content: center; align-items: center;
+            text-align: center;
+        }
+        .pantalla-principal {
+            width: 800px; padding: 40px; border: 2px solid #333;
+            background: rgba(0,0,0,0.9);
+        }
+        h1 { font-size: 1.5rem; }
+        a.boton {
+            display: inline-block; margin-top: 30px;
+            border: 1px solid #00ff00; color: #00ff00;
+            padding: 12px 24px; text-decoration: none;
+        }
+        a.boton:hover { background: #002200; }
+    </style>
+</head>
+<body>
+    <div class="pantalla-principal">
+        {% if fin_ruta %}
+            <h1>¡Terminaste todos los retos de {{ ruta.nombre_ruta }}!</h1>
+            <p>+{{ reto.recompensa_exp }} puntos obtenidos en este reto</p>
+            <a href="{% url 'lista_temas' %}" class="boton">Volver a Temas</a>
+        {% else %}
+            <h1>¡Subtema "{{ subtema_actual.nombre_subtema }}" completado!</h1>
+            <p>+{{ reto.recompensa_exp }} puntos obtenidos</p>
+            <a href="{% url 'seleccion_retos' siguiente_subtema.id_subtema %}" class="boton">
+                Ir a "{{ siguiente_subtema.nombre_subtema }}"
+            </a>
+        {% endif %}
+    </div>
+</body>
+</html>

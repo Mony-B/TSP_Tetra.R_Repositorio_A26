@@ -7,6 +7,7 @@ from django.contrib.auth.hashers import make_password
 class Ruta(models.Model):
     id_ruta = models.AutoField(primary_key=True)
     nombre_ruta = models.CharField(max_length=150)
+    slug = models.SlugField(max_length=50, unique=True, default='')  # <- nuevo
 
     def __str__(self):
         return self.nombre_ruta
@@ -15,12 +16,13 @@ class Ruta(models.Model):
 class Subtema(models.Model):
     id_subtema = models.AutoField(primary_key=True)
     nombre_subtema = models.CharField(max_length=150)
+    orden = models.PositiveIntegerField(default=1)  # <- nuevo
     ruta = models.ForeignKey(
         Ruta, on_delete=models.CASCADE, related_name="subtemas", db_column="id_ruta"
     )
 
-    def __str__(self):
-        return f"{self.nombre_subtema} ({self.ruta.nombre_ruta})"
+    class Meta:
+        ordering = ["ruta", "orden"]
 
 
 # --- Alumno y su progreso ---

@@ -1,11 +1,14 @@
-from django.shortcuts import render, get_object_or_404
-from .models import Ruta, Subtema, Reto, ResolverReto, Examen, ResolverExamen
+from django.core.exceptions import ObjectDoesNotExist
+from django.shortcuts import render, get_object_or_404, redirect
+from .models import (
+    Ruta, Subtema, Reto, ResolverReto, Alumno, Examen, ResolverExamen,
+    RetoCF, RetoCifrado, RetoDD, RetoDecision,
+)
 
 
 def lista_temas(request):
-    """Pantalla principal: muestra todas las Rutas (le llaman 'temas' en el mockup)."""
     rutas = Ruta.objects.all()
-    return render(request, "recode/pantalla_temas.html", {"rutas": rutas})
+    return render(request, 'recode/pantalla_temas.html', {'rutas': rutas})
 
 
 def lista_subtemas(request, tema_id):
@@ -49,7 +52,6 @@ def seleccion_retos(request, subtema_id):
     subtema = get_object_or_404(Subtema, pk=subtema_id)
     # TEMPORAL: aún no hay login. Usamos el primer alumno como prueba.
     # Cuando armen el login, cambiar esto por: alumno = request.user.alumno
-    from .models import Alumno
     alumno = Alumno.objects.first()
 
     retos, todos_completos = _calcular_estado_retos(alumno, subtema)
@@ -74,10 +76,94 @@ def seleccion_retos(request, subtema_id):
     return render(request, "recode/pantalla_seleccion_retos.html", contexto)
 
 
+def _obtener_subtipo(reto):
+    """Devuelve (tipo_str, instancia_especifica) del reto, según su subclase real."""
+    mapa = ["retocf", "retocifrado", "retodd", "retodecision"]
+    for attr in mapa:
+        try:
+            return attr, getattr(reto, attr)
+        except ObjectDoesNotExist:
+            continue
+    return None, None
+
+
+def _validar_respuesta(tipo, especifico, respuesta):
+    if tipo == "retocf":
+        blanks_esperados = [b.strip().lower() for b in especifico.estructura_frase.get("blanks", [])]
+        blanks_usuario = [r.strip().lower() for r in respuesta.split("|")]
+        return blanks_usuario == blanks_esperados
+
+    if tipo == "retocifrado":
+        return respuesta.strip() == especifico.acertijo_logico.get("respuesta", "").strip()
+
+    if tipo == "retodecision":
+        return respuesta.strip() == especifico.opciones_botones.get("correcta", "").strip()
+
+    if tipo == "retodd":
+        # el front debe mandar el mismo orden que "solucion" en catalogo_dd, separado por comas
+        solucion = especifico.catalogo_dd.get("solucion", [])
+        return [r.strip() for r in respuesta.split(",")] == solucion
+
+    return False
+
+
 def resolver_reto(request, reto_id):
-    """Pantalla para intentar un reto (aún falta el template de esta vista)."""
+    """Pantalla para intentar un reto: valida la respuesta, otorga puntos,
+    y decide si desbloquear el siguiente reto, el siguiente subtema, o
+    mostrar la felicitación final de la ruta."""
     reto = get_object_or_404(Reto, pk=reto_id)
-    return render(request, "recode/reto_detalle.html", {"reto": reto})
+    tipo, especifico = _obtener_subtipo(reto)
+
+    # TEMPORAL: aún no hay login. Cambiar cuando exista: alumno = request.user.alumno
+    alumno = Alumno.objects.first()
+
+    if request.method == "POST":
+        respuesta = request.POST.get("respuesta", "")
+        es_correcta = _validar_respuesta(tipo, especifico, respuesta)
+
+        ResolverReto.objects.create(
+            alumno=alumno, reto=reto, completado_exitosamente=es_correcta
+        )
+
+        if not es_correcta:
+            contexto = {"reto": reto, "tipo": tipo, "especifico": especifico, "incorrecto": True}
+            return render(request, "recode/reto_detalle.html", contexto)
+
+        # Respuesta correcta: otorgar puntos
+        progreso = alumno.progreso
+        progreso.puntos_exp += reto.recompensa_exp
+        progreso.save()
+
+        # ¿Hay siguiente reto en el mismo subtema?
+        siguiente_reto = Reto.objects.filter(
+            subtema=reto.subtema, orden=reto.orden + 1
+        ).first()
+        if siguiente_reto:
+            return redirect("resolver_reto", reto_id=siguiente_reto.id_reto)
+
+        # No hay más retos en este subtema: ¿hay siguiente subtema en la ruta?
+        siguiente_subtema = Subtema.objects.filter(
+            ruta=reto.subtema.ruta, orden=reto.subtema.orden + 1
+        ).first()
+        if siguiente_subtema:
+            return render(request, "recode/reto_completado.html", {
+                "reto": reto,
+                "subtema_actual": reto.subtema,
+                "siguiente_subtema": siguiente_subtema,
+                "fin_ruta": False,
+            })
+
+        # No hay más subtemas: se completó toda la ruta
+        return render(request, "recode/reto_completado.html", {
+            "reto": reto,
+            "subtema_actual": reto.subtema,
+            "ruta": reto.subtema.ruta,
+            "fin_ruta": True,
+        })
+
+    # GET: mostrar el reto
+    contexto = {"reto": reto, "tipo": tipo, "especifico": especifico}
+    return render(request, "recode/reto_detalle.html", contexto)
 
 
 def contestar_examen(request, tema_id):

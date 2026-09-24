@@ -55,9 +55,8 @@
             padding-left: 20px;
         }
 
-        /* Estilo base para cajas de reto y examen */
+        /* Estilo base para cajas */
         .caja-nodo {
-            border-radius: 10px;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -65,22 +64,28 @@
             font-weight: bold;
             transition: all 0.2s;
             text-align: center;
+            box-sizing: border-box;
         }
 
+        /* Ajuste para que sean perfectamente cuadradas */
         .reto-box {
-            width: 80px;
-            height: 80px;
+            width: 90px;
+            height: 90px;
             border: 2px solid #00ff00;
             color: #00ff00;
+            border-radius: 0px; /* Esquinas rectas */
+            background: rgba(0, 20, 0, 0.5);
         }
 
         .examen-box {
             width: 120px;
-            height: 100px;
+            height: 90px;
             border: 2px dashed #00ff00;
             color: #00ff00;
             font-size: 1.2rem;
-            margin-left: auto; /* Empuja el examen a la derecha */
+            margin-left: auto;
+            border-radius: 0px;
+            background: rgba(0, 20, 0, 0.5);
         }
 
         /* Estados controlados por la Base de Datos */
@@ -93,19 +98,20 @@
         .bloqueado {
             border-color: #333;
             color: #444;
+            background: transparent;
             pointer-events: none;
             cursor: not-allowed;
-            background: transparent;
         }
 
-        /* Efecto Glitch SÓLO para el reto o examen actual (desbloqueado) */
-        .actual:hover {
+        /* El efecto Glitch se aplica a cualquier caja que NO esté bloqueada */
+        .caja-nodo:not(.bloqueado):hover {
             background: #002200;
             animation: glitch-skew 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) both infinite;
             color: #fff;
             text-shadow: 2px 0px 0px #ff0000, -2px 0px 0px #0000ff;
             border-color: #fff;
             cursor: pointer;
+            z-index: 10;
         }
 
         .flecha {
@@ -155,45 +161,44 @@
 
     <div class="pantalla-principal">
         <!-- Textos recuperados de la BD -->
-        <h1>{{ tema.nombre }}</h1>
-        <h2>• {{ subtema.nombre }}</h2>
+        <h1>{{ tema.nombre_ruta }}</h1>
+        <h2>• {{ subtema.nombre_subtema }}</h2>
 
         <div class="ruta-retos">
             
             <!-- CAJA: RETO 01 -->
-            <a href="{% if reto_01.estado != 'bloqueado' %}{% url 'resolver_reto' reto_01.id %}{% else %}#{% endif %}" 
+            <a href="{% if reto_01.estado != 'bloqueado' %}{% url 'resolver_reto' reto_01.id_reto %}{% else %}#{% endif %}" 
                class="caja-nodo reto-box {{ reto_01.estado }}">
-                Reto 01
+                Reto<br>01
             </a>
 
             <!-- Flecha 1 -->
             <div class="flecha {% if reto_01.estado == 'completado' %}iluminada{% endif %}">➔</div>
 
             <!-- CAJA: RETO 02 -->
-            <a href="{% if reto_02.estado != 'bloqueado' %}{% url 'resolver_reto' reto_02.id %}{% else %}#{% endif %}" 
+            <a href="{% if reto_02.estado != 'bloqueado' %}{% url 'resolver_reto' reto_02.id_reto %}{% else %}#{% endif %}" 
                class="caja-nodo reto-box {{ reto_02.estado }}">
-                Reto 02
+                Reto<br>02
             </a>
 
             <!-- Flecha 2 -->
             <div class="flecha {% if reto_02.estado == 'completado' %}iluminada{% endif %}">➔</div>
 
             <!-- CAJA: RETO 03 -->
-            <a href="{% if reto_03.estado != 'bloqueado' %}{% url 'resolver_reto' reto_03.id %}{% else %}#{% endif %}" 
+            <a href="{% if reto_03.estado != 'bloqueado' %}{% url 'resolver_reto' reto_03.id_reto %}{% else %}#{% endif %}" 
                class="caja-nodo reto-box {{ reto_03.estado }}">
-                Reto 03
+                Reto<br>03
             </a>
 
-            <!-- CAJA: EXAMEN (Desvinculado de las flechas) -->
-            <!-- Si estado_examen es 'actual', el CSS le aplicará el efecto glitch al pasar el cursor -->
-            <a href="{% if estado_examen == 'actual' %}{% url 'contestar_examen' tema.id %}{% else %}#{% endif %}" 
+            <!-- CAJA: EXAMEN 
+            <a href="{% if estado_examen != 'bloqueado' %}{% url 'contestar_examen' tema.id_ruta %}{% else %}#{% endif %}" 
                class="caja-nodo examen-box {{ estado_examen }}">
                 Examen
-            </a>
+            </a> -->
             
         </div>
 
-        <a href="{% url 'lista_subtemas' tema.id %}" class="btn-regresar" title="Regresar">←</a>
+        <a href="{% url 'lista_subtemas' tema.id_ruta %}" class="btn-regresar" title="Regresar">←</a>
     </div>
 
 </body>
