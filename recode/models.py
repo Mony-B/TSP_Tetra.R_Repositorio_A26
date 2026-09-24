@@ -1,4 +1,3 @@
-#Tetra.R - Models en base al diagrama E-R
 from django.db import models
 from django.contrib.auth.hashers import make_password
 
@@ -60,10 +59,15 @@ class Reto(models.Model):
     subtema = models.ForeignKey(
         Subtema, on_delete=models.CASCADE, related_name="retos", db_column="id_subtema"
     )
+    orden = models.PositiveIntegerField()  # define el orden dentro del subtema (Reto 01, 02...)
     recompensa_exp = models.PositiveIntegerField(default=0)
 
+    class Meta:
+        ordering = ["subtema", "orden"]
+        unique_together = ("subtema", "orden")
+
     def __str__(self):
-        return f"Reto #{self.id_reto} - {self.subtema.nombre_subtema}"
+        return f"Reto #{self.orden} - {self.subtema.nombre_subtema}"
 
 
 class RetoDD(Reto):
