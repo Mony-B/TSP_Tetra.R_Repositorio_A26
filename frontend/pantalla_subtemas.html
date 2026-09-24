@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Selección de Reto - Re:Code</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            background-color: #0a0a0a;
+            background-image: repeating-linear-gradient(
+                0deg,
+                transparent,
+                transparent 2px,
+                rgba(0, 255, 0, 0.03) 2px,
+                rgba(0, 255, 0, 0.03) 4px
+            );
+            color: #00ff00;
+            font-family: 'Courier New', Courier, monospace;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .pantalla-principal {
+            width: 800px;
+            height: 500px;
+            border: 2px solid #333;
+            background: rgba(0, 0, 0, 0.9);
+            padding: 30px;
+            box-sizing: border-box;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 1.5rem;
+            text-decoration: underline;
+        }
+
+        h2 {
+            margin: 10px 0 30px 20px;
+            font-size: 1.2rem;
+            color: #00aa00;
+        }
+
+        .ruta-retos {
+            display: flex;
+            align-items: center;
+            margin-top: 20px;
+            padding-left: 20px;
+        }
+
+        /* Estilo base para cajas */
+        .caja-nodo {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.2s;
+            text-align: center;
+            box-sizing: border-box;
+        }
+
+        /* Ajuste para que sean perfectamente cuadradas */
+        .reto-box {
+            width: 90px;
+            height: 90px;
+            border: 2px solid #00ff00;
+            color: #00ff00;
+            border-radius: 0px; /* Esquinas rectas */
+            background: rgba(0, 20, 0, 0.5);
+        }
+
+        .examen-box {
+            width: 120px;
+            height: 90px;
+            border: 2px dashed #00ff00;
+            color: #00ff00;
+            font-size: 1.2rem;
+            margin-left: auto;
+            border-radius: 0px;
+            background: rgba(0, 20, 0, 0.5);
+        }
+
+        /* Estados controlados por la Base de Datos */
+        .completado {
+            background: #003300;
+            border-color: #00aa00;
+            color: #00aa00;
+        }
+
+        .bloqueado {
+            border-color: #333;
+            color: #444;
+            background: transparent;
+            pointer-events: none;
+            cursor: not-allowed;
+        }
+
+        /* CORRECCIÓN: El efecto Glitch ahora se aplica a cualquier caja que NO esté bloqueada */
+        .caja-nodo:not(.bloqueado):hover {
+            background: #002200;
+            animation: glitch-skew 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) both infinite;
+            color: #fff;
+            text-shadow: 2px 0px 0px #ff0000, -2px 0px 0px #0000ff;
+            border-color: #fff;
+            cursor: pointer;
+            z-index: 10;
+        }
+
+        .flecha {
+            font-size: 2rem;
+            margin: 0 15px;
+            color: #333;
+        }
+
+        .flecha.iluminada {
+            color: #00ff00;
+            text-shadow: 0 0 5px #00ff00;
+        }
+
+        .btn-regresar {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            color: #00aa00;
+            text-decoration: none;
+            border: 1px solid #00aa00;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.5rem;
+        }
+
+        .btn-regresar:hover {
+            color: #00ff00;
+            border-color: #00ff00;
+            background: rgba(0,255,0,0.1);
+        }
+
+        @keyframes glitch-skew {
+            0% { transform: skew(0deg); }
+            20% { transform: skew(-5deg); }
+            40% { transform: skew(5deg); }
+            60% { transform: skew(-2deg); }
+            80% { transform: skew(2deg); }
+            100% { transform: skew(0deg); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="pantalla-principal">
+        <!-- Textos recuperados de la BD -->
+        <h1>{{ tema.nombre }}</h1>
+        <h2>• {{ subtema.nombre }}</h2>
+
+        <div class="ruta-retos">
+            
+            <!-- CAJA: RETO 01 -->
+            <a href="{% if reto_01.estado != 'bloqueado' %}{% url 'resolver_reto' reto_01.id %}{% else %}#{% endif %}" 
+               class="caja-nodo reto-box {{ reto_01.estado }}">
+                Reto<br>01
+            </a>
+
+            <!-- Flecha 1 -->
+            <div class="flecha {% if reto_01.estado == 'completado' %}iluminada{% endif %}">➔</div>
+
+            <!-- CAJA: RETO 02 -->
+            <a href="{% if reto_02.estado != 'bloqueado' %}{% url 'resolver_reto' reto_02.id %}{% else %}#{% endif %}" 
+               class="caja-nodo reto-box {{ reto_02.estado }}">
+                Reto<br>02
+            </a>
+
+            <!-- Flecha 2 -->
+            <div class="flecha {% if reto_02.estado == 'completado' %}iluminada{% endif %}">➔</div>
+
+            <!-- CAJA: RETO 03 -->
+            <a href="{% if reto_03.estado != 'bloqueado' %}{% url 'resolver_reto' reto_03.id %}{% else %}#{% endif %}" 
+               class="caja-nodo reto-box {{ reto_03.estado }}">
+                Reto<br>03
+            </a>
+
+            <!-- CAJA: EXAMEN -->
+            <a href="{% if estado_examen != 'bloqueado' %}{% url 'contestar_examen' tema.id %}{% else %}#{% endif %}" 
+               class="caja-nodo examen-box {{ estado_examen }}">
+                Examen
+            </a>
+            
+        </div>
+
+        <a href="{% url 'lista_subtemas' tema.id %}" class="btn-regresar" title="Regresar">←</a>
+    </div>
+
+</body>
+</html>
