@@ -84,6 +84,14 @@ document.querySelector("form").addEventListener("submit", function(e) {
 </script>
 {% endif %}
 
+{% if reto.pista %}
+<p style="color:#00aa00; font-style:italic;">💡 Pista: {{ reto.pista }}</p>
+{% endif %}
+
+{% if incorrecto %}
+<p class="error">✗ {{ reto.retro_incorrecta }}</p>
+{% endif %}
+
         </form>
     </div>
 </body>

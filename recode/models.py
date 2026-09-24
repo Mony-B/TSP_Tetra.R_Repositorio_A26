@@ -61,8 +61,11 @@ class Reto(models.Model):
     subtema = models.ForeignKey(
         Subtema, on_delete=models.CASCADE, related_name="retos", db_column="id_subtema"
     )
-    orden = models.PositiveIntegerField()  # define el orden dentro del subtema (Reto 01, 02...)
+    orden = models.PositiveIntegerField()
     recompensa_exp = models.PositiveIntegerField(default=0)
+    retro_correcta = models.TextField(blank=True, default="")
+    retro_incorrecta = models.TextField(blank=True, default="")
+    pista = models.TextField(blank=True, default="")
 
     class Meta:
         ordering = ["subtema", "orden"]
