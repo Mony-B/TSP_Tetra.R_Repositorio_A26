@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mockup - Re:Code</title>
+    <style>
+        /* Efecto de estática/glitch estático rápido */
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            background-color: #0a0a0a;
+            background-image: repeating-linear-gradient(
+                0deg,
+                transparent,
+                transparent 2px,
+                rgba(0, 255, 0, 0.03) 2px,
+                rgba(0, 255, 0, 0.03) 4px
+            );
+            color: #00ff00;
+            font-family: 'Courier New', Courier, monospace;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Contenedor principal rígido */
+        .pantalla-principal {
+            position: relative;
+            width: 800px;
+            height: 600px;
+            border: 2px solid #333;
+            background: rgba(0, 0, 0, 0.9);
+        }
+
+        /* Estilo simple para los nodos de temas */
+        .nodo {
+            position: absolute;
+            padding: 10px 15px;
+            border: 1px solid #00ff00;
+            background: #001a00;
+            color: #00ff00;
+            text-decoration: none;
+            text-align: center;
+            cursor: pointer;
+        }
+
+        .nodo:hover {
+            background: #004400;
+        }
+
+        /* El núcleo en el centro */
+        .kernel {
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border: 4px solid #00ff00;
+            border-radius: 50%; /* Intento de círculo rápido */
+            width: 80px;
+            height: 80px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+            background: #000;
+        }
+
+        /* Posiciones manuales (hardcodeadas) */
+        .picoctf { top: 15%; left: 45%; transform: translateX(-50%); }
+        .linux { top: 35%; right: 15%; }
+        .calculo { top: 75%; right: 25%; }
+        .logica { top: 75%; left: 25%; }
+        .algebra { top: 35%; left: 15%; }
+
+    </style>
+</head>
+<body>
+
+    <div class="pantalla-principal">
+        <!-- Vínculos que redirigen a la sección de subtemas -->
+        <a href="subtemas.html?tema=kernel" class="nodo kernel">Kernel</a>
+        
+        <a href="subtemas.html?tema=picoctf" class="nodo picoctf">PicoCTF</a>
+        <a href="subtemas.html?tema=linux" class="nodo linux">Linux</a>
+        <a href="subtemas.html?tema=calculo" class="nodo calculo">Cálculo</a>
+        <a href="subtemas.html?tema=logica" class="nodo logica">Lógica y<br>Algoritmos</a>
+        <a href="subtemas.html?tema=algebra" class="nodo algebra">Álgebra</a>
+    </div>
+
+</body>
+</html>
