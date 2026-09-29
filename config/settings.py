@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -20,12 +21,19 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-pq&8h3)jm9m#s0mq85$u@08d%a64!df9ho32x*lm_3-mjcp48l'
+SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-pq&8h3)jm9m#s0mq85$u@08d%a64!df9ho32x*lm_3-mjcp48l')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get('DEBUG', 'True') == 'True'
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '.up.railway.app']
+# Dominio propio (opcional): variable DOMINIO en Railway, ej. re-code.com
+if os.environ.get('DOMINIO'):
+    ALLOWED_HOSTS.append(os.environ['DOMINIO'])
+
+CSRF_TRUSTED_ORIGINS = ['https://*.up.railway.app']
+if os.environ.get('DOMINIO'):
+    CSRF_TRUSTED_ORIGINS.append('https://' + os.environ['DOMINIO'])
 
 # Application definition
 
@@ -41,6 +49,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -76,11 +85,11 @@ WSGI_APPLICATION = 'config.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'novela_terror',
-        'USER': 'app',
-        'PASSWORD': 'app123',
-        'HOST': 'db',
-        'PORT': '3306',
+        'NAME': os.environ.get('MYSQLDATABASE', 'novela_terror'),
+        'USER': os.environ.get('MYSQLUSER', 'app'),
+        'PASSWORD': os.environ.get('MYSQLPASSWORD', 'app123'),
+        'HOST': os.environ.get('MYSQLHOST', 'db'),
+        'PORT': os.environ.get('MYSQLPORT', '3306'),
     }
 }
 
@@ -117,6 +126,11 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
 STATIC_URL = 'static/'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+STORAGES = {
+    'default': {'BACKEND': 'django.core.files.storage.FileSystemStorage'},
+    'staticfiles': {'BACKEND': 'whitenoise.storage.CompressedStaticFilesStorage'},
+}
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
