@@ -1,0 +1,28 @@
+{% load static %}<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block titulo %}Re:Code{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'comun/css/recode.css' %}">
+    {% block estilos %}{% endblock %}
+</head>
+<body>
+    <div class="pantalla-principal">
+        {% if user.is_authenticated %}
+        <div class="barra-alumno">
+            <a href="{% url 'progreso:perfil' %}">{{ user.username }}</a>
+            <span class="bitcoins" id="bitcoins-alumno">{{ progreso_alumno.bitcoins }}</span>
+            <form method="post" action="{% url 'logout' %}">
+                {% csrf_token %}
+                <button type="submit" class="enlace">salir</button>
+            </form>
+        </div>
+        {% endif %}
+
+        {% block contenido %}{% endblock %}
+    </div>
+    <script src="{% static 'comun/js/recode.js' %}"></script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>

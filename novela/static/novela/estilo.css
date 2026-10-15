@@ -1,0 +1,41 @@
+/* Ajustes de Monogatari para que combine con Re:Code */
+#monogatari {
+	font-family: 'Courier New', Courier, monospace;
+	background: #000;
+}
+[data-component="text-box"] {
+	background: rgba(0, 0, 0, 0.85);
+	border-top: 2px solid #00ff00;
+	color: #00ff00;
+}
+[data-component="text-box"] [data-content="text"] {
+	color: #00ff00;
+}
+[data-component="choice-container"] button {
+	background: #001a00;
+	border: 1px solid #00ff00;
+	color: #00ff00;
+	font-family: inherit;
+}
+[data-component="choice-container"] button:hover {
+	background: #004400;
+	color: #fff;
+}
+[data-component="centered-dialog"] {
+	color: #00ff00;
+}
+
+/* Botón para saltar la introducción */
+.saltar-novela {
+	position: fixed;
+	top: 12px;
+	right: 12px;
+	z-index: 100;
+	padding: 6px 12px;
+	border: 1px solid #00aa00;
+	color: #00aa00;
+	background: rgba(0, 0, 0, 0.7);
+	font-family: 'Courier New', Courier, monospace;
+	text-decoration: none;
+}
+.saltar-novela:hover { color: #00ff00; border-color: #00ff00; }

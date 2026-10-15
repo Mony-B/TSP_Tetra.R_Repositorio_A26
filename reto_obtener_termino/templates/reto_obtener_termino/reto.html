@@ -1,0 +1,12 @@
+{% extends "comun/reto_base.html" %}
+{% load static %}
+{% block juego %}
+<ul id="pistas"></ul>
+<p class="enunciado" id="huecos"></p>
+<form id="form-respuesta" class="opciones">
+    <input type="text" id="respuesta" autocomplete="off" required>
+    <button type="submit">Descifrar</button>
+</form>
+<p class="etiqueta" id="avance"></p>
+{% endblock %}
+{% block script_juego %}<script src="{% static 'reto_obtener_termino/juego.js' %}"></script>{% endblock %}

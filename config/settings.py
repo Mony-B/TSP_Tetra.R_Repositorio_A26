@@ -44,7 +44,21 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'recode'
+
+    # Apps de Re:Code (ver diagrama de componentes)
+    'comun',        # plantilla base, JS compartido y estilos
+    'progreso',     # único con modelos: avance del alumno, registro y Mi Perfil (API JSON)
+    'mapa',         # mapa de materias y subtemas
+    'novela',       # novela visual (Monogatari)
+    'batalla',      # exámenes por materia y batalla final
+
+    # Retos: cada uno revisa sus respuestas en el servidor
+    'reto_algebra_booleana',  # CU-05
+    'reto_comandos_linux',    # CU-06
+    'reto_ecuaciones',        # CU-07
+    'reto_desigualdades',     # CU-08
+    'reto_obtener_termino',   # CU-09
+    'reto_conceptos',         # CU-10
 ]
 
 MIDDLEWARE = [
@@ -71,6 +85,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'progreso.context_processors.progreso_alumno',
             ],
         },
     },
@@ -137,3 +152,8 @@ STORAGES = {
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Inicio de sesión: el alumno es el User de Django (tabla auth_user), sin app propia.
+LOGIN_URL = 'login'
+LOGIN_REDIRECT_URL = 'mapa:inicio'
+LOGOUT_REDIRECT_URL = 'login'

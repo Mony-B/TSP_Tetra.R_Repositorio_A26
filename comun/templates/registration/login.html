@@ -1,0 +1,18 @@
+{% extends "comun/base.html" %}
+{% block titulo %}Entrar - Re:Code{% endblock %}
+
+{% block contenido %}
+<h1>Re:Code</h1>
+<h2>…conexión detectada. Identifícate.</h2>
+
+<form method="post" class="formulario">
+    {% csrf_token %}
+    {% if form.errors %}<p class="mensaje error">Usuario o contraseña incorrectos.</p>{% endif %}
+    <label>Usuario <input type="text" name="username" autofocus required></label>
+    <label>Contraseña <input type="password" name="password" required></label>
+    <input type="hidden" name="next" value="{{ next }}">
+    <button type="submit">Entrar</button>
+</form>
+
+<p>¿No tienes cuenta? <a href="{% url 'progreso:registro' %}">Regístrate</a></p>
+{% endblock %}

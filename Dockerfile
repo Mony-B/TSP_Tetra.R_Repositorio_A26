@@ -12,6 +12,6 @@ COPY . .
 
 RUN python manage.py collectstatic --noinput
 
-# Producción (Railway): aplica migraciones, carga datos de prueba y arranca gunicorn.
+# Producción (Railway): aplica migraciones y arranca gunicorn.
 # Las migraciones se generan a mano (makemigrations) y se suben al repo.
-CMD ["sh", "-c", "python manage.py migrate && python manage.py seed_logica && gunicorn config.wsgi --bind 0.0.0.0:${PORT:-8000}"]
+CMD ["sh", "-c", "python manage.py migrate && gunicorn config.wsgi --bind 0.0.0.0:${PORT:-8000}"]

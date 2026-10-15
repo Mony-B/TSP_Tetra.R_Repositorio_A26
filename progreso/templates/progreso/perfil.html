@@ -1,0 +1,20 @@
+{% extends "comun/base.html" %}
+{% block titulo %}Mi Perfil - Re:Code{% endblock %}
+
+{% block contenido %}
+<h1>Mi Perfil</h1>
+<h2>{{ datos.nombre }} · ₿ {{ datos.bitcoins }}</h2>
+
+<div class="lista">
+    {% for materia in materias %}
+    <div class="lista-item {% if materia.examen_aprobado %}completado{% endif %}">
+        <span>{{ materia.nombre }}</span>
+        <span class="etiqueta">
+            {{ materia.resueltos }}/{{ materia.total }} retos{% if materia.examen_aprobado %} · examen ✓{% endif %}
+        </span>
+    </div>
+    {% endfor %}
+</div>
+
+<a href="{% url 'mapa:inicio' %}" class="btn-regresar" title="Regresar">←</a>
+{% endblock %}

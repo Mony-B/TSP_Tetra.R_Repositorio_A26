@@ -1,0 +1,32 @@
+{% extends "comun/base.html" %}
+{% block titulo %}{{ materia.nombre }} - Re:Code{% endblock %}
+
+{% block contenido %}
+<h1>{{ materia.nombre }}</h1>
+<h2><a href="{% url 'novela:ver' materia.slug %}">↺ Ver introducción</a></h2>
+
+{% for sub in subtemas %}
+<h2>• {{ sub.nombre }}</h2>
+<!-- Todos los retos están disponibles desde el inicio -->
+<div class="ruta-retos">
+    {% for reto in sub.retos %}
+    <a href="{{ reto.url }}" class="caja-nodo {% if reto.resuelto %}completado{% endif %}">
+        {{ reto.titulo }}{% if reto.resuelto %}<br>✓{% endif %}
+    </a>
+    {% endfor %}
+</div>
+{% empty %}
+<p>Esta materia todavía no tiene retos.</p>
+{% endfor %}
+
+{% if tiene_examen %}
+<h2>• Examen</h2>
+<div class="ruta-retos">
+    <a href="{% url 'batalla:examen' materia.slug %}" class="caja-nodo examen {% if examen_aprobado %}completado{% endif %}">
+        Examen{% if examen_aprobado %}<br>✓{% endif %}
+    </a>
+</div>
+{% endif %}
+
+<a href="{% url 'mapa:inicio' %}" class="btn-regresar" title="Regresar">←</a>
+{% endblock %}
