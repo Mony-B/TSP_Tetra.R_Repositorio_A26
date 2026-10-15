@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -20,12 +21,19 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-pq&8h3)jm9m#s0mq85$u@08d%a64!df9ho32x*lm_3-mjcp48l'
+SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-pq&8h3)jm9m#s0mq85$u@08d%a64!df9ho32x*lm_3-mjcp48l')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get('DEBUG', 'True') == 'True'
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '.up.railway.app']
+# Dominio propio (opcional): variable DOMINIO en Railway, ej. re-code.com
+if os.environ.get('DOMINIO'):
+    ALLOWED_HOSTS.append(os.environ['DOMINIO'])
+
+CSRF_TRUSTED_ORIGINS = ['https://*.up.railway.app']
+if os.environ.get('DOMINIO'):
+    CSRF_TRUSTED_ORIGINS.append('https://' + os.environ['DOMINIO'])
 
 # Application definition
 
@@ -41,6 +49,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -73,10 +82,15 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
+# SQLite: el archivo vive en la carpeta data/ para poder montarla como volumen
+# en Docker y en Railway. Se puede cambiar con la variable SQLITE_PATH.
+SQLITE_PATH = Path(os.environ.get('SQLITE_PATH', BASE_DIR / 'data' / 'db.sqlite3'))
+SQLITE_PATH.parent.mkdir(parents=True, exist_ok=True)
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'NAME': SQLITE_PATH,
     }
 }
 
@@ -113,6 +127,11 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
 STATIC_URL = 'static/'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+STORAGES = {
+    'default': {'BACKEND': 'django.core.files.storage.FileSystemStorage'},
+    'staticfiles': {'BACKEND': 'whitenoise.storage.CompressedStaticFilesStorage'},
+}
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field

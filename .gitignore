@@ -1,0 +1,15 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Base de datos local (cada quien genera la suya con migrate + seed_logica)
+data/
+*.sqlite3
+
+# collectstatic
+staticfiles/
+
+# Sistema
+.DS_Store
