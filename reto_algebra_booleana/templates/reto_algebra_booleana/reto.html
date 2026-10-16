@@ -1,8 +1,64 @@
 {% extends "comun/reto_base.html" %}
 {% load static %}
 {% block juego %}
-<p class="enunciado" id="pregunta"></p>
-<div class="opciones" id="opciones"></div>
-<p class="etiqueta" id="avance"></p>
+<link rel="stylesheet" href="{% static 'reto_algebra_booleana/puertas.css' %}">
+
+{{ datos_publicos|json_script:"puertas-datos" }}
+
+<section id="puertas" class="puertas"
+         data-revisar-url="{{ revisar_url }}"
+         data-volver-url="{{ volver_url }}"
+         data-ya-resuelto="{% if ya_resuelto %}1{% else %}0{% endif %}">
+
+    <p class="puertas-enunciado" id="puertas-enunciado"></p>
+    <p class="puertas-leyenda">Leyenda: <strong id="puertas-leyenda"></strong> = 1</p>
+
+    <!-- Pantalla 1: interruptores y foco -->
+    <div class="puertas-escena" id="escena">
+        <div class="puertas-circuito" id="circuito"></div>
+
+        <div class="puertas-foco" aria-live="polite">
+            <svg id="foco" class="foco foco-parpadea" viewBox="0 0 100 150" aria-hidden="true">
+                <path class="foco-cable" d="M0 20 C 30 20, 40 10, 50 10 L50 30"/>
+                <path class="foco-cable" d="M0 32 C 30 32, 40 22, 56 22 L56 30"/>
+                <rect class="foco-casquillo" x="36" y="30" width="28" height="22" rx="3"/>
+                <path class="foco-vidrio" d="M50 52 C 20 52, 12 80, 30 104 C 38 114, 38 122, 38 128 L62 128 C 62 122, 62 114, 70 104 C 88 80, 80 52, 50 52 Z"/>
+                <path class="foco-filamento" d="M42 128 L42 98 L46 90 L50 98 L54 90 L58 98 L58 128"/>
+                <path class="foco-grieta" d="M50 52 L44 70 L56 82 L46 98 L54 112 L50 128"/>
+                <g class="foco-rayos">
+                    <line x1="8" y1="70" x2="-2" y2="66"/><line x1="92" y1="70" x2="102" y2="66"/>
+                    <line x1="14" y1="40" x2="6" y2="32"/><line x1="86" y1="40" x2="94" y2="32"/>
+                    <line x1="50" y1="40" x2="50" y2="30"/>
+                </g>
+            </svg>
+        </div>
+
+        <div class="puertas-acciones">
+            <button type="button" class="boton" id="btn-verificar">&#10145; Verificar</button>
+            <button type="button" class="boton boton-secundario" id="btn-salir">Salir / Rendirse</button>
+        </div>
+        <p class="etiqueta" id="puertas-avance"></p>
+    </div>
+
+    <!-- Pantalla 2 y 3: resultado -->
+    <div class="puertas-resultado" id="resultado-puertas" hidden>
+        <p class="puertas-mensaje" id="puertas-mensaje"></p>
+        <p class="puertas-recompensa" id="puertas-recompensa" hidden></p>
+        <div class="puertas-acciones">
+            <button type="button" class="boton" id="btn-reintentar" hidden>&#8635; Reintentar</button>
+            <button type="button" class="boton" id="btn-siguiente-puerta" hidden>Siguiente puerta &#10145;</button>
+            <a class="boton" id="btn-siguiente" href="{{ volver_url }}" hidden>Siguiente &#10145;</a>
+        </div>
+    </div>
+
+    <!-- Confirmación de abandono (FE-1) -->
+    <div class="puertas-confirmar" id="confirmar-salir" hidden role="alertdialog" aria-labelledby="confirmar-texto">
+        <p id="confirmar-texto">Si sales, se pierde el progreso del reto actual y no obtendrás bitcoins.</p>
+        <div class="puertas-acciones">
+            <button type="button" class="boton boton-secundario" id="btn-seguir">Seguir jugando</button>
+            <a class="boton" href="{{ volver_url }}">Sí, salir</a>
+        </div>
+    </div>
+</section>
 {% endblock %}
 {% block script_juego %}<script src="{% static 'reto_algebra_booleana/juego.js' %}"></script>{% endblock %}
