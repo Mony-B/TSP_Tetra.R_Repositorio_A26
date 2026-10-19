@@ -72,9 +72,12 @@
     return { fila: Number(celda.dataset.fila), columna: Number(celda.dataset.columna) };
   }
 
-  /** Lista las posiciones entre dos letras; null si no es horizontal ni vertical. */
+  /** Lista las posiciones entre dos letras; null si no van en línea recta. */
   function calcularLinea(desde, hasta) {
-    if (desde.fila !== hasta.fila && desde.columna !== hasta.columna) {
+    const saltoFila = Math.abs(hasta.fila - desde.fila);
+    const saltoColumna = Math.abs(hasta.columna - desde.columna);
+    const esDiagonal = saltoFila === saltoColumna;
+    if (saltoFila !== 0 && saltoColumna !== 0 && !esDiagonal) {
       return null;
     }
     const pasoFila = Math.sign(hasta.fila - desde.fila);
@@ -143,7 +146,10 @@
     arrastrando = false;
     if (!linea) {
       limpiarSeleccion();
-      mostrarMensaje('Selecciona en línea recta: horizontal o vertical.', true);
+      mostrarMensaje(
+        'Selecciona en línea recta: horizontal, vertical o diagonal.',
+        true,
+      );
       return;
     }
     mostrarSeleccion(linea);

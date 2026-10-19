@@ -37,8 +37,8 @@ EJERCICIOS = {
     },
 }
 
-# Derecha y abajo: las mismas direcciones del prototipo (sin diagonales).
-DIRECCIONES = [(0, 1), (1, 0)]
+# Derecha, abajo y diagonal hacia abajo a la derecha.
+DIRECCIONES = [(0, 1), (1, 0), (1, 1)]
 LETRAS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 MAX_INTENTOS_SOPA = 200
 
