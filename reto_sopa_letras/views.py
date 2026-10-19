@@ -17,7 +17,7 @@ from progreso import servicios
 
 from .ejercicios import EJERCICIOS, datos_publicos, revisar_respuesta
 
-APP = "reto_conceptos"
+APP = "reto_sopa_letras"
 
 
 def _ejercicio(ejercicio_id):
