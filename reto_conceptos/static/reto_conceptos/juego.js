@@ -1,54 +1,273 @@
-// Sopa de conceptos (CU-10): se toca la primera y la última letra de la palabra
-// y Django revisa si es uno de los conceptos.
+/**
+ * Sopa de letras (CU-10).
+ * Dibuja la sopa y la lista de conceptos que manda Django. El alumno marca una
+ * palabra arrastrando o con clic en la primera y la última letra; cada selección
+ * se manda al servidor, que es quien dice si es correcta.
+ */
 (() => {
-    const { sopa, pasos } = ReCode.reto.datos;
-    const n = sopa.length;
-    const tablero = document.getElementById("sopa");
-    const celdas = [];
-    let inicio = null;
+  'use strict';
 
-    tablero.style.gridTemplateColumns = `repeat(${n}, auto)`;
-    sopa.forEach((fila, f) => {
-        celdas.push([]);
-        [...fila].forEach((letra, c) => {
-            const b = document.createElement("button");
-            b.type = "button";
-            b.textContent = letra;
-            b.onclick = () => tocar(f, c);
-            tablero.appendChild(b);
-            celdas[f].push(b);
-        });
+  const { sopa, pasos } = ReCode.reto.datos;
+
+  const tablero = document.getElementById('sopa');
+  const lista = document.getElementById('conceptos');
+  const resultado = document.getElementById('resultado');
+  const victoria = document.getElementById('victoria');
+  const textoVictoria = document.getElementById('victoria-texto');
+  const botonSalir = document.getElementById('btn-salir');
+  const dialogo = document.getElementById('dialogo-salir');
+  const MENSAJE_SALIR =
+    'Se perderá el progreso de este reto y no obtendrás bitcoins. ¿Salir?';
+
+  const celdas = [];
+  const itemsConcepto = [];
+  let inicio = null;
+  let arrastrando = false;
+  let bloqueado = false;
+  let terminado = false;
+
+  /** Crea un botón por cada letra de la sopa. */
+  function crearTablero() {
+    tablero.style.setProperty('--columnas', sopa[0].length);
+    sopa.forEach((texto, fila) => {
+      const filaCeldas = [];
+      Array.from(texto).forEach((letra, columna) => {
+        const celda = document.createElement('button');
+        celda.type = 'button';
+        celda.textContent = letra;
+        celda.dataset.fila = fila;
+        celda.dataset.columna = columna;
+        celda.setAttribute(
+          'aria-label',
+          `Letra ${letra}, fila ${fila + 1}, columna ${columna + 1}`,
+        );
+        tablero.appendChild(celda);
+        filaCeldas.push(celda);
+      });
+      celdas.push(filaCeldas);
     });
+  }
 
-    document.getElementById("definiciones").innerHTML =
-        pasos.map((p, i) => `<li id="def-${i}">${p.definicion}</li>`).join("");
+  /** Muestra la lista de conceptos que hay que encontrar. */
+  function crearLista() {
+    pasos.forEach((paso) => {
+      const item = document.createElement('li');
+      const palabra = document.createElement('strong');
+      const definicion = document.createElement('span');
+      palabra.textContent = paso.palabra;
+      definicion.textContent = ` ${paso.definicion}`;
+      item.append(palabra, definicion);
+      lista.appendChild(item);
+      itemsConcepto.push(item);
+    });
+  }
 
-    // Celdas en línea recta entre dos puntos (horizontal, vertical o diagonal)
-    function linea(a, b) {
-        const df = Math.sign(b[0] - a[0]), dc = Math.sign(b[1] - a[1]);
-        const largo = Math.max(Math.abs(b[0] - a[0]), Math.abs(b[1] - a[1]));
-        const recta = a[0] === b[0] || a[1] === b[1] ||
-                      Math.abs(b[0] - a[0]) === Math.abs(b[1] - a[1]);
-        if (!recta) return null;
-        return Array.from({ length: largo + 1 }, (_, i) => [a[0] + df * i, a[1] + dc * i]);
+  /** Devuelve {fila, columna} de la letra que contiene el elemento, o null. */
+  function posicionDe(elemento) {
+    const celda =
+      elemento && elemento.closest ? elemento.closest('#sopa button') : null;
+    if (!celda) {
+      return null;
     }
+    return { fila: Number(celda.dataset.fila), columna: Number(celda.dataset.columna) };
+  }
 
-    async function tocar(f, c) {
-        if (!inicio) {
-            inicio = [f, c];
-            celdas[f][c].classList.add("inicio");
-            return;
-        }
-        celdas[inicio[0]][inicio[1]].classList.remove("inicio");
-        const camino = linea(inicio, [f, c]);
-        inicio = null;
-        if (!camino || camino.length < 2) return;
-
-        const palabra = camino.map(([x, y]) => sopa[x][y]).join("");
-        const r = await ReCode.enviarRespuesta(null, palabra);
-        if (r.correcto) {
-            camino.forEach(([x, y]) => celdas[x][y].classList.add("encontrada"));
-            document.getElementById(`def-${r.paso}`).classList.add("hecha");
-        }
+  /** Lista las posiciones entre dos letras; null si no es horizontal ni vertical. */
+  function calcularLinea(desde, hasta) {
+    if (desde.fila !== hasta.fila && desde.columna !== hasta.columna) {
+      return null;
     }
+    const pasoFila = Math.sign(hasta.fila - desde.fila);
+    const pasoColumna = Math.sign(hasta.columna - desde.columna);
+    const largo =
+      Math.max(
+        Math.abs(hasta.fila - desde.fila),
+        Math.abs(hasta.columna - desde.columna),
+      ) + 1;
+    return Array.from({ length: largo }, (_, i) => ({
+      fila: desde.fila + pasoFila * i,
+      columna: desde.columna + pasoColumna * i,
+    }));
+  }
+
+  /** Encierra en un círculo las letras que se están seleccionando. */
+  function mostrarSeleccion(posiciones) {
+    tablero.querySelectorAll('.seleccion').forEach((celda) => {
+      celda.classList.remove('seleccion');
+    });
+    posiciones.forEach(({ fila, columna }) => {
+      celdas[fila][columna].classList.add('seleccion');
+    });
+  }
+
+  /** Quita la selección temporal. */
+  function limpiarSeleccion() {
+    inicio = null;
+    arrastrando = false;
+    mostrarSeleccion([]);
+  }
+
+  /** Escribe un mensaje bajo la sopa. */
+  function mostrarMensaje(texto, esError) {
+    const mensaje = document.createElement('p');
+    mensaje.className = esError ? 'mensaje error' : 'mensaje';
+    mensaje.textContent = texto;
+    resultado.textContent = '';
+    resultado.appendChild(mensaje);
+  }
+
+  /** Deja marcadas las letras y tacha el concepto encontrado. */
+  function marcarEncontrada(linea, indice) {
+    linea.forEach(({ fila, columna }) => {
+      celdas[fila][columna].classList.add('encontrada');
+    });
+    if (itemsConcepto[indice]) {
+      itemsConcepto[indice].classList.add('hecha');
+    }
+  }
+
+  /** Muestra la pantalla de victoria con el botón Continuar. */
+  function mostrarVictoria(respuesta) {
+    terminado = true;
+    resultado.textContent = '';
+    textoVictoria.textContent = respuesta.bitcoins_otorgados
+      ? `¡Felicidades! +${respuesta.bitcoins_otorgados} bitcoins`
+      : '¡Felicidades! Ya habías recibido los bitcoins de este reto.';
+    victoria.hidden = false;
+    botonSalir.hidden = true;
+  }
+
+  /** Manda la selección al servidor y muestra lo que conteste. */
+  async function terminarEn(fin) {
+    const linea = calcularLinea(inicio, fin);
+    arrastrando = false;
+    if (!linea) {
+      limpiarSeleccion();
+      mostrarMensaje('Selecciona en línea recta: horizontal o vertical.', true);
+      return;
+    }
+    mostrarSeleccion(linea);
+    bloqueado = true;
+    const palabra = linea.map(({ fila, columna }) => sopa[fila][columna]).join('');
+    try {
+      const respuesta = await ReCode.enviarRespuesta(null, palabra);
+      if (respuesta.correcto) {
+        marcarEncontrada(linea, respuesta.paso);
+      }
+      if (respuesta.completado) {
+        mostrarVictoria(respuesta);
+      }
+    } catch {
+      mostrarMensaje('No se pudo revisar la palabra. Intenta de nuevo.', true);
+    } finally {
+      limpiarSeleccion();
+      bloqueado = false;
+    }
+  }
+
+  /** Empieza la selección con el dedo o el ratón. */
+  function alPresionar(evento) {
+    if (bloqueado || terminado) {
+      return;
+    }
+    const celda = posicionDe(evento.target);
+    if (!celda) {
+      return;
+    }
+    evento.preventDefault();
+    if (inicio) {
+      if (inicio.fila === celda.fila && inicio.columna === celda.columna) {
+        limpiarSeleccion();
+      } else {
+        terminarEn(celda);
+      }
+      return;
+    }
+    inicio = celda;
+    arrastrando = true;
+    mostrarSeleccion([celda]);
+  }
+
+  /** Actualiza el círculo mientras se arrastra. */
+  function alMover(evento) {
+    if (!arrastrando) {
+      return;
+    }
+    const celda = posicionDe(document.elementFromPoint(evento.clientX, evento.clientY));
+    if (celda) {
+      mostrarSeleccion(calcularLinea(inicio, celda) || [inicio]);
+    }
+  }
+
+  /** Termina el arrastre; si se soltó en la misma letra, espera el segundo clic. */
+  function alSoltar(evento) {
+    if (!arrastrando) {
+      return;
+    }
+    arrastrando = false;
+    const celda = posicionDe(document.elementFromPoint(evento.clientX, evento.clientY));
+    if (!celda) {
+      limpiarSeleccion();
+    } else if (celda.fila !== inicio.fila || celda.columna !== inicio.columna) {
+      terminarEn(celda);
+    }
+  }
+
+  /** Permite jugar con teclado: Enter o espacio en la primera y la última letra. */
+  function alActivarConTeclado(evento) {
+    if (evento.detail !== 0 || bloqueado || terminado) {
+      return;
+    }
+    const celda = posicionDe(evento.target);
+    if (!celda) {
+      return;
+    }
+    if (!inicio) {
+      inicio = celda;
+      mostrarSeleccion([celda]);
+    } else if (inicio.fila === celda.fila && inicio.columna === celda.columna) {
+      limpiarSeleccion();
+    } else {
+      terminarEn(celda);
+    }
+  }
+
+  /** Pide confirmación antes de salir (FE-1). */
+  function pedirSalida(evento) {
+    if (terminado) {
+      return;
+    }
+    evento.preventDefault();
+    if (typeof dialogo.showModal === 'function') {
+      dialogo.showModal();
+    } else if (window.confirm(MENSAJE_SALIR)) {
+      window.location.href = ReCode.reto.volverUrl;
+    }
+  }
+
+  crearTablero();
+  crearLista();
+
+  tablero.addEventListener('pointerdown', alPresionar);
+  tablero.addEventListener('pointermove', alMover);
+  tablero.addEventListener('click', alActivarConTeclado);
+  document.addEventListener('pointerup', alSoltar);
+  document.addEventListener('pointercancel', limpiarSeleccion);
+  document.addEventListener('keydown', (evento) => {
+    if (evento.key === 'Escape' && !bloqueado) {
+      limpiarSeleccion();
+    }
+  });
+
+  botonSalir.addEventListener('click', pedirSalida);
+  const flecha = document.querySelector('.btn-regresar');
+  if (flecha) {
+    flecha.addEventListener('click', pedirSalida);
+  }
+  document.getElementById('btn-cancelar-salida').addEventListener('click', () => {
+    dialogo.close();
+  });
+  document.getElementById('btn-confirmar-salida').addEventListener('click', () => {
+    window.location.href = ReCode.reto.volverUrl;
+  });
 })();

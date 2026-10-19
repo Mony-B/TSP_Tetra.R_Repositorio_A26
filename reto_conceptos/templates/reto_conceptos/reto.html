@@ -2,24 +2,127 @@
 {% load static %}
 {% block estilos %}
 <style>
-    .sopa-contenedor { display: flex; flex-wrap: wrap; gap: 24px; align-items: flex-start; }
-    .sopa { display: grid; gap: 2px; user-select: none; }
-    .sopa button {
-        width: 32px; height: 32px; padding: 0;
-        font-size: 1rem; font-weight: bold;
+  .sopa-encabezado {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    justify-content: flex-end;
+    margin-bottom: 0.75rem;
+  }
+
+  .conceptos {
+    margin: 0 0 1rem;
+    padding-left: 1.25rem;
+  }
+
+  .conceptos li {
+    margin-bottom: 0.375rem;
+  }
+
+  .conceptos li.hecha {
+    color: var(--verde-medio);
+    text-decoration: line-through;
+  }
+
+  .sopa {
+    display: grid;
+    grid-template-columns: repeat(var(--columnas, 10), 1fr);
+    gap: 0.125rem;
+    width: 100%;
+    max-width: 24rem;
+    margin: 0 auto;
+    touch-action: none;
+    user-select: none;
+  }
+
+  .sopa button {
+    aspect-ratio: 1;
+    padding: 0;
+    font-size: 1rem;
+    font-weight: bold;
+  }
+
+  .sopa button.seleccion {
+    background: var(--verde-oscuro);
+    border-color: var(--verde);
+    border-radius: 50%;
+    color: #fff;
+  }
+
+  .sopa button.encontrada {
+    background: #003300;
+    border-color: var(--verde-medio);
+    color: #fff;
+  }
+
+  .boton.peligro {
+    border-color: var(--rojo);
+    background: transparent;
+    color: var(--rojo);
+  }
+
+  .victoria {
+    margin-top: 1rem;
+    text-align: center;
+  }
+
+  .victoria[hidden],
+  .sopa-encabezado [hidden] {
+    display: none;
+  }
+
+  dialog.confirmar {
+    max-width: 26rem;
+    border: 1px solid var(--verde);
+    background: #000;
+    color: var(--verde);
+    font-family: inherit;
+  }
+
+  dialog.confirmar::backdrop {
+    background: rgba(0, 0, 0, 0.7);
+  }
+
+  .acciones-dialogo {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.625rem;
+    justify-content: center;
+    margin-top: 0.75rem;
+  }
+
+  @media (min-width: 37.5rem) {
+    .sopa {
+      max-width: 30rem;
     }
-    .sopa button.inicio { background: #005500; color: #fff; }
-    .sopa button.encontrada { background: #003300; border-color: var(--verde-medio); color: #fff; }
-    .definiciones { flex: 1; min-width: 220px; padding-left: 18px; margin: 0; }
-    .definiciones li { margin-bottom: 8px; }
-    .definiciones li.hecha { text-decoration: line-through; color: var(--verde-medio); }
-    @media (max-width: 600px) { .sopa button { width: 28px; height: 28px; font-size: 0.85rem; } }
+
+    .sopa button {
+      font-size: 1.25rem;
+    }
+  }
 </style>
 {% endblock %}
+
 {% block juego %}
-<div class="sopa-contenedor">
-    <div class="sopa" id="sopa"></div>
-    <ol class="definiciones" id="definiciones"></ol>
+<div class="sopa-encabezado">
+  <button type="button" class="boton peligro" id="btn-salir">Salir / Rendirse</button>
 </div>
+
+<ul class="conceptos" id="conceptos"></ul>
+<div class="sopa" id="sopa"></div>
+
+<div class="victoria" id="victoria" hidden>
+  <p class="mensaje" id="victoria-texto"></p>
+  <a class="boton" href="{{ volver_url }}">Continuar</a>
+</div>
+
+<dialog class="confirmar" id="dialogo-salir">
+  <p>¿Seguro que quieres salir? Se perderá el progreso de este reto y no obtendrás bitcoins.</p>
+  <div class="acciones-dialogo">
+    <button type="button" class="boton secundario" id="btn-cancelar-salida">Seguir jugando</button>
+    <button type="button" class="boton peligro" id="btn-confirmar-salida">Salir</button>
+  </div>
+</dialog>
 {% endblock %}
+
 {% block script_juego %}<script src="{% static 'reto_conceptos/juego.js' %}"></script>{% endblock %}
