@@ -21,6 +21,9 @@
 
   .conceptos li.hecha {
     color: var(--verde-medio);
+  }
+
+  .conceptos li.hecha span {
     text-decoration: line-through;
   }
 
@@ -62,8 +65,41 @@
   }
 
   .victoria {
-    margin-top: 1rem;
+    position: fixed;
+    top: 0;
+    left: 50%;
+    z-index: 10;
+    width: min(90%, 28rem);
+    padding: 1.5rem 1rem;
+    border: 2px solid var(--verde);
+    border-top: 0;
+    background: #000;
+    box-shadow: 0 0 1.5rem var(--verde-oscuro);
     text-align: center;
+    transform: translateX(-50%);
+    animation: bajar-victoria 0.5s ease-out;
+  }
+
+  .victoria p {
+    margin: 0 0 1rem;
+    font-size: 1.4rem;
+    font-weight: bold;
+  }
+
+  @keyframes bajar-victoria {
+    from {
+      transform: translate(-50%, -100%);
+    }
+
+    to {
+      transform: translate(-50%, 0);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .victoria {
+      animation: none;
+    }
   }
 
   .victoria[hidden],

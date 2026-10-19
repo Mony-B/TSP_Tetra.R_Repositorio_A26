@@ -80,4 +80,6 @@ def revisar(request, ejercicio_id):
     )
     resultado["mensaje"] = mensaje
     resultado["paso"] = paso
+    if correcto:
+        resultado["palabra"] = ejercicio["pasos"][paso]["palabra"]
     return JsonResponse(resultado)

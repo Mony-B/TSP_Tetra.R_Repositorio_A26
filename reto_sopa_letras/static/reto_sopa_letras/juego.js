@@ -48,15 +48,13 @@
     });
   }
 
-  /** Muestra la lista de conceptos que hay que encontrar. */
+  /** Muestra la definición de cada concepto; la palabra se revela al encontrarla. */
   function crearLista() {
     pasos.forEach((paso) => {
       const item = document.createElement('li');
-      const palabra = document.createElement('strong');
       const definicion = document.createElement('span');
-      palabra.textContent = paso.palabra;
-      definicion.textContent = ` ${paso.definicion}`;
-      item.append(palabra, definicion);
+      definicion.textContent = paso.definicion;
+      item.appendChild(definicion);
       lista.appendChild(item);
       itemsConcepto.push(item);
     });
@@ -119,13 +117,17 @@
     resultado.appendChild(mensaje);
   }
 
-  /** Deja marcadas las letras y tacha el concepto encontrado. */
-  function marcarEncontrada(linea, indice) {
+  /** Deja marcadas las letras, tacha la definición y revela la palabra. */
+  function marcarEncontrada(linea, indice, palabra) {
     linea.forEach(({ fila, columna }) => {
       celdas[fila][columna].classList.add('encontrada');
     });
-    if (itemsConcepto[indice]) {
-      itemsConcepto[indice].classList.add('hecha');
+    const item = itemsConcepto[indice];
+    if (item && !item.classList.contains('hecha')) {
+      item.classList.add('hecha');
+      const revelada = document.createElement('strong');
+      revelada.textContent = ` → ${palabra}`;
+      item.appendChild(revelada);
     }
   }
 
@@ -158,7 +160,7 @@
     try {
       const respuesta = await ReCode.enviarRespuesta(null, palabra);
       if (respuesta.correcto) {
-        marcarEncontrada(linea, respuesta.paso);
+        marcarEncontrada(linea, respuesta.paso, respuesta.palabra);
       }
       if (respuesta.completado) {
         mostrarVictoria(respuesta);

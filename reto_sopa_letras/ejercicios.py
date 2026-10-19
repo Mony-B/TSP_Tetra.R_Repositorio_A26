@@ -11,8 +11,8 @@ EJERCICIOS = {
     "algoritmos": {
         "titulo": "Conceptos de algoritmos",
         "instrucciones": (
-            "Encuentra los conceptos de la lista: arrastra sobre las letras "
-            "o toca la primera y la última."
+            "Lee cada definición y encuentra el concepto en la sopa: arrastra "
+            "sobre las letras o toca la primera y la última."
         ),
         "bitcoins": 30,
         "tamano": 10,
@@ -93,17 +93,14 @@ def armar_sopa(ejercicio, semilla="recode"):
 
 
 def datos_publicos(ejercicio):
-    """Devuelve lo que ve el navegador: la sopa y la lista de conceptos.
+    """Devuelve lo que ve el navegador: la sopa y la definición de cada concepto.
 
-    La lista se muestra al alumno (R20), pero no se manda dónde está cada palabra:
+    El alumno ve las definiciones (R20), pero no las palabras ni dónde están:
     el servidor es quien revisa cada selección.
     """
     return {
         "sopa": armar_sopa(ejercicio),
-        "pasos": [
-            {"palabra": paso["palabra"], "definicion": paso["definicion"]}
-            for paso in ejercicio["pasos"]
-        ],
+        "pasos": [{"definicion": paso["definicion"]} for paso in ejercicio["pasos"]],
     }
 
 
