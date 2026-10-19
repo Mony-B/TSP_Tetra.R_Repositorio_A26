@@ -14,6 +14,7 @@ from django.views.decorators.http import require_POST
 
 from mapa.temas import materia_de_reto
 from progreso import servicios
+
 from .ejercicios import EJERCICIOS, datos_publicos, revisar_respuesta
 
 APP = "reto_conceptos"
