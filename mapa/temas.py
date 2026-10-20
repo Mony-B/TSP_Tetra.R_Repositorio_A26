@@ -24,7 +24,13 @@ MATERIAS = [
     {
         "slug": "introprog",
         "nombre": "Introducción a la Programación",
-        "subtemas": [],
+        "subtemas": [
+            {"nombre": "Conceptos básicos", "retos": [
+                ("reto_obtener_termino", "conceptos-basicos-1"),
+                ("reto_obtener_termino", "conceptos-basicos-2"),
+                ("reto_obtener_termino", "conceptos-basicos-3"),
+            ]},
+        ],
     },
     {
         "slug": "linux",
