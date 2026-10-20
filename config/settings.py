@@ -58,7 +58,7 @@ INSTALLED_APPS = [
     'reto_ecuaciones',        # CU-07
     'reto_desigualdades',     # CU-08
     'reto_obtener_termino',   # CU-09
-    'reto_conceptos',         # CU-10
+    'reto_sopa_letras',         # CU-10
 ]
 
 MIDDLEWARE = [

@@ -19,5 +19,5 @@ urlpatterns = [
     path('retos/ecuaciones/', include('reto_ecuaciones.urls')),
     path('retos/desigualdades/', include('reto_desigualdades.urls')),
     path('retos/obtener-termino/', include('reto_obtener_termino.urls')),
-    path('retos/conceptos/', include('reto_conceptos.urls')),
+    path('retos/sopa-letras/', include('reto_sopa_letras.urls')),
 ]

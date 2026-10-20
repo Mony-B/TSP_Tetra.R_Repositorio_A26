@@ -34,7 +34,7 @@ docker compose run --rm web python manage.py makemigrations
 | `reto_ecuaciones` | V T | CU-07 |
 | `reto_desigualdades` | V T | CU-08 |
 | `reto_obtener_termino` | V T | CU-09 |
-| `reto_conceptos` | V T | CU-10 (sopa de letras) |
+| `reto_sopa_letras` | V T | CU-10 (sopa de letras) |
 
 El alumno es el `User` que ya trae Django (tabla `auth_user`), así que no hay app de usuarios. El inicio y cierre de sesión usan las vistas de Django (`config/urls.py`) y el registro está en `progreso`, porque al crear la cuenta también se crea su progreso.
 
