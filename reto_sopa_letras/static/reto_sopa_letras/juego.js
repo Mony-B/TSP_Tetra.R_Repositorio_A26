@@ -7,10 +7,9 @@
 (() => {
   'use strict';
 
-  const { sopa, pasos } = ReCode.reto.datos;
-
   const tablero = document.getElementById('sopa');
   const lista = document.getElementById('conceptos');
+  const indicadorNivel = document.getElementById('nivel');
   const resultado = document.getElementById('resultado');
   const victoria = document.getElementById('victoria');
   const textoVictoria = document.getElementById('victoria-texto');
@@ -19,15 +18,22 @@
   const MENSAJE_SALIR =
     'Se perderá el progreso de este reto y no obtendrás bitcoins. ¿Salir?';
 
+  const PAUSA_ENTRE_NIVELES = 1800;
+
+  let sopa = [];
+  let pasos = [];
+  let numeroNivel = 1;
   const celdas = [];
   const itemsConcepto = [];
   let inicio = null;
   let arrastrando = false;
   let bloqueado = false;
   let terminado = false;
+  let enTransicion = false;
 
   /** Crea un botón por cada letra de la sopa. */
   function crearTablero() {
+    tablero.textContent = '';
     tablero.style.setProperty('--columnas', sopa[0].length);
     sopa.forEach((texto, fila) => {
       const filaCeldas = [];
@@ -50,6 +56,7 @@
 
   /** Muestra la definición de cada concepto; la palabra se revela al encontrarla. */
   function crearLista() {
+    lista.textContent = '';
     pasos.forEach((paso) => {
       const item = document.createElement('li');
       const definicion = document.createElement('span');
@@ -58,6 +65,18 @@
       lista.appendChild(item);
       itemsConcepto.push(item);
     });
+  }
+
+  /** Dibuja la sopa y las definiciones de un nivel. */
+  function cargarNivel(datos) {
+    sopa = datos.sopa;
+    pasos = datos.pasos;
+    numeroNivel = datos.nivel;
+    celdas.length = 0;
+    itemsConcepto.length = 0;
+    indicadorNivel.textContent = `Nivel ${datos.nivel} de ${datos.total_niveles}`;
+    crearTablero();
+    crearLista();
   }
 
   /** Devuelve {fila, columna} de la letra que contiene el elemento, o null. */
@@ -142,6 +161,18 @@
     botonSalir.hidden = true;
   }
 
+  /** Avisa que se superó el nivel y, tras una pausa, muestra el siguiente. */
+  function pasarDeNivel(siguiente) {
+    enTransicion = true;
+    mostrarMensaje(`¡Nivel ${numeroNivel} superado! Siguiente nivel…`, false);
+    setTimeout(() => {
+      cargarNivel(siguiente);
+      resultado.textContent = '';
+      enTransicion = false;
+      bloqueado = false;
+    }, PAUSA_ENTRE_NIVELES);
+  }
+
   /** Manda la selección al servidor y muestra lo que conteste. */
   async function terminarEn(fin) {
     const linea = calcularLinea(inicio, fin);
@@ -164,12 +195,14 @@
       }
       if (respuesta.completado) {
         mostrarVictoria(respuesta);
+      } else if (respuesta.nivel_completado) {
+        pasarDeNivel(respuesta.siguiente);
       }
     } catch {
       mostrarMensaje('No se pudo revisar la palabra. Intenta de nuevo.', true);
     } finally {
       limpiarSeleccion();
-      bloqueado = false;
+      bloqueado = enTransicion;
     }
   }
 
@@ -253,8 +286,7 @@
     }
   }
 
-  crearTablero();
-  crearLista();
+  cargarNivel(ReCode.reto.datos);
 
   tablero.addEventListener('pointerdown', alPresionar);
   tablero.addEventListener('pointermove', alMover);
