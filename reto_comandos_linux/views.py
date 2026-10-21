@@ -9,6 +9,7 @@ el alumno sale o recarga, empieza desde cero (el reto solo tiene dos estados:
 completado o no). Al abrir la puerta se registra con progreso, que da los
 bitcoins solo la primera vez.
 """
+
 import json
 
 from django.contrib.auth.decorators import login_required
@@ -22,20 +23,28 @@ from mapa.temas import materia_de_reto
 from progreso import servicios
 
 from .ejercicios import (
-    EJERCICIOS, LIMITE_COMANDO, datos_publicos, ejecutar, estado_inicial, estado_valido,
-    prompt, revisar_clave,
+    EJERCICIOS,
+    LIMITE_COMANDO,
+    datos_publicos,
+    ejecutar,
+    estado_inicial,
+    estado_valido,
+    prompt,
+    revisar_clave,
 )
 
 APP = "reto_comandos_linux"
 
 
 def _ejercicio(ejercicio_id):
+    """Devuelve el ejercicio o responde 404 si no existe."""
     if ejercicio_id not in EJERCICIOS:
         raise Http404("Ejercicio no encontrado")
     return EJERCICIOS[ejercicio_id]
 
 
 def _json(request):
+    """Lee el cuerpo JSON; devuelve None si no es un objeto válido."""
     try:
         datos = json.loads(request.body or "{}")
     except json.JSONDecodeError:
@@ -45,21 +54,26 @@ def _json(request):
 
 # --- Estado de la partida (en la sesión) ------------------------------------------
 
+
 def _clave_sesion(clave):
+    """Nombre con el que se guarda la partida en la sesión."""
     return f"linux:{clave}"
 
 
 def _estado(request, ejercicio, clave):
+    """Devuelve la partida guardada o una nueva si no hay o no es válida."""
     estado = request.session.get(_clave_sesion(clave))
     return estado if estado_valido(ejercicio, estado) else estado_inicial(ejercicio)
 
 
 def _reiniciar(request, clave):
+    """Borra la partida de la sesión y los pasos del reto."""
     request.session.pop(_clave_sesion(clave), None)
     servicios.reiniciar_pasos(request, clave)
 
 
 # --- Vistas -------------------------------------------------------------------------
+
 
 @login_required
 @ensure_csrf_cookie
@@ -69,15 +83,23 @@ def jugar(request, ejercicio_id):
     clave = f"{APP}:{ejercicio_id}"
     _reiniciar(request, clave)  # siempre se empieza desde cero
     materia = materia_de_reto(APP, ejercicio_id)
-    return render(request, f"{APP}/reto.html", {
-        "nombre_reto": "Comandos de Linux",
-        "ejercicio": ejercicio,
-        "datos_publicos": datos_publicos(ejercicio),
-        "revisar_url": reverse(f"{APP}:puerta", args=[ejercicio_id]),
-        "comando_url": reverse(f"{APP}:comando", args=[ejercicio_id]),
-        "volver_url": reverse("mapa:materia", args=[materia["slug"]]) if materia else reverse("mapa:inicio"),
-        "ya_resuelto": servicios.reto_resuelto(request.user, clave),
-    })
+    return render(
+        request,
+        f"{APP}/reto.html",
+        {
+            "nombre_reto": "Comandos de Linux",
+            "ejercicio": ejercicio,
+            "datos_publicos": datos_publicos(ejercicio),
+            "revisar_url": reverse(f"{APP}:revisar", args=[ejercicio_id]),
+            "comando_url": reverse(f"{APP}:comando", args=[ejercicio_id]),
+            "volver_url": (
+                reverse("mapa:materia", args=[materia["slug"]])
+                if materia
+                else reverse("mapa:inicio")
+            ),
+            "ya_resuelto": servicios.reto_resuelto(request.user, clave),
+        },
+    )
 
 
 @login_required
@@ -104,7 +126,7 @@ def comando(request, ejercicio_id):
 
 @login_required
 @require_POST
-def puerta(request, ejercicio_id):
+def revisar(request, ejercicio_id):
     """Pasos 5-8 (FA-3): recibe {"respuesta": "clave"}.
 
     Respuesta: { correcto, completado, mensaje, bitcoins_otorgados,
@@ -119,7 +141,12 @@ def puerta(request, ejercicio_id):
     correcto = revisar_clave(ejercicio, str(datos.get("respuesta", "")))
     # progreso registra el reto y da los bitcoins solo la primera vez.
     resultado = servicios.procesar_paso(
-        request, f"{APP}:{ejercicio_id}", 0, correcto, 1, ejercicio["bitcoins"],
+        request,
+        f"{APP}:{ejercicio_id}",
+        0,
+        correcto,
+        1,
+        ejercicio["bitcoins"],
     )
     if correcto:
         resultado["ya_otorgado"] = resultado["bitcoins_otorgados"] == 0
