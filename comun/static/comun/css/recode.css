@@ -1,0 +1,178 @@
+/* Estilos compartidos de Re:Code (antes cada template repetía los suyos) */
+:root {
+    --verde: #00ff00;
+    --verde-medio: #00aa00;
+    --verde-oscuro: #001a00;
+    --fondo: #0a0a0a;
+    --borde: #333;
+    --rojo: #ff4444;
+}
+
+* { box-sizing: border-box; }
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    background-color: var(--fondo);
+    background-image: repeating-linear-gradient(
+        0deg, transparent, transparent 2px,
+        rgba(0, 255, 0, 0.03) 2px, rgba(0, 255, 0, 0.03) 4px
+    );
+    color: var(--verde);
+    font-family: 'Courier New', Courier, monospace;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 16px;
+}
+
+/* Contenedor principal: 800px en compu, todo el ancho en celular */
+.pantalla-principal {
+    position: relative;
+    width: min(800px, 100%);
+    min-height: 500px;
+    border: 2px solid var(--borde);
+    background: rgba(0, 0, 0, 0.9);
+    padding: 30px 30px 80px;
+}
+
+h1 { margin: 0; font-size: 1.5rem; text-decoration: underline; }
+h2 { margin: 10px 0 24px; font-size: 1.2rem; color: var(--verde-medio); }
+
+a { color: var(--verde); }
+
+/* Barra con nombre y bitcoins ("Mi Perfil" reducido) */
+.barra-alumno {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    font-size: 0.9rem;
+    color: var(--verde-medio);
+    border-bottom: 1px dashed var(--borde);
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+}
+.barra-alumno .bitcoins::before { content: "₿ "; }
+.barra-alumno .bitcoins { margin-left: auto; }
+
+.boton, button {
+    display: inline-block;
+    background: var(--verde-oscuro);
+    border: 1px solid var(--verde);
+    color: var(--verde);
+    padding: 10px 20px;
+    font-family: inherit;
+    font-size: 1rem;
+    text-decoration: none;
+    cursor: pointer;
+}
+.boton:hover, button:hover { background: #004400; color: #fff; }
+.boton.secundario { border-color: var(--verde-medio); color: var(--verde-medio); background: transparent; }
+
+.lista {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+.lista-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    border: 1px solid var(--verde);
+    padding: 12px 20px;
+    color: var(--verde);
+    text-decoration: none;
+}
+.lista-item:hover { background: #002200; color: #fff; }
+.lista-item.completado { border-color: var(--verde-medio); color: var(--verde-medio); background: #001400; }
+.etiqueta { font-size: 0.8rem; opacity: 0.8; }
+
+/* Botón redondo de regresar */
+.btn-regresar {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    color: var(--verde-medio);
+    text-decoration: none;
+    border: 1px solid var(--verde-medio);
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.5rem;
+}
+.btn-regresar:hover { color: var(--verde); border-color: var(--verde); background: rgba(0,255,0,0.1); }
+
+/* Cajas de retos con el efecto glitch */
+.ruta-retos { display: flex; flex-wrap: wrap; gap: 16px; align-items: center; }
+.caja-nodo {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    text-decoration: none;
+    font-weight: bold;
+    width: 110px;
+    height: 110px;
+    padding: 8px;
+    border: 2px solid var(--verde);
+    color: var(--verde);
+    background: rgba(0, 20, 0, 0.5);
+    font-size: 0.9rem;
+}
+.caja-nodo.completado { background: #003300; border-color: var(--verde-medio); color: var(--verde-medio); }
+.caja-nodo.examen { border-style: dashed; width: 140px; }
+.caja-nodo:hover {
+    background: #002200;
+    animation: glitch-skew 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) both infinite;
+    color: #fff;
+    text-shadow: 2px 0 0 #ff0000, -2px 0 0 #0000ff;
+    border-color: #fff;
+}
+@keyframes glitch-skew {
+    0% { transform: skew(0deg); }
+    20% { transform: skew(-5deg); }
+    40% { transform: skew(5deg); }
+    60% { transform: skew(-2deg); }
+    80% { transform: skew(2deg); }
+    100% { transform: skew(0deg); }
+}
+
+.mensaje { margin: 16px 0; padding: 12px; border: 1px solid var(--verde-medio); }
+.mensaje.error { color: var(--rojo); border-color: var(--rojo); }
+
+@media (max-width: 600px) {
+    .pantalla-principal { padding: 20px 16px 80px; min-height: 0; }
+    h1 { font-size: 1.25rem; }
+    .caja-nodo { width: calc(50% - 8px); height: 90px; }
+    .caja-nodo.examen { width: 100%; }
+}
+
+/* Barra superior: nombre (Mi Perfil), bitcoins y salir */
+.barra-alumno { align-items: center; }
+.barra-alumno a { color: var(--verde-medio); }
+.barra-alumno form { margin: 0; }
+button.enlace {
+    background: none; border: none; padding: 0;
+    color: var(--verde-medio); font-size: 0.9rem; text-decoration: underline;
+}
+button.enlace:hover { background: none; color: var(--verde); }
+
+/* Formularios (login, registro, retos) */
+.formulario { display: flex; flex-direction: column; gap: 14px; max-width: 420px; }
+.formulario label { display: flex; flex-direction: column; gap: 6px; }
+.formulario ul { margin: 0; padding-left: 18px; font-size: 0.85rem; color: var(--verde-medio); }
+input[type="text"], input[type="password"], input[type="number"] {
+    background: var(--verde-oscuro);
+    border: 1px solid var(--verde);
+    color: var(--verde);
+    padding: 8px;
+    font-family: inherit;
+    font-size: 1rem;
+}
+.opciones { display: flex; flex-wrap: wrap; gap: 10px; margin: 12px 0; }
+.helptext { font-size: 0.8rem; color: var(--verde-medio); }
+.errorlist { color: var(--rojo); }

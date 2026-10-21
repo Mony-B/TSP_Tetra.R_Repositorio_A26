@@ -1,0 +1,47 @@
+{% load static %}<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{{ materia.nombre }} - Re:Code</title>
+
+    <!-- Monogatari (motor de novela visual) servido por Django como estáticos -->
+    <link rel="stylesheet" href="{% static 'novela/engine/monogatari.css' %}">
+    <link rel="stylesheet" href="{% static 'novela/estilo.css' %}">
+
+    <script>
+        // Lo que la novela necesita de Django
+        window.NOVELA = {
+            materia: "{{ materia.nombre|escapejs }}",
+            apiAvance: "{% url 'progreso:api_avance' %}",
+            apiVista: "{% url 'progreso:api_novela_vista' materia.slug %}",
+            alTerminar: "{% url 'mapa:materia' materia.slug %}",
+            assets: "{% static 'novela/assets' %}",
+        };
+    </script>
+    <script src="{% static 'comun/js/recode.js' %}"></script>
+    <script src="{% static 'novela/engine/monogatari.js' %}"></script>
+    <script src="{% static 'novela/config.js' %}"></script>
+    <script src="{% static historia %}"></script>
+    <script src="{% static 'novela/main.js' %}"></script>
+</head>
+<body>
+    <a href="{% url 'novela:saltar' materia.slug %}" class="saltar-novela">Saltar ⏭</a>
+
+    <div id="monogatari">
+        <visual-novel>
+            <loading-screen></loading-screen>
+            <main-screen><main-menu></main-menu></main-screen>
+            <game-screen>
+                <dialog-log></dialog-log>
+                <text-box></text-box>
+                <quick-menu></quick-menu>
+            </game-screen>
+            <load-screen></load-screen>
+            <save-screen></save-screen>
+            <settings-screen></settings-screen>
+            <help-screen></help-screen>
+        </visual-novel>
+    </div>
+</body>
+</html>

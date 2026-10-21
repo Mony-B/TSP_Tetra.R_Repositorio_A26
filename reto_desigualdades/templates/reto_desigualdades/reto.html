@@ -1,0 +1,8 @@
+{% extends "comun/reto_base.html" %}
+{% load static %}
+{% block juego %}
+<p class="enunciado" id="pregunta"></p>
+<div class="opciones" id="opciones"></div>
+<p class="etiqueta" id="avance"></p>
+{% endblock %}
+{% block script_juego %}<script src="{% static 'reto_desigualdades/juego.js' %}"></script>{% endblock %}

@@ -1,0 +1,79 @@
+{% extends "comun/reto_base.html" %}
+{% load static %}
+{% block estilos %}
+<style>
+    .termino-info { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 12px; }
+    .termino-pista { color: #ffd166; }
+
+    .cuadricula { display: grid; gap: 6px; justify-content: center; margin: 16px 0; }
+    .fila { display: grid; gap: 6px; grid-auto-flow: column; grid-auto-columns: 52px; }
+    .celda {
+        height: 52px; display: flex; align-items: center; justify-content: center;
+        border: 2px solid var(--borde); font-size: 1.6rem; font-weight: bold;
+        text-transform: uppercase; color: var(--verde); background: rgba(0, 20, 0, 0.5);
+    }
+    .celda.escrita { border-color: var(--verde-medio); }
+    .celda.verde    { background: #1f8a2e; border-color: #1f8a2e; color: #fff; }
+    .celda.amarillo { background: #b59f1b; border-color: #b59f1b; color: #fff; }
+    .celda.gris     { background: #3a3a3a; border-color: #3a3a3a; color: #ddd; }
+    .fila.sacudir { animation: sacudir 0.35s; }
+    @keyframes sacudir {
+        0%, 100% { transform: translateX(0); }
+        25% { transform: translateX(-6px); }
+        75% { transform: translateX(6px); }
+    }
+
+    .teclado { display: flex; flex-direction: column; gap: 6px; align-items: center; margin: 12px 0; }
+    .teclado .renglon { display: flex; gap: 4px; }
+    .teclado button { padding: 10px 0; min-width: 34px; font-size: 0.9rem; }
+    .teclado button.ancha { min-width: 64px; }
+    .teclado button.verde    { background: #1f8a2e; border-color: #1f8a2e; color: #fff; }
+    .teclado button.amarillo { background: #b59f1b; border-color: #b59f1b; color: #fff; }
+    .teclado button.gris     { background: #222; border-color: #444; color: #666; }
+
+    .acciones-termino { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; margin-top: 12px; }
+    .acciones-termino [hidden], .acciones-termino[hidden] { display: none; }
+    .boton.peligro { border-color: var(--rojo); color: var(--rojo); background: transparent; }
+
+    dialog.confirmar {
+        background: #000; color: var(--verde); border: 1px solid var(--verde);
+        font-family: inherit; max-width: 420px;
+    }
+    dialog.confirmar::backdrop { background: rgba(0, 0, 0, 0.7); }
+
+    @media (max-width: 600px) {
+        .fila { grid-auto-columns: 44px; }
+        .celda { height: 44px; font-size: 1.3rem; }
+        .teclado button { min-width: 26px; padding: 10px 0; font-size: 0.8rem; }
+        .teclado button.ancha { min-width: 48px; }
+    }
+</style>
+{% endblock %}
+
+{% block juego %}
+<div id="termino" data-reiniciar-url="{{ reiniciar_url }}">
+    <div class="termino-info">
+        <span class="termino-pista" id="pista"></span>
+        <span class="etiqueta" id="intentos"></span>
+    </div>
+
+    <div class="cuadricula" id="cuadricula"></div>
+
+    <div class="teclado" id="teclado"></div>
+
+    <div class="acciones-termino" id="acciones">
+        <button type="button" class="boton" id="btn-reintentar" hidden>Reintentar</button>
+        <button type="button" class="boton peligro" id="btn-salir">Salir / Rendirse</button>
+    </div>
+</div>
+
+<dialog class="confirmar" id="dialogo-salir">
+    <p>¿Seguro que quieres salir? Se perderá el progreso de este reto y no obtendrás bitcoins.</p>
+    <div class="acciones-termino">
+        <button type="button" class="boton secundario" id="btn-cancelar-salida">Seguir jugando</button>
+        <button type="button" class="boton peligro" id="btn-confirmar-salida">Salir</button>
+    </div>
+</dialog>
+{% endblock %}
+
+{% block script_juego %}<script src="{% static 'reto_obtener_termino/juego.js' %}"></script>{% endblock %}

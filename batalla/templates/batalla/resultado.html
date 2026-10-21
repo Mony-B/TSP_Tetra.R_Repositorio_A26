@@ -1,0 +1,16 @@
+{% extends "comun/base.html" %}
+{% block titulo %}Resultado - Re:Code{% endblock %}
+
+{% block contenido %}
+<h1>{{ examen.agente }}</h1>
+<h2>{{ aciertos }} de {{ total }} correctas</h2>
+
+{% if aprobado %}
+<p class="mensaje">{% if es_final %}Venciste a la IA.{% else %}Derrotaste al agente.{% endif %}{% if otorgados %} +₿ {{ otorgados }}{% endif %}</p>
+{% else %}
+<p class="mensaje error">Te venció. Necesitas {{ examen.aciertos_minimos }} correctas.</p>
+<a class="boton" href="{% url 'batalla:examen' slug %}">Intentar de nuevo</a>
+{% endif %}
+
+<a href="{% if es_final %}{% url 'mapa:inicio' %}{% else %}{% url 'mapa:materia' slug %}{% endif %}" class="btn-regresar" title="Regresar">←</a>
+{% endblock %}

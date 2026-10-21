@@ -1,0 +1,26 @@
+{% extends "comun/reto_base.html" %}
+{% load static %}
+{% block estilos %}
+<style>
+    .terminal {
+        background: #000; border: 1px solid var(--verde-medio);
+        padding: 12px; min-height: 220px; max-height: 360px; overflow-y: auto;
+        font-size: 0.95rem;
+    }
+    .terminal .linea { white-space: pre-wrap; margin: 2px 0; }
+    .terminal .tarea { color: #ffd166; }
+    .terminal .error { color: var(--rojo); }
+    .terminal form { display: flex; gap: 6px; }
+    .terminal input {
+        flex: 1; background: transparent; border: none; color: var(--verde);
+        font-family: inherit; font-size: inherit; outline: none; padding: 0;
+    }
+</style>
+{% endblock %}
+{% block juego %}
+<div class="terminal" id="terminal">
+    <div id="lineas"></div>
+    <form id="form-comando"><span>alumno@recode:~$</span><input type="text" id="comando" autocomplete="off" spellcheck="false"></form>
+</div>
+{% endblock %}
+{% block script_juego %}<script src="{% static 'reto_comandos_linux/juego.js' %}"></script>{% endblock %}

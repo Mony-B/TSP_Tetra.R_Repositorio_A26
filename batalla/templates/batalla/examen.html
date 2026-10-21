@@ -1,0 +1,41 @@
+{% extends "comun/base.html" %}
+{% block titulo %}{{ examen.agente }} - Re:Code{% endblock %}
+
+{% block contenido %}
+<h1>{% if es_final %}⚠ {% endif %}{{ examen.agente }}</h1>
+<h2>{% if materia %}{{ materia.nombre }} · {% endif %}Tiempo: <span id="reloj"></span></h2>
+
+<form method="post" id="form-examen">
+    {% csrf_token %}
+    {% for p in preguntas %}
+    <fieldset class="mensaje">
+        <legend>{{ forloop.counter }}. {{ p.texto }}</legend>
+        {% for opcion in p.opciones %}
+        <label><input type="radio" name="pregunta_{{ p.indice }}" value="{{ opcion }}"> {{ opcion }}</label><br>
+        {% endfor %}
+    </fieldset>
+    {% endfor %}
+    <button type="submit">Enviar respuestas</button>
+</form>
+
+<a href="{% if es_final %}{% url 'mapa:inicio' %}{% else %}{% url 'mapa:materia' slug %}{% endif %}" class="btn-regresar" title="Regresar">←</a>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Temporizador: al llegar a 0 se envía lo que haya contestado.
+    let restante = {{ examen.tiempo_limite }};
+    const reloj = document.getElementById("reloj");
+    const pintar = () => reloj.textContent =
+        `${Math.floor(restante / 60)}:${String(restante % 60).padStart(2, "0")}`;
+    pintar();
+    const intervalo = setInterval(() => {
+        restante--;
+        pintar();
+        if (restante <= 0) {
+            clearInterval(intervalo);
+            document.getElementById("form-examen").submit();
+        }
+    }, 1000);
+</script>
+{% endblock %}

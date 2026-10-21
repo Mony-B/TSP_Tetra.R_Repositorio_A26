@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -20,12 +21,19 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-pq&8h3)jm9m#s0mq85$u@08d%a64!df9ho32x*lm_3-mjcp48l'
+SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-pq&8h3)jm9m#s0mq85$u@08d%a64!df9ho32x*lm_3-mjcp48l')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get('DEBUG', 'True') == 'True'
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '.up.railway.app']
+# Dominio propio (opcional): variable DOMINIO en Railway, ej. re-code.com
+if os.environ.get('DOMINIO'):
+    ALLOWED_HOSTS.append(os.environ['DOMINIO'])
+
+CSRF_TRUSTED_ORIGINS = ['https://*.up.railway.app']
+if os.environ.get('DOMINIO'):
+    CSRF_TRUSTED_ORIGINS.append('https://' + os.environ['DOMINIO'])
 
 # Application definition
 
@@ -36,11 +44,26 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'recode'
+
+    # Apps de Re:Code (ver diagrama de componentes)
+    'comun',        # plantilla base, JS compartido y estilos
+    'progreso',     # único con modelos: avance del alumno, registro y Mi Perfil (API JSON)
+    'mapa',         # mapa de materias y subtemas
+    'novela',       # novela visual (Monogatari)
+    'batalla',      # exámenes por materia y batalla final
+
+    # Retos: cada uno revisa sus respuestas en el servidor
+    'reto_algebra_booleana',  # CU-05
+    'reto_comandos_linux',    # CU-06
+    'reto_ecuaciones',        # CU-07
+    'reto_desigualdades',     # CU-08
+    'reto_obtener_termino',   # CU-09
+    'reto_sopa_letras',         # CU-10
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -62,6 +85,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'progreso.context_processors.progreso_alumno',
             ],
         },
     },
@@ -73,14 +97,15 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
+# SQLite: el archivo vive en la carpeta data/ para poder montarla como volumen
+# en Docker y en Railway. Se puede cambiar con la variable SQLITE_PATH.
+SQLITE_PATH = Path(os.environ.get('SQLITE_PATH', BASE_DIR / 'data' / 'db.sqlite3'))
+SQLITE_PATH.parent.mkdir(parents=True, exist_ok=True)
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'novela_terror',
-        'USER': 'app',
-        'PASSWORD': 'app123',
-        'HOST': 'db',
-        'PORT': '3306',
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': SQLITE_PATH,
     }
 }
 
@@ -117,8 +142,18 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
 STATIC_URL = 'static/'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+STORAGES = {
+    'default': {'BACKEND': 'django.core.files.storage.FileSystemStorage'},
+    'staticfiles': {'BACKEND': 'whitenoise.storage.CompressedStaticFilesStorage'},
+}
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Inicio de sesión: el alumno es el User de Django (tabla auth_user), sin app propia.
+LOGIN_URL = 'login'
+LOGIN_REDIRECT_URL = 'mapa:inicio'
+LOGOUT_REDIRECT_URL = 'login'

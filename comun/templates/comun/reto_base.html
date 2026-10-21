@@ -1,0 +1,30 @@
+{% extends "comun/base.html" %}
+{% comment %}
+Plantilla que comparten las 6 apps de reto. Cada app llena el bloque "juego"
+(o lo dibuja con su JS dentro de #juego) y manda las respuestas con
+ReCode.enviarRespuesta(paso, respuesta). Django las revisa en el servidor.
+{% endcomment %}
+{% block titulo %}{{ ejercicio.titulo }} - Re:Code{% endblock %}
+
+{% block contenido %}
+<h1>{{ ejercicio.titulo }}</h1>
+<h2>{{ nombre_reto }}{% if ya_resuelto %} · ✓ resuelto{% endif %}</h2>
+{% if ejercicio.instrucciones %}<p>{{ ejercicio.instrucciones }}</p>{% endif %}
+
+<div id="juego">{% block juego %}{% endblock %}</div>
+<div id="resultado"></div>
+
+<a href="{{ volver_url }}" class="btn-regresar" title="Regresar">←</a>
+{{ datos_publicos|json_script:"datos-reto" }}
+{% endblock %}
+
+{% block scripts %}
+<script>
+    ReCode.configurarReto({
+        revisarUrl: "{{ revisar_url }}",
+        volverUrl: "{{ volver_url }}",
+        datos: JSON.parse(document.getElementById("datos-reto").textContent),
+    });
+</script>
+{% block script_juego %}{% endblock %}
+{% endblock %}

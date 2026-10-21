@@ -1,0 +1,94 @@
+/* Puertas lógicas (CU-05). Mismo estilo terminal verde sobre negro del resto de Re:Code. */
+.puertas { --verde: #00ff00; --verde-tenue: #00aa00; --rojo: #ff3b3b; --ambar: #ffd84a; max-width: 760px; }
+
+.puertas-enunciado { margin: 0 0 18px; }
+
+.puertas-escena {
+    position: relative;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 16px 32px;
+    align-items: end;
+    border: 2px solid #1f4d1f;
+    background: rgba(0, 20, 0, 0.5);
+    padding: 20px 24px;
+}
+.puertas-circuito { display: flex; align-items: flex-end; gap: 22px; }
+.puertas-columna { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.puertas-operador { font-size: 2rem; line-height: 1; padding-bottom: 38px; color: var(--verde-tenue); }
+.puertas-variable { font-size: 1.4rem; font-style: italic; }
+
+/* LED pequeño sobre cada interruptor */
+.led {
+    width: 14px; height: 14px; border-radius: 50%;
+    border: 2px solid var(--verde-tenue); background: transparent;
+    transition: background .12s, box-shadow .12s;
+}
+.led-on { background: var(--verde); border-color: var(--verde); box-shadow: 0 0 10px 3px rgba(0, 255, 0, .7); }
+
+/* Interruptor tipo balancín con 1 arriba y 0 abajo */
+.interruptor {
+    width: 64px; height: 104px; padding: 6px; cursor: pointer;
+    display: flex; flex-direction: column; justify-content: space-between; align-items: center;
+    background: #061406; color: var(--verde-tenue); border: 2px solid var(--verde-tenue);
+    font: inherit; font-weight: bold; font-size: 1.2rem;
+}
+.interruptor:hover { border-color: var(--verde); }
+.interruptor:focus-visible { outline: 2px dashed var(--verde); outline-offset: 3px; }
+.interruptor .int-1, .interruptor .int-0 {
+    width: 100%; flex: 1; display: flex; align-items: center; justify-content: center;
+    border: 1px solid transparent;
+}
+.interruptor .int-0 { background: #0f2a0f; color: var(--verde); border-color: var(--verde-tenue); }
+.interruptor-on .int-0 { background: transparent; color: var(--verde-tenue); border-color: transparent; }
+.interruptor-on .int-1 { background: #0f2a0f; color: var(--verde); border-color: var(--verde-tenue); }
+
+/* Foco grande de la habitación */
+.puertas-foco { grid-row: 1 / span 2; grid-column: 2; align-self: center; }
+.foco { width: 120px; height: 180px; overflow: visible; }
+.foco * { fill: none; stroke: var(--verde-tenue); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+.foco .foco-casquillo { fill: #0a1a0a; }
+.foco .foco-rayos, .foco .foco-grieta { display: none; }
+.foco .foco-vidrio { transition: fill .25s; }
+
+.foco-parpadea .foco-vidrio { animation: parpadeo 1.6s steps(1) infinite; }
+.foco-parpadea .foco-filamento { animation: parpadeo 1.6s steps(1) infinite; }
+@keyframes parpadeo { 0%, 55% { opacity: 1; } 60%, 70% { opacity: .25; } 75%, 100% { opacity: 1; } }
+
+.foco-encendido .foco-vidrio { fill: rgba(255, 216, 74, .35); stroke: var(--ambar); filter: drop-shadow(0 0 14px var(--ambar)); }
+.foco-encendido .foco-filamento { stroke: var(--ambar); }
+.foco-encendido .foco-rayos { display: block; }
+.foco-encendido .foco-rayos line { stroke: var(--ambar); }
+
+.foco-roto .foco-vidrio { stroke: var(--rojo); stroke-dasharray: 10 6; animation: tronar .5s ease-out; }
+.foco-roto .foco-filamento { stroke: var(--rojo); stroke-dasharray: 3 5; }
+.foco-roto .foco-grieta { display: block; stroke: var(--rojo); }
+@keyframes tronar {
+    0% { transform: scale(1); filter: drop-shadow(0 0 0 transparent); }
+    20% { transform: scale(1.15); filter: drop-shadow(0 0 22px var(--rojo)); }
+    40% { transform: translateX(-4px); } 60% { transform: translateX(4px); }
+    100% { transform: scale(1); }
+}
+
+/* Botones y mensajes */
+.puertas-acciones { display: flex; gap: 12px; flex-wrap: wrap; grid-column: 1; }
+.puertas .boton:disabled { opacity: .4; cursor: not-allowed; }
+.boton-secundario { opacity: .8; }
+
+.puertas-resultado, .puertas-confirmar { margin-top: 18px; }
+.puertas-mensaje.error { color: var(--rojo); }
+.puertas-recompensa { color: var(--ambar); font-weight: bold; }
+.puertas-confirmar { border: 2px dashed var(--rojo); padding: 14px 18px; }
+.puertas [hidden] { display: none !important; }
+
+@media (max-width: 560px) {
+    .puertas-escena { grid-template-columns: 1fr; }
+    .puertas-foco { grid-row: auto; grid-column: 1; justify-self: center; }
+}
+@media (prefers-reduced-motion: reduce) {
+    .foco-parpadea .foco-vidrio, .foco-parpadea .foco-filamento, .foco-roto .foco-vidrio { animation: none; }
+}
+
+.puertas-leyenda { margin: 0 0 12px; color: var(--verde-tenue); }
+.puertas-leyenda strong { color: var(--verde); font-size: 1.3rem; letter-spacing: .05em; }
+.puertas-escena .etiqueta { grid-column: 1; margin: 0; }
