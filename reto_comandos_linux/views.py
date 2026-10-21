@@ -90,7 +90,7 @@ def jugar(request, ejercicio_id):
             "nombre_reto": "Comandos de Linux",
             "ejercicio": ejercicio,
             "datos_publicos": datos_publicos(ejercicio),
-            "revisar_url": reverse(f"{APP}:revisar", args=[ejercicio_id]),
+            "revisar_url": reverse(f"{APP}:puerta", args=[ejercicio_id]),
             "comando_url": reverse(f"{APP}:comando", args=[ejercicio_id]),
             "volver_url": (
                 reverse("mapa:materia", args=[materia["slug"]])
@@ -126,7 +126,7 @@ def comando(request, ejercicio_id):
 
 @login_required
 @require_POST
-def revisar(request, ejercicio_id):
+def puerta(request, ejercicio_id):
     """Pasos 5-8 (FA-3): recibe {"respuesta": "clave"}.
 
     Respuesta: { correcto, completado, mensaje, bitcoins_otorgados,
