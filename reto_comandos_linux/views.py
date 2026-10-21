@@ -1,6 +1,13 @@
 """
-Comandos de Linux (CU-06). Revisa las respuestas en el servidor.
-Las respuestas correctas están en ejercicios.py y nunca se mandan al navegador.
+Comandos de Linux (CU-06): obtener la contraseña en una terminal simulada.
+
+Todo se interpreta y revisa en el servidor: el sistema de archivos y la
+contraseña están en ejercicios.py y solo llegan al navegador como salida de
+un comando. El estado de la partida (carpeta actual, archivos que el alumno
+crea o mueve, usuario y permisos) se guarda en la sesión mientras se juega; si
+el alumno sale o recarga, empieza desde cero (el reto solo tiene dos estados:
+completado o no). Al abrir la puerta se registra con progreso, que da los
+bitcoins solo la primera vez.
 """
 import json
 
@@ -14,7 +21,10 @@ from django.views.decorators.http import require_POST
 from mapa.temas import materia_de_reto
 from progreso import servicios
 
-from .ejercicios import EJERCICIOS, datos_publicos, revisar_respuesta
+from .ejercicios import (
+    EJERCICIOS, LIMITE_COMANDO, datos_publicos, ejecutar, estado_inicial, estado_valido,
+    prompt, revisar_clave,
+)
 
 APP = "reto_comandos_linux"
 
@@ -25,18 +35,46 @@ def _ejercicio(ejercicio_id):
     return EJERCICIOS[ejercicio_id]
 
 
+def _json(request):
+    try:
+        datos = json.loads(request.body or "{}")
+    except json.JSONDecodeError:
+        return None
+    return datos if isinstance(datos, dict) else None
+
+
+# --- Estado de la partida (en la sesión) ------------------------------------------
+
+def _clave_sesion(clave):
+    return f"linux:{clave}"
+
+
+def _estado(request, ejercicio, clave):
+    estado = request.session.get(_clave_sesion(clave))
+    return estado if estado_valido(ejercicio, estado) else estado_inicial(ejercicio)
+
+
+def _reiniciar(request, clave):
+    request.session.pop(_clave_sesion(clave), None)
+    servicios.reiniciar_pasos(request, clave)
+
+
+# --- Vistas -------------------------------------------------------------------------
+
 @login_required
 @ensure_csrf_cookie
 def jugar(request, ejercicio_id):
+    """Paso 1: terminal en el directorio inicial, la puerta y Salir / Rendirse."""
     ejercicio = _ejercicio(ejercicio_id)
     clave = f"{APP}:{ejercicio_id}"
-    servicios.reiniciar_pasos(request, clave)
+    _reiniciar(request, clave)  # siempre se empieza desde cero
     materia = materia_de_reto(APP, ejercicio_id)
     return render(request, f"{APP}/reto.html", {
         "nombre_reto": "Comandos de Linux",
         "ejercicio": ejercicio,
         "datos_publicos": datos_publicos(ejercicio),
-        "revisar_url": reverse(f"{APP}:revisar", args=[ejercicio_id]),
+        "revisar_url": reverse(f"{APP}:puerta", args=[ejercicio_id]),
+        "comando_url": reverse(f"{APP}:comando", args=[ejercicio_id]),
         "volver_url": reverse("mapa:materia", args=[materia["slug"]]) if materia else reverse("mapa:inicio"),
         "ya_resuelto": servicios.reto_resuelto(request.user, clave),
     })
@@ -44,26 +82,48 @@ def jugar(request, ejercicio_id):
 
 @login_required
 @require_POST
-def revisar(request, ejercicio_id):
-    """Recibe {"paso": n, "respuesta": "..."} y contesta si es correcta."""
+def comando(request, ejercicio_id):
+    """Pasos 2-3 (FA-1, FA-2): recibe {"comando": "ls"} y contesta con
+    { salida, error, limpiar, prompt, oculto }. Los errores del comando no son
+    errores HTTP: son salida normal de la terminal. `oculto` es True cuando la
+    siguiente línea es una contraseña (su) y no debe mostrarse."""
     ejercicio = _ejercicio(ejercicio_id)
-    try:
-        datos = json.loads(request.body or "{}")
-    except json.JSONDecodeError:
+    clave = f"{APP}:{ejercicio_id}"
+    datos = _json(request)
+    if datos is None:
+        return JsonResponse({"error": "JSON inválido"}, status=400)
+    linea = str(datos.get("comando", ""))
+    if len(linea) > LIMITE_COMANDO:
+        return JsonResponse({"error": "Comando demasiado largo"}, status=400)
+
+    estado = _estado(request, ejercicio, clave)
+    resultado = ejecutar(ejercicio, estado, linea)
+    request.session[_clave_sesion(clave)] = estado
+    return JsonResponse({**resultado, "prompt": prompt(estado)})
+
+
+@login_required
+@require_POST
+def puerta(request, ejercicio_id):
+    """Pasos 5-8 (FA-3): recibe {"respuesta": "clave"}.
+
+    Respuesta: { correcto, completado, mensaje, bitcoins_otorgados,
+                 bitcoins_total, ya_otorgado (solo si correcto) }
+    Con la clave incorrecta la puerta sigue cerrada y no hay límite de intentos.
+    """
+    ejercicio = _ejercicio(ejercicio_id)
+    datos = _json(request)
+    if datos is None:
         return JsonResponse({"error": "JSON inválido"}, status=400)
 
-    paso, correcto, mensaje = revisar_respuesta(ejercicio, datos.get("paso"), str(datos.get("respuesta", "")))
-    if paso is None:
-        return JsonResponse({"error": "Paso inválido"}, status=400)
-
+    correcto = revisar_clave(ejercicio, str(datos.get("respuesta", "")))
+    # progreso registra el reto y da los bitcoins solo la primera vez.
     resultado = servicios.procesar_paso(
-        request, f"{APP}:{ejercicio_id}", paso, correcto,
-        ejercicio_total_pasos(ejercicio), ejercicio["bitcoins"],
+        request, f"{APP}:{ejercicio_id}", 0, correcto, 1, ejercicio["bitcoins"],
     )
-    resultado["mensaje"] = mensaje
-    resultado["paso"] = paso
+    if correcto:
+        resultado["ya_otorgado"] = resultado["bitcoins_otorgados"] == 0
+        resultado["mensaje"] = "¡La puerta se abrió!"
+    else:
+        resultado["mensaje"] = "Contraseña incorrecta. La puerta sigue cerrada."
     return JsonResponse(resultado)
-
-
-def ejercicio_total_pasos(ejercicio):
-    return len(ejercicio["pasos"])
