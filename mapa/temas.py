@@ -36,7 +36,11 @@ MATERIAS = [
         "slug": "linux",
         "nombre": "Linux",
         "subtemas": [
-            {"nombre": "Comandos básicos", "retos": [("reto_comandos_linux", "basicos")]},
+            {"nombre": "Exploración del entorno", "retos": [("reto_comandos_linux", "basicos")]},
+            {"nombre": "Creación y manipulación de archivos", "retos": [("reto_comandos_linux", "archivos")]},
+            {"nombre": "Lectura y filtrado de información", "retos": [("reto_comandos_linux", "filtrado")]},
+            {"nombre": "Búsqueda avanzada", "retos": [("reto_comandos_linux", "busqueda")]},
+            {"nombre": "Permisos y propiedad", "retos": [("reto_comandos_linux", "permisos")]},
         ],
     },
     {

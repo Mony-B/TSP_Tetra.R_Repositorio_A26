@@ -1,0 +1,37 @@
+/* Comandos de Linux (CU-06): terminal, puerta y confirmación de salida. */
+.terminal {
+    background: #000; border: 1px solid var(--verde-medio);
+    padding: 12px; height: 320px; overflow-y: auto; font-size: 0.95rem;
+    cursor: text;
+}
+.terminal .linea { white-space: pre-wrap; word-break: break-word; margin: 2px 0; }
+.terminal .error { color: var(--rojo); }
+.terminal .info { color: #ffd166; }
+.terminal form { display: flex; gap: 8px; }
+.terminal .prompt { color: #00bfff; font-weight: bold; white-space: nowrap; }
+.terminal input {
+    flex: 1; min-width: 0; background: transparent; border: none; color: var(--verde);
+    font-family: inherit; font-size: inherit; outline: none; padding: 0;
+}
+
+.puerta {
+    display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
+    margin: 16px 0; padding: 12px; border: 1px solid var(--borde);
+}
+.puerta .icono { font-size: 2.4rem; line-height: 1; }
+.puerta form { display: flex; gap: 8px; flex: 1; min-width: 220px; }
+.puerta input {
+    flex: 1; min-width: 0; padding: 8px; background: #000; color: var(--verde);
+    border: 1px solid var(--verde-medio); font-family: inherit; font-size: 1rem;
+}
+.puerta.abierta { border-color: var(--verde); }
+
+.acciones-linux { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
+.acciones-linux[hidden] { display: none; }
+.boton.peligro { border-color: var(--rojo); color: var(--rojo); background: transparent; }
+
+dialog.confirmar {
+    background: #000; color: var(--verde); border: 1px solid var(--verde);
+    font-family: inherit; max-width: 420px;
+}
+dialog.confirmar::backdrop { background: rgba(0, 0, 0, 0.7); }
