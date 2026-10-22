@@ -1,7 +1,8 @@
 """
 Ejercicios de conceptos (CU-10): sopa de letras.
-Se muestra la lista de conceptos del subtema y el alumno los encuentra en la sopa.
-La sopa se arma en el servidor y siempre sale igual para cada ejercicio.
+Cada ejercicio tiene varios niveles; en cada uno se muestran las definiciones de
+los conceptos y el alumno los encuentra en la sopa. El reto se completa al
+terminar todos los niveles. Cada sopa se arma en el servidor y siempre sale igual.
 """
 
 import random
@@ -12,26 +13,106 @@ EJERCICIOS = {
         "titulo": "Conceptos de algoritmos",
         "instrucciones": (
             "Lee cada definición y encuentra el concepto en la sopa: arrastra "
-            "sobre las letras o toca la primera y la última."
+            "sobre las letras o toca la primera y la última. Superas el reto "
+            "cuando completas los tres niveles."
         ),
         "bitcoins": 30,
-        "tamano": 10,
-        "pasos": [
+        "niveles": [
             {
-                "palabra": "ALGORITMO",
-                "definicion": "Serie de pasos ordenados para resolver un problema.",
+                "tamano": 10,
+                "semilla": "recode",
+                "pasos": [
+                    {
+                        "palabra": "ALGORITMO",
+                        "definicion": "Serie de pasos ordenados para resolver un problema.",
+                    },
+                    {
+                        "palabra": "ENTRADA",
+                        "definicion": "Los datos que recibe un algoritmo.",
+                    },
+                    {
+                        "palabra": "PROCESO",
+                        "definicion": "Lo que el algoritmo hace con los datos.",
+                    },
+                    {
+                        "palabra": "SALIDA",
+                        "definicion": "El resultado que entrega el algoritmo.",
+                    },
+                ],
             },
             {
-                "palabra": "ENTRADA",
-                "definicion": "Los datos que recibe un algoritmo.",
+                "tamano": 13,
+                "semilla": "nivel2-2",
+                "pasos": [
+                    {
+                        "palabra": "SECUENCIA",
+                        "definicion": "Los pasos se ejecutan uno tras otro, en orden.",
+                    },
+                    {
+                        "palabra": "DECISION",
+                        "definicion": (
+                            "Estructura que elige un camino según una pregunta "
+                            "de sí o no."
+                        ),
+                    },
+                    {
+                        "palabra": "CICLO",
+                        "definicion": "Estructura que repite un grupo de pasos.",
+                    },
+                    {
+                        "palabra": "DIAGRAMA",
+                        "definicion": (
+                            "Dibujo con símbolos que representa los pasos de "
+                            "un algoritmo."
+                        ),
+                    },
+                    {
+                        "palabra": "PSEUDOCODIGO",
+                        "definicion": (
+                            "Forma de escribir un algoritmo con palabras "
+                            "parecidas al lenguaje humano."
+                        ),
+                    },
+                ],
             },
             {
-                "palabra": "PROCESO",
-                "definicion": "Lo que el algoritmo hace con los datos.",
-            },
-            {
-                "palabra": "SALIDA",
-                "definicion": "El resultado que entrega el algoritmo.",
+                "tamano": 14,
+                "semilla": "nivel3-5",
+                "pasos": [
+                    {
+                        "palabra": "VARIABLE",
+                        "definicion": (
+                            "Espacio con nombre donde se guarda un dato que "
+                            "puede cambiar."
+                        ),
+                    },
+                    {
+                        "palabra": "CONDICION",
+                        "definicion": "Expresión que solo puede ser verdadera o falsa.",
+                    },
+                    {
+                        "palabra": "ITERACION",
+                        "definicion": "Cada repetición de un ciclo.",
+                    },
+                    {
+                        "palabra": "RECURSION",
+                        "definicion": (
+                            "Resolver un problema usando una versión más "
+                            "pequeña del mismo problema."
+                        ),
+                    },
+                    {
+                        "palabra": "DEPURAR",
+                        "definicion": "Buscar y corregir los errores de un algoritmo.",
+                    },
+                    {
+                        "palabra": "COMPLEJIDAD",
+                        "definicion": (
+                            "Medida de cuánto tiempo o memoria necesita un "
+                            "algoritmo."
+                        ),
+                    },
+                ],
             },
         ],
     },
@@ -77,13 +158,17 @@ def _colocar_palabra(cuadricula, palabra, azar):
     return False
 
 
-def armar_sopa(ejercicio, semilla="recode"):
-    """Coloca las palabras en la cuadrícula y rellena con letras al azar."""
-    tamano = ejercicio["tamano"]
+def armar_sopa(nivel):
+    """Coloca las palabras de un nivel en la cuadrícula y rellena con letras.
+
+    Cada nivel tiene su propia semilla, así la sopa siempre sale igual.
+    """
+    semilla = nivel["semilla"]
+    tamano = nivel["tamano"]
     for intento in range(MAX_INTENTOS_SOPA):
         azar = random.Random(f"{semilla}-{intento}")
         cuadricula = [[None] * tamano for _ in range(tamano)]
-        palabras = [_normalizar(paso["palabra"]) for paso in ejercicio["pasos"]]
+        palabras = [_normalizar(paso["palabra"]) for paso in nivel["pasos"]]
         if all(_colocar_palabra(cuadricula, palabra, azar) for palabra in palabras):
             return [
                 "".join(letra or azar.choice(LETRAS) for letra in fila)
@@ -92,24 +177,59 @@ def armar_sopa(ejercicio, semilla="recode"):
     raise ValueError("No se pudieron acomodar las palabras; agranda la sopa.")
 
 
-def datos_publicos(ejercicio):
-    """Devuelve lo que ve el navegador: la sopa y la definición de cada concepto.
+def total_pasos(ejercicio):
+    """Cuenta los conceptos de todos los niveles; son los que completan el reto."""
+    return sum(len(nivel["pasos"]) for nivel in ejercicio["niveles"])
+
+
+def _inicio_de_nivel(ejercicio, nivel):
+    """Número del primer concepto del nivel dentro de todo el reto."""
+    return sum(len(n["pasos"]) for n in ejercicio["niveles"][:nivel])
+
+
+def nivel_actual(ejercicio, encontrados):
+    """Devuelve el nivel en el que va el alumno (el primero con conceptos sin encontrar)."""
+    for numero, nivel in enumerate(ejercicio["niveles"]):
+        inicio = _inicio_de_nivel(ejercicio, numero)
+        if any(inicio + i not in encontrados for i in range(len(nivel["pasos"]))):
+            return numero
+    return len(ejercicio["niveles"])
+
+
+def datos_publicos(ejercicio, numero=0):
+    """Devuelve lo que ve el navegador de un nivel: la sopa y las definiciones.
 
     El alumno ve las definiciones (R20), pero no las palabras ni dónde están:
     el servidor es quien revisa cada selección.
     """
+    nivel = ejercicio["niveles"][numero]
     return {
-        "sopa": armar_sopa(ejercicio),
-        "pasos": [{"definicion": paso["definicion"]} for paso in ejercicio["pasos"]],
+        "sopa": armar_sopa(nivel),
+        "pasos": [{"definicion": paso["definicion"]} for paso in nivel["pasos"]],
+        "nivel": numero + 1,
+        "total_niveles": len(ejercicio["niveles"]),
     }
 
 
-def revisar_respuesta(ejercicio, respuesta):
-    """Busca la selección entre los conceptos y devuelve (índice, correcto, mensaje)."""
+def palabra_de(ejercicio, indice):
+    """Devuelve la palabra del concepto con ese número dentro de todo el reto."""
+    for numero, nivel in enumerate(ejercicio["niveles"]):
+        inicio = _inicio_de_nivel(ejercicio, numero)
+        if inicio <= indice < inicio + len(nivel["pasos"]):
+            return nivel["pasos"][indice - inicio]["palabra"]
+    raise IndexError(indice)
+
+
+def revisar_respuesta(ejercicio, numero, respuesta):
+    """Busca la selección entre los conceptos del nivel actual.
+
+    Devuelve (índice dentro de todo el reto, correcto, mensaje).
+    """
     seleccion = _normalizar(respuesta)
-    for indice, paso in enumerate(ejercicio["pasos"]):
+    inicio = _inicio_de_nivel(ejercicio, numero)
+    for indice, paso in enumerate(ejercicio["niveles"][numero]["pasos"]):
         palabra = _normalizar(paso["palabra"])
         # La selección puede hacerse de la primera a la última letra o al revés.
         if seleccion in (palabra, palabra[::-1]):
-            return indice, True, f"Encontraste: {palabra}"
+            return inicio + indice, True, f"Encontraste: {palabra}"
     return None, False, "Eso no es ninguno de los conceptos."
