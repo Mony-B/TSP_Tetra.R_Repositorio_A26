@@ -1,11 +1,64 @@
 {% extends "comun/reto_base.html" %}
 {% load static %}
 {% block juego %}
-<p class="enunciado" id="ecuacion"></p>
-<form id="form-respuesta" class="opciones">
-    <label>x = <input type="text" id="respuesta" autocomplete="off" required></label>
-    <button type="submit">Revisar</button>
-</form>
-<p class="etiqueta" id="avance"></p>
+<link rel="stylesheet" href="{% static 'reto_ecuaciones/matriz.css' %}">
+
+{{ datos_publicos|json_script:"matriz-datos" }}
+
+<section id="matriz" class="matriz"
+         data-revisar-url="{{ revisar_url }}"
+         data-volver-url="{{ volver_url }}"
+         data-ya-resuelto="{% if ya_resuelto %}1{% else %}0{% endif %}">
+
+    <p class="matriz-mision" id="matriz-mision"></p>
+
+    <!-- Pantalla 1: matriz de referencia, matriz de respuesta y pistas -->
+    <div id="matriz-escena">
+        <div class="matriz-tableros">
+            <div class="matriz-bloque">
+                <h3 class="matriz-titulo">Matriz de referencia</h3>
+                <div class="matriz-rejilla" id="matriz-referencia" role="table" aria-label="Matriz de referencia"></div>
+            </div>
+            <div class="matriz-bloque">
+                <h3 class="matriz-titulo">Matriz de respuesta</h3>
+                <div class="matriz-rejilla" id="matriz-respuesta" role="group" aria-label="Matriz de respuesta"></div>
+            </div>
+        </div>
+
+        <div class="matriz-listas">
+            <div class="matriz-bloque">
+                <h3 class="matriz-titulo">Pistas</h3>
+                <ol class="matriz-pistas" id="pistas-originales"></ol>
+            </div>
+            <div class="matriz-bloque">
+                <h3 class="matriz-titulo">Pistas con tus valores</h3>
+                <ol class="matriz-pistas" id="pistas-vivas" aria-live="polite"></ol>
+            </div>
+        </div>
+
+        <p class="matriz-mensaje error" id="matriz-aviso" hidden role="alert"></p>
+
+        <div class="matriz-acciones">
+            <button type="button" class="boton" id="btn-verificar">&#10145; Verificar</button>
+            <button type="button" class="boton boton-secundario" id="btn-salir">Salir / Rendirse</button>
+        </div>
+    </div>
+
+    <!-- Éxito -->
+    <div class="matriz-resultado" id="resultado-exito" hidden>
+        <p class="matriz-mensaje" id="exito-mensaje">&#10004; Felicidades, lo completaste.</p>
+        <p class="matriz-recompensa" id="exito-recompensa"></p>
+        <a class="boton" id="btn-continuar" href="{{ volver_url }}">Continuar &#10145;</a>
+    </div>
+
+    <!-- Confirmación de abandono (FE-1) -->
+    <div class="matriz-confirmar" id="confirmar-salir" hidden role="alertdialog" aria-labelledby="confirmar-texto">
+        <p id="confirmar-texto">Se perderá el progreso del reto actual y no obtendrás bitcoins. ¿Seguro que quieres salir?</p>
+        <div class="matriz-acciones">
+            <a class="boton" href="{{ volver_url }}" id="btn-salir-si">Sí</a>
+            <button type="button" class="boton boton-secundario" id="btn-salir-no">NO</button>
+        </div>
+    </div>
+</section>
 {% endblock %}
 {% block script_juego %}<script src="{% static 'reto_ecuaciones/juego.js' %}"></script>{% endblock %}

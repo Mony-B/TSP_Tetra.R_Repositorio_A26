@@ -1,0 +1,35 @@
+/* Ecuaciones lineales (CU-07). Mismo estilo terminal verde sobre negro del resto de Re:Code. */
+.matriz { --verde: #00ff00; --verde-tenue: #00aa00; --rojo: #ff3b3b; max-width: 820px; }
+[hidden] { display: none !important; }
+
+.matriz-mision { margin: 0 0 18px; }
+.matriz-tableros, .matriz-listas { display: flex; flex-wrap: wrap; gap: 24px 40px; margin-bottom: 20px; }
+.matriz-bloque { min-width: 220px; }
+.matriz-titulo { margin: 0 0 8px; font-size: 1rem; color: var(--verde-tenue); }
+
+.matriz-rejilla { display: grid; grid-template-columns: 34px repeat(3, 88px); gap: 6px; }
+.celda {
+    width: 88px; height: 56px; box-sizing: border-box;
+    display: flex; align-items: center; justify-content: center;
+    border: 2px solid var(--verde-tenue); background: rgba(0, 20, 0, .5);
+    color: var(--verde); font: inherit; font-size: 1.3rem; text-align: center;
+}
+.celda-incognita { font-style: italic; border-style: dashed; }
+.celda-caja { background: #061406; }
+.celda-caja::placeholder { color: #1f6b1f; font-style: italic; }
+.celda-caja:focus { outline: 2px dashed var(--verde); outline-offset: 2px; border-color: var(--verde); }
+.celda-mala { border-color: var(--rojo); box-shadow: 0 0 8px var(--rojo); }
+
+.matriz-pistas { margin: 0; padding-left: 28px; line-height: 1.9; font-size: 1.1rem; }
+.pista-mala { color: var(--rojo); text-decoration: underline wavy; }
+
+.matriz-mensaje { margin: 12px 0; font-size: 1.1rem; }
+.matriz-mensaje.error { color: var(--rojo); }
+.matriz-recompensa { font-size: 1.6rem; margin: 6px 0 14px; }
+.matriz-acciones { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 12px; }
+.matriz-resultado, .matriz-confirmar {
+    border: 2px solid #1f4d1f; background: rgba(0, 20, 0, .5); padding: 20px 24px; margin-top: 16px;
+}
+.matriz-confirmar { border-color: var(--rojo); }
+.indice { display: flex; align-items: center; justify-content: center; color: var(--verde-tenue); font-size: .9rem; }
+.matriz-pistas li { font-size: 1rem; }
