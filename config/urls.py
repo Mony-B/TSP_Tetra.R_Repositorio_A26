@@ -17,7 +17,7 @@ urlpatterns = [
     path('retos/algebra-booleana/', include('reto_algebra_booleana.urls')),
     path('retos/comandos-linux/', include('reto_comandos_linux.urls')),
     path('retos/ecuaciones/', include('reto_ecuaciones.urls')),
-    path('retos/desigualdades/', include('reto_desigualdades.urls')),
+    path('retos/clasificar/', include('reto_clasificar.urls')),
     path('retos/obtener-termino/', include('reto_obtener_termino.urls')),
     path('retos/sopa-letras/', include('reto_sopa_letras.urls')),
 ]

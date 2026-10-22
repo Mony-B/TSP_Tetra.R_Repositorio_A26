@@ -43,17 +43,21 @@ MATERIAS = [
             {"nombre": "Permisos y propiedad", "retos": [("reto_comandos_linux", "permisos")]},
         ],
     },
-    {
+        {
         "slug": "calculo",
         "nombre": "Cálculo",
-        "subtemas": [],
+        "subtemas": [
+            {"nombre": "Desigualdades lineales", "retos": [("reto_clasificar", "lineales")]},
+            {"nombre": "Desigualdades cuadráticas", "retos": [("reto_clasificar", "cuadraticas")]},
+            {"nombre": "Desigualdades racionales", "retos": [("reto_clasificar", "racionales")]},
+            {"nombre": "Desigualdades compuestas", "retos": [("reto_clasificar", "compuestas")]},
+        ],
     },
     {
         "slug": "algebra",
         "nombre": "Álgebra",
         "subtemas": [
             {"nombre": "Ecuaciones", "retos": [("reto_ecuaciones", "lineales")]},
-            {"nombre": "Desigualdades", "retos": [("reto_desigualdades", "lineales")]},
         ],
     },
 ]

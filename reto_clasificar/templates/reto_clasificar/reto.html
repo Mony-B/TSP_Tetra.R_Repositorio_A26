@@ -1,0 +1,44 @@
+{% extends "comun/reto_base.html" %}
+{% load static %}
+{% block estilos %}
+<link rel="stylesheet" href="{% static 'reto_clasificar/css/clasificar.css' %}">
+{% endblock %}
+
+{% block juego %}
+<div id="clasificar" data-clasificar-url="{{ clasificar_url }}">
+    <div class="cl-barra">
+        <div class="cl-enunciado" id="enunciado" aria-live="polite"></div>
+        <div class="cl-progreso" role="progressbar" aria-label="Progreso" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="progreso">
+            <div class="cl-progreso-relleno" id="progreso-relleno"></div>
+        </div>
+    </div>
+
+    <div class="cl-tablero">
+        <canvas id="grafica" class="cl-grafica" width="300" height="300" aria-label="Gráfica de la desigualdad"></canvas>
+        <div class="cl-zonas" id="zonas"></div>
+    </div>
+
+    <div class="cl-bandeja" id="bandeja" aria-label="Fichas por clasificar"></div>
+
+    <div class="cl-pie">
+        <div class="cl-botones">
+            <button type="button" class="boton secundario" id="btn-ayuda">Ayuda</button>
+            <button type="button" class="boton secundario" id="btn-reiniciar">Reiniciar</button>
+            <button type="button" class="boton peligro" id="btn-salir">Salir / Rendirse</button>
+        </div>
+        <div class="cl-puntos">Puntos: <span id="puntos">0</span>/<span id="total">0</span></div>
+    </div>
+    <p class="cl-ayuda" id="ayuda" hidden></p>
+    <p class="cl-mensaje etiqueta" id="aviso" aria-live="polite">Arrastra cada ficha a una caja (o toca la ficha y luego la caja).</p>
+</div>
+
+<dialog class="confirmar" id="dialogo-salir">
+    <p>¿Seguro que quieres salir? Se perderá el progreso de este reto y no obtendrás bitcoins.</p>
+    <div class="cl-botones">
+        <button type="button" class="boton secundario" id="btn-cancelar-salida">Seguir jugando</button>
+        <button type="button" class="boton peligro" id="btn-confirmar-salida">Salir</button>
+    </div>
+</dialog>
+{% endblock %}
+
+{% block script_juego %}<script src="{% static 'reto_clasificar/juego.js' %}"></script>{% endblock %}

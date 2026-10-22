@@ -56,7 +56,7 @@ INSTALLED_APPS = [
     'reto_algebra_booleana',  # CU-05
     'reto_comandos_linux',    # CU-06
     'reto_ecuaciones',        # CU-07
-    'reto_desigualdades',     # CU-08
+    'reto_clasificar',        # CU-08
     'reto_obtener_termino',   # CU-09
     'reto_sopa_letras',         # CU-10
 ]
