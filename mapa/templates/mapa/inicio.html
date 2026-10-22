@@ -1,58 +1,148 @@
-{% extends "comun/base.html" %}
-{% block titulo %}Mapa - Re:Code{% endblock %}
+{% load static %}<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mapa - Re:Code</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&family=JetBrains+Mono:wght@400;500;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'mapa/css/mapa.css' %}">
+</head>
+{# Esta pantalla no extiende comun/base.html: es un lienzo de pantalla completa. #}
+<body>
 
-{% block estilos %}
-<style>
-    /* Mapa de materias alrededor del kernel; las posiciones van por slug */
-    .mapa { position: relative; width: 100%; aspect-ratio: 4 / 3; }
-    .nodo {
-        position: absolute;
-        padding: 10px 15px;
-        border: 1px solid var(--verde);
-        background: var(--verde-oscuro);
-        color: var(--verde);
-        text-decoration: none;
-        text-align: center;
-        max-width: 40%;
-    }
-    .nodo:hover { background: #004400; }
-    .kernel {
-        top: 50%; left: 50%;
-        transform: translate(-50%, -50%);
-        border: 4px solid var(--verde);
-        border-radius: 50%;
-        width: 80px; height: 80px;
-        display: flex; justify-content: center; align-items: center;
-        font-weight: bold;
-        background: #000;
-        padding: 0;
-    }
-    .introprog { top: 5%; left: 50%; transform: translateX(-50%); }
-    .linux { top: 30%; right: 3%; }
-    .calculo { bottom: 5%; right: 12%; }
-    .logica { bottom: 5%; left: 12%; }
-    .algebra { top: 30%; left: 3%; }
-    .batalla { text-align: center; margin-top: 16px; }
-    @media (max-width: 600px) {
-        .nodo { font-size: 0.8rem; padding: 6px 8px; }
-        .kernel { width: 60px; height: 60px; }
-    }
-</style>
-{% endblock %}
 
-{% block contenido %}
-<div class="mapa">
-    <div class="nodo kernel">Kernel</div>
-    {% for materia in materias %}
-    <a href="{{ materia.url }}" class="nodo {{ materia.slug }}">{{ materia.nombre }}</a>
-    {% endfor %}
+<div id="escenario">
+    <div class="fondo-pared"></div>
+    <div class="fondo-escritorio"></div>
+
+    <!-- ===================== ENCABEZADO ===================== -->
+    <header class="logo">
+        <h1 id="logo">Re:<span>Code</span></h1>
+        <div class="sub">UAZ // CAMPUS<br>v1.0.0</div>
+    </header>
+
+    <div class="mony">{{ user.username|upper }}</div>
+
+    <!-- Monitor IA -->
+    <div class="monitor" id="mon-ia">
+        <div class="ia">
+            <div class="ia-retrato"></div>
+            <div class="ia-texto">
+                <span class="ruido">▓▒░ 0x4B45524E 0x454C ░▒▓</span>
+                <span class="ruido">ERR::MEM_0FF5 // SYNC</span>
+                <br>
+                <span class="lin">SISTEMA A.I.</span><br>
+                <span class="lin">ESTADO: ACTIVO</span>
+                <div class="ctrl">CONTROL: <b>MARÍA</b></div>
+            </div>
+            <svg class="ia-pulso" viewBox="0 0 70 30" aria-hidden="true">
+                <path d="M0 18 H22 L27 18 L31 6 L36 26 L40 12 L44 18 H70"/>
+            </svg>
+        </div>
+    </div>
+
+    <!-- ===================== MONITOR IZQUIERDO ===================== -->
+    <div class="monitor" id="mon-izq">
+        <div class="pantalla">
+            <div class="lista-edificios">
+                <p class="seccion-titulo">// EDIFICIOS</p>
+                <div id="lista" role="listbox" aria-label="Edificios"></div>
+            </div>
+            <div class="nucleo">
+                <p class="seccion-titulo">// NÚCLEO</p>
+                <div id="lista-nucleo"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===================== MONITOR CENTRAL ===================== -->
+    <div class="monitor" id="mon-centro">
+        <div class="pantalla">
+            <div class="mapa-head">
+                <h2>UAZ CAMPUS</h2>
+                <div class="mini">MAPA GENERAL</div>
+                <div class="progreso">
+                    <div class="mini">PROGRESO</div>
+                    <div class="num" id="prog-num">{{ restaurados }} / {{ total }}</div>
+                    <div class="barra"><i id="prog-barra" data-valor="{% widthratio restaurados total 100 %}"></i></div>
+                </div>
+            </div>
+
+            <!-- El mapa es solo visual: la selección se hace con la barra izquierda -->
+            <div class="mapa">
+              <div class="mapa-img" id="mapa">
+                <div class="mapa-rejilla"></div>
+                <div class="pulso-suelo" id="pulso"></div>
+                <div class="pin" id="pin">
+                    <svg width="26" height="34" viewBox="0 0 26 34" aria-hidden="true">
+                        <path d="M13 1C6.4 1 1 6.2 1 12.7 1 21.5 13 33 13 33S25 21.5 25 12.7C25 6.2 19.6 1 13 1Z"
+                              fill="rgba(20,4,5,.9)" stroke="#ff3b44" stroke-width="1.6"/>
+                        <rect x="8" y="7.5" width="10" height="10" fill="none" stroke="#ff3b44" stroke-width="1.4"/>
+                        <path d="M10 10.5h6M10 13h6M10 15.5h6" stroke="#ff3b44" stroke-width="1"/>
+                    </svg>
+                </div>
+              </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===================== MONITOR DERECHO ===================== -->
+    <div class="monitor" id="mon-der">
+        <div class="pantalla">
+            <div class="vista" id="vista"></div>
+
+            <div class="detalle">
+                <span class="regla" aria-hidden="true">E 2 1</span>
+                <div class="mini" id="det-codigo"></div>
+                <h3 id="det-nombre"></h3>
+                <p id="det-desc"></p>
+                <div class="estado-bloque" id="det-estado-bloque">
+                    <span class="lbl">Estado:</span> <span class="val" id="det-estado"></span><br>
+                    <span class="examen" id="det-examen"></span><br>
+                    <span class="villano">Guardián: <b id="det-villano"></b></span>
+                    <span class="aliado" id="det-aliado-linea"> · Aliado: <b id="det-aliado"></b></span>
+                </div>
+
+                <svg class="plano" viewBox="0 0 150 90" aria-hidden="true">
+                    <g fill="none" stroke="#bbb" stroke-width=".7">
+                        <path d="M10 55 L60 30 L140 50 L90 78 Z"/>
+                        <path d="M10 55 V40 L60 15 L140 35 V50"/>
+                        <path d="M60 15 V30 M90 78 V63 L140 35 M90 63 L10 40"/>
+                        <path d="M40 46 L70 32 L110 42 L80 57 Z"/>
+                        <path d="M40 46 V38 L70 24 L110 34 V42"/>
+                    </g>
+                </svg>
+            </div>
+
+            <a class="btn-entrar" id="btn-entrar" href="#">
+                ENTRAR <span class="x">✕</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- ===================== PIE ===================== -->
+    <button class="config" id="btn-config" aria-expanded="false" aria-controls="menu-config">
+        <span class="tri">
+            <svg width="10" height="9" viewBox="0 0 10 9" aria-hidden="true"><path d="M5 1 L9 8 H1 Z" fill="none" stroke="#bdbdbd" stroke-width="1.1"/></svg>
+        </span>
+        CONFIGURACIÓN
+    </button>
+
+    <div class="menu-config" id="menu-config" hidden>
+        <form method="post" action="{% url 'logout' %}">
+            {% csrf_token %}
+            <button type="submit">Cerrar sesión</button>
+        </form>
+    </div>
+
+    <div class="fx-scan"></div>
+    <div class="fx-vineta"></div>
+    <div class="fx-grano"></div>
 </div>
 
-<div class="batalla">
-    {% if final_disponible %}
-        <a href="{% url 'batalla:examen' 'final' %}" class="boton">⚠ Enfrentar a la IA</a>
-    {% else %}
-        <span class="etiqueta">La batalla final se abre al aprobar el examen de cada materia.</span>
-    {% endif %}
-</div>
-{% endblock %}
+{{ datos_mapa|json_script:"datos-mapa" }}
+<script src="{% static 'mapa/js/mapa.js' %}"></script>
+</body>
+</html>
