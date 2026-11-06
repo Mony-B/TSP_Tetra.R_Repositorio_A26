@@ -8,7 +8,7 @@ from batalla.reglas import final_disponible, tiene_examen
 from progreso import servicios
 
 from .edificios import EDIFICIOS, KERNEL
-from .temas import MATERIAS, obtener_materia, info_reto, retos_de_materia
+from .temas import MATERIAS, obtener_materia, retos_de_materia
 
 
 def _imagen(nombre):
@@ -94,22 +94,20 @@ def inicio(request):
 
 @login_required
 def materia(request, slug):
-    """Subtemas de la materia con sus retos (todos disponibles) y el examen."""
+    """Selección de retos de la materia (todos disponibles) y el examen."""
     materia = obtener_materia(slug)
     if not materia:
         raise Http404("Materia no encontrada")
 
     resueltos = servicios.retos_resueltos(request.user)
-    subtemas = []
-    for sub in materia["subtemas"]:
-        retos = [info_reto(app, ej) for app, ej in sub["retos"]]
-        for reto in retos:
-            reto["resuelto"] = reto["clave"] in resueltos
-        subtemas.append({"nombre": sub["nombre"], "retos": retos})
+    retos = retos_de_materia(materia)
+    for reto in retos:
+        reto["resuelto"] = reto["clave"] in resueltos
 
     return render(request, "mapa/materia.html", {
         "materia": materia,
-        "subtemas": subtemas,
+        "retos": retos,
         "tiene_examen": tiene_examen(slug),
         "examen_aprobado": servicios.examen_aprobado(request.user, slug),
+        "bitcoins": servicios.obtener_progreso(request.user).bitcoins,
     })
