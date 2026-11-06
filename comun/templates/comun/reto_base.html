@@ -37,6 +37,7 @@ No extiende comun/base.html porque usa su propio layout de pantalla completa.
     <main class="body">
         <div class="card">
             <p class="qnum">{{ nombre_reto|upper }}</p>
+            <h1 class="qtext">{{ ejercicio.titulo }}</h1>
             {% if ejercicio.instrucciones %}<p class="instrucciones">{{ ejercicio.instrucciones }}</p>{% endif %}
 
             <div id="juego">{% block juego %}{% endblock %}</div>
