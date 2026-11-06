@@ -4,10 +4,9 @@ Plantilla que comparten las apps de reto. Cada app llena el bloque "juego"
 (o lo dibuja con su JS dentro de #juego) y manda las respuestas con
 ReCode.enviarRespuesta(paso, respuesta). Django las revisa en el servidor.
 
-La pantalla es una computadora vieja (monitor CRT):
-  1. El monitor se enciende con su animación y el texto de arranque (reto.js).
-  2. Dentro de la pantalla va el reto con estética de terminal.
-No extiende comun/base.html porque es de pantalla completa.
+Pantalla plana (sin monitor ni animación): la tarjeta del reto es visible e
+interactiva desde que carga la página, sin ningún retraso artificial.
+No extiende comun/base.html porque usa su propio layout de pantalla completa.
 {% endcomment %}
 <html lang="es">
 <head>
@@ -16,60 +15,33 @@ No extiende comun/base.html porque es de pantalla completa.
     <title>{% block titulo %}{{ ejercicio.titulo }} - Re:Code{% endblock %}</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Share+Tech+Mono&family=VT323&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'comun/css/recode.css' %}">
     <link rel="stylesheet" href="{% static 'comun/css/reto.css' %}">
     {% block estilos %}{% endblock %}
 </head>
-{% url 'mapa:inicio' as url_mapa %}
-{% if materia.slug %}{% url 'mapa:materia' materia.slug as url_materia %}{% endif %}
-<body class="pantalla-reto" data-estado="apagado">
-    <div class="escena"></div>
-    <div class="escena-velo"></div>
+<body class="pantalla-reto">
+    {% url 'mapa:inicio' as url_mapa %}
+    {% if materia.slug %}{% url 'mapa:materia' materia.slug as url_materia %}{% endif %}
 
-    <!-- Barra superior: regresar, título y usuario -->
-    <header class="hud">
-        <a href="{% firstof volver_url url_materia url_mapa %}" class="btn-regresar" title="Regresar">←</a>
-        <div class="hud-titulo">
-            <span class="hud-mini">{{ nombre_reto|upper }}</span>
-            <span class="hud-nombre">{{ ejercicio.titulo }}{% if ya_resuelto %} <em>✓ resuelto</em>{% endif %}</span>
+    <header class="topbar">
+        <div class="topbar-izq">
+            <a href="{% firstof volver_url url_materia url_mapa %}" class="volver" title="Regresar">←</a>
+            <div>
+                <div class="brand">RE:CODE — RETO</div>
+                <div class="subject">{{ ejercicio.titulo }}{% if ya_resuelto %} <span class="hecho">✓ resuelto</span>{% endif %}</div>
+            </div>
         </div>
-        <span class="hud-alumno">{{ user.username|upper }}</span>
     </header>
 
-    <!-- La computadora -->
-    <main class="computadora" aria-label="Computadora del reto">
-        <div class="monitor">
-            <div class="monitor-marco">
-                <div class="crt" id="crt">
-                    <!-- Texto de arranque (lo escribe reto.js) -->
-                    <pre class="crt-arranque" id="crt-arranque" aria-hidden="true"></pre>
+    <main class="body">
+        <div class="card">
+            <p class="qnum">{{ nombre_reto|upper }}</p>
+            {% if ejercicio.instrucciones %}<p class="instrucciones">{{ ejercicio.instrucciones }}</p>{% endif %}
 
-                    <div class="crt-contenido" id="crt-contenido">
-                        <p class="crt-ruta">alumno@recode:~/retos$ ./{{ nombre_reto|slugify }}</p>
-                        <h1>{{ ejercicio.titulo }}</h1>
-                        <h2>&gt; {{ nombre_reto }}{% if ya_resuelto %} · ✓ resuelto{% endif %}</h2>
-                        {% if ejercicio.instrucciones %}<p class="crt-instrucciones">{{ ejercicio.instrucciones }}</p>{% endif %}
-
-                        <div id="juego">{% block juego %}{% endblock %}</div>
-                        <div id="resultado"></div>
-                    </div>
-
-                    <div class="crt-scan"></div>
-                    <div class="crt-brillo"></div>
-                    <div class="crt-linea" id="crt-linea"></div>
-                </div>
-            </div>
-            <div class="monitor-pie">
-                <span class="monitor-marca">RE:CODE&nbsp;CRT-86</span>
-                <span class="monitor-rejilla"></span>
-                <span class="monitor-power" title="Encendido">
-                    <span class="led" id="led"></span>
-                </span>
-            </div>
+            <div id="juego">{% block juego %}{% endblock %}</div>
+            <div id="resultado"></div>
         </div>
-        <div class="monitor-cuello"></div>
-        <div class="monitor-base"></div>
     </main>
 
     {{ datos_publicos|json_script:"datos-reto" }}
