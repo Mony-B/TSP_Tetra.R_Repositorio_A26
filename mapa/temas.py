@@ -19,10 +19,33 @@ MATERIAS = [
             {"nombre": "Algoritmos", "retos": [
                 ("reto_sopa_letras", "algoritmos"),
                 ("reto_ordenamiento", "par-impar"),
+                ("reto_laberinto", "algoritmos"),
             ]},
-            {"nombre": "Lógica proposicional", "retos": [("reto_algebra_booleana", "proposicional")]},
-            {"nombre": "Conjuntos", "retos": [("reto_obtener_termino", "conjuntos")]},
-            {"nombre": "Lógica de programación", "retos": [("reto_conceptos", "logica-programacion")]},
+            {"nombre": "Lógica proposicional", "retos": [
+                ("reto_algebra_booleana", "proposicional"),
+                ("reto_obtener_termino", "proposicional"),
+                ("reto_conceptos", "proposicional"),
+            ]},
+            {"nombre": "Conjuntos", "retos": [
+                ("reto_obtener_termino", "conjuntos"),
+                ("reto_sopa_letras", "conjuntos"),
+                ("reto_conceptos", "conjuntos"),
+            ]},
+            {"nombre": "Relaciones y operaciones (Venn)", "retos": [
+                ("reto_sopa_letras", "relaciones-venn"),
+                ("reto_laberinto", "relaciones-venn"),
+                ("reto_ordenamiento", "relaciones-venn"),
+            ]},
+            {"nombre": "Álgebra de proposiciones y demostración", "retos": [
+                ("reto_ordenamiento", "demostracion"),
+                ("reto_conceptos", "demostracion"),
+                ("reto_sopa_letras", "demostracion"),
+            ]},
+            {"nombre": "Lógica de programación", "retos": [
+                ("reto_conceptos", "logica-programacion"),
+                ("reto_obtener_termino", "logica-programacion"),
+                ("reto_laberinto", "logica-programacion"),
+            ]},
         ],
     },
     {
