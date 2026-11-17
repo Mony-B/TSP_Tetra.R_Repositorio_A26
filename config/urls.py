@@ -23,4 +23,5 @@ urlpatterns = [
     path('retos/ordenamiento/', include('reto_ordenamiento.urls')),
     path('retos/parabolica/', include('reto_parabolica.urls')),
     path('retos/conceptos/', include('reto_conceptos.urls')),
+    path('retos/laberinto/', include('reto_laberinto.urls')),
 ]

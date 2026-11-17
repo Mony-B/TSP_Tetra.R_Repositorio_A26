@@ -62,6 +62,7 @@ INSTALLED_APPS = [
     'reto_ordenamiento',       # CU-11
     'reto_parabolica',         # CU-12
     'reto_conceptos',          # CU-13
+    'reto_laberinto',          # CU-14
 ]
 
 MIDDLEWARE = [
