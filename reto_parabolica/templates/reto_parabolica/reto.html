@@ -1,0 +1,73 @@
+{% extends "comun/reto_base.html" %}
+{% load static %}
+{% block estilos %}
+<style>
+    .estado-tiro { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 10px; }
+    .intentos-puntos { display: inline-flex; gap: 4px; margin-left: 6px; }
+    .punto { width: 10px; height: 10px; border-radius: 50%; background: var(--verde); display: inline-block; }
+    .punto.usado { background: transparent; border: 1px solid var(--borde); }
+
+    .lienzo-caja { border: 1px solid var(--borde); margin: 10px 0; background: #000; }
+    canvas { display: block; width: 100%; height: auto; }
+
+    .ecuacion { font-size: 0.85rem; color: var(--verde-medio); margin: 8px 0; }
+
+    .controles { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 14px 0; }
+    .campo { display: flex; flex-direction: column; gap: 4px; }
+    .campo label { font-size: 0.85rem; display: flex; justify-content: space-between; }
+    .campo input[type="range"] { width: 100%; }
+
+    .acciones-parabolica { display: flex; gap: 10px; flex-wrap: wrap; justify-content: space-between; margin-top: 10px; }
+    .boton.peligro { border-color: var(--rojo); color: var(--rojo); background: transparent; }
+    .boton[disabled] { opacity: 0.4; cursor: not-allowed; }
+
+    .info-matematica { font-size: 0.85rem; line-height: 1.5; margin-top: 10px; }
+    .info-matematica b { color: #fff; }
+
+    dialog.confirmar { background: #000; color: var(--verde); border: 1px solid var(--verde); font-family: inherit; max-width: 420px; }
+    dialog.confirmar::backdrop { background: rgba(0, 0, 0, 0.7); }
+</style>
+{% endblock %}
+
+{% block juego %}
+<div id="parabolica" data-disparo-url="{{ disparo_url }}" data-reintentar-url="{{ reintentar_url }}">
+    <div class="estado-tiro">
+        <span>Intentos: <span class="intentos-puntos" id="puntos"></span></span>
+        <span>Objetivo: fijo (visible en el lienzo)</span>
+    </div>
+
+    <div class="lienzo-caja">
+        <canvas id="lienzo" width="800" height="400"></canvas>
+    </div>
+    <div class="controles">
+        <div class="campo">
+            <label>Ángulo <span id="valor-angulo"></span>°</label>
+            <input type="range" id="angulo" />
+        </div>
+        <div class="campo">
+            <label>Fuerza <span id="valor-fuerza"></span></label>
+            <input type="range" id="fuerza" />
+        </div>
+    </div>
+
+    <div class="acciones-parabolica" id="acciones-parabolica">
+        <button type="button" class="boton peligro" id="btn-salir">Salir / Rendirse</button>
+        <button type="button" class="boton" id="btn-disparar">Disparar</button>
+    </div>
+
+    <div class="acciones-parabolica" id="acciones-agotado" hidden>
+        <button type="button" class="boton peligro" id="btn-salir-agotado">Salir / Rendirse</button>
+        <button type="button" class="boton" id="btn-reintentar">Reintentar</button>
+    </div>
+</div>
+
+<dialog class="confirmar" id="dialogo-salir">
+    <p>¿Seguro que quieres salir? Se perderá el progreso de este intento y no obtendrás bitcoins.</p>
+    <div class="acciones-parabolica">
+        <button type="button" class="boton secundario" id="btn-cancelar-salida">Seguir jugando</button>
+        <button type="button" class="boton peligro" id="btn-confirmar-salida">Salir</button>
+    </div>
+</dialog>
+{% endblock %}
+
+{% block script_juego %}<script src="{% static 'reto_parabolica/juego.js' %}"></script>{% endblock %}

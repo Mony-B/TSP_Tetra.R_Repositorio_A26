@@ -54,6 +54,7 @@ MATERIAS = [
             {"nombre": "Desigualdades cuadráticas", "retos": [("reto_clasificar", "cuadraticas")]},
             {"nombre": "Desigualdades racionales", "retos": [("reto_clasificar", "racionales")]},
             {"nombre": "Desigualdades compuestas", "retos": [("reto_clasificar", "compuestas")]},
+            {"nombre": "Ecuaciones cuadráticas", "retos": [("reto_parabolica", "cuadraticas")]},
         ],
     },
     {
