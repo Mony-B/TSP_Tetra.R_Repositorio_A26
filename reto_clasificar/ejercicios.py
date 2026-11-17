@@ -1,15 +1,20 @@
 """
 Clasificar elementos por categorías (CU-08): contenido y reglas del reto.
 
-El reto es reutilizable: cada entrada de EJERCICIOS define el enunciado, las
-fichas, las categorías y la regla que decide a qué categoría pertenece cada
-ficha. Para agregar un subtema solo se agrega una entrada nueva; la mecánica
-(views.py y juego.js) no cambia.
+El reto es reutilizable para cualquier materia: cada entrada de EJERCICIOS
+define su enunciado, sus categorías y sus fichas; la mecánica (arrastrar cada
+ficha a su caja) no cambia. Hay dos formas de dar el contenido, según "kind":
 
-En este conjunto los ejercicios son desigualdades en el plano: las fichas son
-puntos (x, y) y las categorías son "Es solución" / "No es solución". La
-categoría correcta NO se manda al navegador: se calcula aquí evaluando la
-desigualdad con aritmética exacta (Fraction), sin errores de redondeo.
+- "grafica" (Cálculo): la ficha es un punto (x, y) y la categoría correcta se
+  calcula evaluando una desigualdad "y <op> f(x)" en el servidor (nunca se
+  manda al navegador). Además de las cajas, se dibuja el plano cartesiano con
+  la curva y la región sombreada.
+- "generico" (cualquier otra materia): la ficha es una etiqueta de texto y
+  cada una ya trae su categoría correcta en el propio ejercicio (tampoco se
+  manda al navegador: fichas() la quita antes de exponerla). Sin gráfica.
+
+Para agregar un subtema solo se agrega una entrada nueva; views.py y
+juego.js no cambian con ninguno de los dos tipos.
 """
 import operator
 from fractions import Fraction
@@ -52,6 +57,7 @@ def _parabola_invertida(x):
 # Cada desigualdad es "y <op> f(x)". Un punto es solución si cumple TODAS.
 EJERCICIOS = {
     "lineales": {
+        "kind": "grafica",
         "nivel": 1,
         "subtema": "Desigualdades lineales",
         "titulo": "Desigualdades lineales",
@@ -63,6 +69,7 @@ EJERCICIOS = {
         "bitcoins": 50,
     },
     "cuadraticas": {
+        "kind": "grafica",
         "nivel": 2,
         "subtema": "Desigualdades cuadráticas",
         "titulo": "Desigualdades cuadráticas",
@@ -74,6 +81,7 @@ EJERCICIOS = {
         "bitcoins": 75,
     },
     "racionales": {
+        "kind": "grafica",
         "nivel": 3,
         "subtema": "Desigualdades racionales",
         "titulo": "Desigualdades racionales",
@@ -85,6 +93,7 @@ EJERCICIOS = {
         "bitcoins": 100,
     },
     "compuestas": {
+        "kind": "grafica",
         "nivel": 4,
         "subtema": "Desigualdades compuestas",
         "titulo": "Desigualdades compuestas",
@@ -100,6 +109,10 @@ EJERCICIOS = {
 
 # --- Regla de clasificación (solo en el servidor) ---------------------------------
 
+def _es_grafica(ejercicio):
+    return ejercicio.get("kind", "grafica") == "grafica"
+
+
 def es_solucion(ejercicio, x, y):
     for d in ejercicio["desigualdades"]:
         valor = d["f"](Fraction(x))
@@ -108,13 +121,23 @@ def es_solucion(ejercicio, x, y):
     return True
 
 
-def categoria_correcta(ejercicio, ficha):
-    return SI if es_solucion(ejercicio, ficha["x"], ficha["y"]) else NO
+def categoria_correcta(ejercicio, indice):
+    """La categoría correcta de la ficha en esa posición (nunca se manda al navegador)."""
+    if _es_grafica(ejercicio):
+        x, y = ejercicio["puntos"][indice]
+        return SI if es_solucion(ejercicio, x, y) else NO
+    return ejercicio["fichas"][indice]["categoria"]
 
 
 def fichas(ejercicio):
-    """Fichas con id estable (f0, f1, ...) según su posición en la lista."""
-    return [{"id": f"f{i}", "x": x, "y": y} for i, (x, y) in enumerate(ejercicio["puntos"])]
+    """Fichas con id estable (f0, f1, ...) según su posición en la lista.
+
+    "grafica": la ficha es un punto (x, y). "generico": la ficha es una
+    etiqueta de texto; su categoría correcta NUNCA se incluye aquí.
+    """
+    if _es_grafica(ejercicio):
+        return [{"id": f"f{i}", "x": x, "y": y} for i, (x, y) in enumerate(ejercicio["puntos"])]
+    return [{"id": f"f{i}", "etiqueta": f["etiqueta"]} for i, f in enumerate(ejercicio["fichas"])]
 
 
 def evaluar_ficha(ejercicio, ficha_id, categoria):
@@ -122,11 +145,12 @@ def evaluar_ficha(ejercicio, ficha_id, categoria):
 
     Devuelve True / False, o None si la ficha o la categoría no existen.
     """
-    if categoria not in (SI, NO):
+    categorias_validas = {c["id"] for c in ejercicio.get("categorias", CATEGORIAS)}
+    if categoria not in categorias_validas:
         return None
-    for ficha in fichas(ejercicio):
+    for indice, ficha in enumerate(fichas(ejercicio)):
         if ficha["id"] == ficha_id:
-            return categoria_correcta(ejercicio, ficha) == categoria
+            return categoria_correcta(ejercicio, indice) == categoria
     return None
 
 
@@ -183,12 +207,18 @@ def _grafica(ejercicio_id):
 
 
 def datos_publicos(ejercicio_id):
-    """Todo lo que necesita el navegador, SIN la categoría correcta de cada ficha."""
+    """Todo lo que necesita el navegador, SIN la categoría correcta de cada ficha.
+
+    "grafica" solo se incluye para los ejercicios tipo "grafica"; en los
+    genéricos no hay plano cartesiano que dibujar.
+    """
     ejercicio = EJERCICIOS[ejercicio_id]
-    return {
+    datos = {
         "enunciado": ejercicio["enunciado"],
-        "categorias": CATEGORIAS,
+        "categorias": ejercicio.get("categorias", CATEGORIAS),
         "fichas": fichas(ejercicio),
-        "grafica": _grafica(ejercicio_id),
         "ayuda": ejercicio["ayuda"],
     }
+    if _es_grafica(ejercicio):
+        datos["grafica"] = _grafica(ejercicio_id)
+    return datos

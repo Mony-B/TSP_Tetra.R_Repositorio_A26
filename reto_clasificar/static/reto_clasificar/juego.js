@@ -59,7 +59,7 @@
         const b = document.createElement("button");
         b.type = "button";
         b.className = "cl-ficha";
-        b.textContent = `(${f.x}, ${f.y})`;
+        b.textContent = f.etiqueta !== undefined ? f.etiqueta : `(${f.x}, ${f.y})`;
         b.style.background = COLORES[i % COLORES.length];
         b.dataset.id = f.id;
         bandeja.appendChild(b);
@@ -67,10 +67,12 @@
         engancharArrastre(b, f);
     });
 
-    // --- Gráfica ----------------------------------------------------------------
+    // --- Gráfica (solo en los ejercicios tipo "grafica"; los genéricos no la traen) --
 
-    const ctx = canvas.getContext("2d");
+    if (!grafica) canvas.style.display = "none";
+    const ctx = grafica ? canvas.getContext("2d") : null;
     function dibujar() {
+        if (!grafica) return;
         const W = canvas.width, n = grafica.rango * 2, u = W / n;
         const px = (x) => (x + grafica.rango) * u;
         const py = (y) => (grafica.rango - y) * u;
