@@ -24,13 +24,17 @@
     .dpad .derecha { grid-column: 3; grid-row: 2; }
     .ayuda-laberinto { font-size: 0.8rem; color: var(--verde-medio); max-width: 260px; }
 
-    .acciones-laberinto { display: flex; gap: 10px; flex-wrap: wrap; justify-content: space-between; margin-top: 10px; }
+    .acciones-laberinto { gap: 10px; flex-wrap: wrap; justify-content: space-between; margin-top: 10px; }
+    .acciones-laberinto:not([hidden]) { display: flex; }
     .boton.peligro { border-color: var(--rojo); color: var(--rojo); background: transparent; }
 
     dialog.confirmar { background: #000; color: var(--verde); border: 1px solid var(--verde); font-family: inherit; max-width: 420px; }
     dialog.confirmar::backdrop { background: rgba(0, 0, 0, 0.7); }
 
-    .superposicion { position: absolute; inset: 0; background: rgba(0, 0, 0, 0.92); display: flex; align-items: center; justify-content: center; text-align: center; padding: 16px; }
+    .superposicion { position: absolute; inset: 0; background: rgba(0, 0, 0, 0.92); align-items: center; justify-content: center; text-align: center; padding: 16px; }
+    /* display solo cuando NO tiene [hidden]: igual que en reto_parabolica,
+       forzar "display: flex" en la clase tapaba el juego desde el inicio. */
+    .superposicion:not([hidden]) { display: flex; }
     .superposicion .tarjeta { max-width: 360px; }
     .superposicion h3 { margin: 0 0 8px; color: var(--verde); }
     .superposicion p { color: var(--verde-medio); font-size: 0.85rem; line-height: 1.5; margin: 0 0 14px; }

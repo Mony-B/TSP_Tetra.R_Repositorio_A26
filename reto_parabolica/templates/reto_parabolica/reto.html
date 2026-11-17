@@ -29,7 +29,8 @@
     .campo label { font-size: 0.85rem; display: flex; justify-content: space-between; }
     .campo input[type="range"] { width: 100%; }
 
-    .acciones-parabolica { display: flex; gap: 10px; flex-wrap: wrap; justify-content: space-between; margin-top: 10px; }
+    .acciones-parabolica { gap: 10px; flex-wrap: wrap; justify-content: space-between; margin-top: 10px; }
+    .acciones-parabolica:not([hidden]) { display: flex; }
     .boton.peligro { border-color: var(--rojo); color: var(--rojo); background: transparent; }
     .boton[disabled] { opacity: 0.4; cursor: not-allowed; }
 
@@ -39,7 +40,11 @@
     dialog.confirmar { background: #000; color: var(--verde); border: 1px solid var(--verde); font-family: inherit; max-width: 420px; }
     dialog.confirmar::backdrop { background: rgba(0, 0, 0, 0.7); }
 
-    .superposicion { position: absolute; inset: 0; background: rgba(0, 0, 0, 0.92); display: flex; align-items: center; justify-content: center; text-align: center; padding: 16px; }
+    .superposicion { position: absolute; inset: 0; background: rgba(0, 0, 0, 0.92); align-items: center; justify-content: center; text-align: center; padding: 16px; }
+    /* display solo cuando NO tiene [hidden]: una regla "display: flex" en
+       la clase le gana al [hidden] del navegador y la pantalla se queda
+       visible desde el inicio, tapando el juego. */
+    .superposicion:not([hidden]) { display: flex; }
     .superposicion .tarjeta { max-width: 360px; }
     .superposicion h3 { margin: 0 0 8px; }
     .superposicion h3.mal { color: var(--rojo); }
