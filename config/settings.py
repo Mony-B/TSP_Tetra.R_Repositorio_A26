@@ -59,6 +59,7 @@ INSTALLED_APPS = [
     'reto_clasificar',        # CU-08
     'reto_obtener_termino',   # CU-09
     'reto_sopa_letras',         # CU-10
+    'reto_ordenamiento',       # CU-11
 ]
 
 MIDDLEWARE = [

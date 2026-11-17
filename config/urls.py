@@ -20,4 +20,5 @@ urlpatterns = [
     path('retos/clasificar/', include('reto_clasificar.urls')),
     path('retos/obtener-termino/', include('reto_obtener_termino.urls')),
     path('retos/sopa-letras/', include('reto_sopa_letras.urls')),
+    path('retos/ordenamiento/', include('reto_ordenamiento.urls')),
 ]

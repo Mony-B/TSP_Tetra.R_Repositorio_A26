@@ -16,7 +16,10 @@ MATERIAS = [
         "slug": "logica",
         "nombre": "Lógica y Algoritmos",
         "subtemas": [
-            {"nombre": "Algoritmos", "retos": [("reto_sopa_letras", "algoritmos")]},
+            {"nombre": "Algoritmos", "retos": [
+                ("reto_sopa_letras", "algoritmos"),
+                ("reto_ordenamiento", "par-impar"),
+            ]},
             {"nombre": "Lógica proposicional", "retos": [("reto_algebra_booleana", "proposicional")]},
             {"nombre": "Conjuntos", "retos": [("reto_obtener_termino", "conjuntos")]},
         ],
