@@ -22,6 +22,7 @@ MATERIAS = [
             ]},
             {"nombre": "Lógica proposicional", "retos": [("reto_algebra_booleana", "proposicional")]},
             {"nombre": "Conjuntos", "retos": [("reto_obtener_termino", "conjuntos")]},
+            {"nombre": "Lógica de programación", "retos": [("reto_conceptos", "logica-programacion")]},
         ],
     },
     {
