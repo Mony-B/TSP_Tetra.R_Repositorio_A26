@@ -2,15 +2,27 @@
 {% load static %}
 {% block estilos %}
 <style>
+    /* El reto trae su propio botón "Salir / Rendirse" (con confirmación,
+       FE-1); la flecha genérica de reto_base.html quedaba duplicada al
+       lado, mostrando dos formas de salir en la misma pantalla. */
+    .btn-regresar { display: none; }
+
     .estado-tiro { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 10px; }
     .intentos-puntos { display: inline-flex; gap: 4px; margin-left: 6px; }
     .punto { width: 10px; height: 10px; border-radius: 50%; background: var(--verde); display: inline-block; }
     .punto.usado { background: transparent; border: 1px solid var(--borde); }
 
-    .lienzo-caja { border: 1px solid var(--borde); margin: 10px 0; background: #000; }
+    .lienzo-caja { position: relative; border: 1px solid var(--borde); margin: 10px 0; background: #000; }
     canvas { display: block; width: 100%; height: auto; }
 
-    .ecuacion { font-size: 0.85rem; color: var(--verde-medio); margin: 8px 0; }
+    .trayectoria-info { border: 1px solid var(--borde); border-radius: 6px; padding: 10px 12px; margin: 10px 0; font-size: 0.85rem; }
+    .trayectoria-info .titulo { display: flex; align-items: center; gap: 8px; font-weight: bold; }
+    .trayectoria-info .titulo small { font-weight: normal; color: var(--verde-medio); }
+    .ecuacion { font-size: 0.9rem; color: var(--verde); margin: 6px 0; }
+    .coeficientes { display: flex; gap: 8px; flex-wrap: wrap; margin: 4px 0; }
+    .coeficientes span { border: 1px solid var(--borde); border-radius: 4px; padding: 2px 6px; }
+    .coeficientes b { color: var(--verde); }
+    .ayuda-trayectoria { color: var(--verde-medio); font-size: 0.78rem; margin-top: 4px; }
 
     .controles { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 14px 0; }
     .campo { display: flex; flex-direction: column; gap: 4px; }
@@ -26,6 +38,13 @@
 
     dialog.confirmar { background: #000; color: var(--verde); border: 1px solid var(--verde); font-family: inherit; max-width: 420px; }
     dialog.confirmar::backdrop { background: rgba(0, 0, 0, 0.7); }
+
+    .superposicion { position: absolute; inset: 0; background: rgba(0, 0, 0, 0.92); display: flex; align-items: center; justify-content: center; text-align: center; padding: 16px; }
+    .superposicion .tarjeta { max-width: 360px; }
+    .superposicion h3 { margin: 0 0 8px; }
+    .superposicion h3.mal { color: var(--rojo); }
+    .superposicion p { color: var(--verde-medio); font-size: 0.85rem; line-height: 1.5; margin: 0 0 12px; }
+    .superposicion .acciones-parabolica { justify-content: center; }
 </style>
 {% endblock %}
 
@@ -38,7 +57,46 @@
 
     <div class="lienzo-caja">
         <canvas id="lienzo" width="800" height="400"></canvas>
+
+        <div class="superposicion" id="superposicion-exito" hidden>
+            <div class="tarjeta">
+                <h3>¡Impacto!</h3>
+                <p id="premio-exito"></p>
+                <div class="info-matematica">
+                    <p>Ecuación del disparo: <b id="exito-ecuacion"></b></p>
+                    <p>Vértice (altura máxima): <b id="exito-vertice"></b></p>
+                    <p>Raíces (nivel del suelo): <b id="exito-raices"></b></p>
+                    <p>El coeficiente de x² es negativo, por eso la parábola abre hacia abajo; el vértice es la altura máxima y las raíces marcan dónde la trayectoria toca el suelo.</p>
+                </div>
+                <div class="acciones-parabolica">
+                    <a class="boton" id="btn-volver-exito" href="{{ volver_url }}">Regresar a la selección de retos</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="superposicion" id="superposicion-agotado" hidden>
+            <div class="tarjeta">
+                <h3 class="mal">Se agotaron los intentos</h3>
+                <p>No se otorgaron bitcoins ni se mostró la información de ecuaciones.</p>
+                <div class="acciones-parabolica">
+                    <button type="button" class="boton" id="btn-reintentar-overlay">Reintentar</button>
+                    <button type="button" class="boton peligro" id="btn-salir-agotado">Salir / Rendirse</button>
+                </div>
+            </div>
+        </div>
     </div>
+
+    <div class="trayectoria-info">
+        <div class="titulo">Trayectoria prevista <small>— guía antes de disparar</small></div>
+        <div class="ecuacion" id="ecuacion-previa">y(x) = —</div>
+        <div class="coeficientes">
+            <span>a = <b id="coef-a">—</b></span>
+            <span>b = <b id="coef-b">—</b></span>
+            <span>c = <b>0</b></span>
+        </div>
+        <div class="ayuda-trayectoria">La guía punteada solo muestra el inicio. Los valores a, b y c corresponden a la ecuación cuadrática de la trayectoria y cambian al mover los controles.</div>
+    </div>
+
     <div class="controles">
         <div class="campo">
             <label>Ángulo <span id="valor-angulo"></span>°</label>
@@ -53,11 +111,6 @@
     <div class="acciones-parabolica" id="acciones-parabolica">
         <button type="button" class="boton peligro" id="btn-salir">Salir / Rendirse</button>
         <button type="button" class="boton" id="btn-disparar">Disparar</button>
-    </div>
-
-    <div class="acciones-parabolica" id="acciones-agotado" hidden>
-        <button type="button" class="boton peligro" id="btn-salir-agotado">Salir / Rendirse</button>
-        <button type="button" class="boton" id="btn-reintentar">Reintentar</button>
     </div>
 </div>
 

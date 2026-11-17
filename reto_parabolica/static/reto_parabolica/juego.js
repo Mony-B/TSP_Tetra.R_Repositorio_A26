@@ -1,7 +1,8 @@
 // Tiro parabólico (CU-12).
 // El ángulo y la fuerza se mandan al servidor, que calcula la trayectoria
 // real (y si acierta) y regresa los coeficientes y(x) = b·x − a·x² junto
-// con el alcance; el navegador solo los usa para animar el disparo.
+// con el alcance; el navegador solo los usa para animar el disparo y para
+// dibujar la guía de vista previa (misma fórmula, nunca decide el acierto).
 (() => {
     const datos = ReCode.reto.datos;
     const raiz = document.getElementById("parabolica");
@@ -12,12 +13,17 @@
     const W = lienzo.width, H = lienzo.height;
     const GROUND = H - 30;
     const LAUNCH_X = W * 0.08;
+    // Misma gravedad didáctica que usa el servidor para calcular a y b
+    // (unidades de lienzo, no metros reales); solo sirve para dibujar la
+    // guía de vista previa en el navegador.
+    const GRAVEDAD = 700;
 
     const anguloInput = document.getElementById("angulo");
     const fuerzaInput = document.getElementById("fuerza");
     const resultado = document.getElementById("resultado");
     const accionesNormal = document.getElementById("acciones-parabolica");
-    const accionesAgotado = document.getElementById("acciones-agotado");
+    const superposicionExito = document.getElementById("superposicion-exito");
+    const superposicionAgotado = document.getElementById("superposicion-agotado");
     const btnDisparar = document.getElementById("btn-disparar");
     const dialogo = document.getElementById("dialogo-salir");
 
@@ -46,35 +52,27 @@
         document.getElementById("valor-fuerza").textContent = fuerzaInput.value;
     }
 
-    function dibujarEscena(puntosTrayectoria) {
-        ctx.clearRect(0, 0, W, H);
-        ctx.strokeStyle = "#333"; ctx.lineWidth = 2;
-        ctx.beginPath(); ctx.moveTo(0, GROUND); ctx.lineTo(W, GROUND); ctx.stroke();
+    // --- Vista previa: misma fórmula que el servidor, antes de disparar ----
 
-        // Objetivo fijo.
-        const tx = LAUNCH_X + datos.objetivo_x, ty = GROUND - datos.objetivo_y;
-        ctx.strokeStyle = "#00aa00"; ctx.lineWidth = 2;
-        ctx.beginPath(); ctx.arc(tx, ty, datos.objetivo_radio, 0, Math.PI * 2); ctx.stroke();
-        ctx.beginPath(); ctx.arc(tx, ty, 6, 0, Math.PI * 2); ctx.stroke();
-
-        if (puntosTrayectoria && puntosTrayectoria.length > 1) {
-            ctx.strokeStyle = "#00ff00"; ctx.lineWidth = 2.5;
-            ctx.beginPath();
-            puntosTrayectoria.forEach(([x, y], i) => (i ? ctx.lineTo(x, y) : ctx.moveTo(x, y)));
-            ctx.stroke();
-            const [ultimoX, ultimoY] = puntosTrayectoria[puntosTrayectoria.length - 1];
-            ctx.fillStyle = "#fff";
-            ctx.beginPath(); ctx.arc(ultimoX, ultimoY, 5, 0, Math.PI * 2); ctx.fill();
-        }
+    function parametrosPrevia() {
+        const theta = (Number(anguloInput.value) * Math.PI) / 180;
+        const velocidad = 110 + Number(fuerzaInput.value) * 6;
+        const a = GRAVEDAD / (2 * velocidad * velocidad * Math.cos(theta) ** 2);
+        const b = Math.tan(theta);
+        return { a, b };
     }
 
-    function mensaje(html, error = false) {
-        resultado.innerHTML = `<p class="mensaje ${error ? "error" : ""}">${html}</p>`;
+    function actualizarEcuacionPrevia() {
+        const { a, b } = parametrosPrevia();
+        document.getElementById("ecuacion-previa").textContent =
+            `y(x) = −${a.toFixed(5)}x² + ${b.toFixed(3)}x + 0`;
+        document.getElementById("coef-a").textContent = "−" + a.toFixed(5);
+        document.getElementById("coef-b").textContent = b.toFixed(3);
     }
 
-    function puntosDeTrayectoria(a, b, alcance) {
+    function puntosDeTrayectoria(a, b, alcance, proporcion = 1) {
         const pasos = 80;
-        const max = Math.min(alcance, (W - LAUNCH_X - 4));
+        const max = Math.min(alcance, (W - LAUNCH_X - 4)) * proporcion;
         const puntos = [];
         for (let i = 0; i <= pasos; i++) {
             const x = (max * i) / pasos;
@@ -84,12 +82,77 @@
         return puntos;
     }
 
+    function dibujarCuadricula() {
+        const paso = 50;
+        ctx.save();
+        ctx.lineWidth = 1;
+        ctx.strokeStyle = "rgba(0, 255, 0, 0.12)";
+        for (let x = LAUNCH_X; x < W; x += paso) {
+            ctx.beginPath(); ctx.moveTo(x, 8); ctx.lineTo(x, GROUND); ctx.stroke();
+        }
+        for (let x = LAUNCH_X - paso; x >= 0; x -= paso) {
+            ctx.beginPath(); ctx.moveTo(x, 8); ctx.lineTo(x, GROUND); ctx.stroke();
+        }
+        for (let y = GROUND; y >= 10; y -= paso) {
+            ctx.beginPath(); ctx.moveTo(5, y); ctx.lineTo(W - 4, y); ctx.stroke();
+        }
+        ctx.strokeStyle = "rgba(0, 255, 0, 0.4)"; ctx.lineWidth = 1.3;
+        ctx.beginPath(); ctx.moveTo(LAUNCH_X, 8); ctx.lineTo(LAUNCH_X, GROUND); ctx.lineTo(W - 4, GROUND); ctx.stroke();
+        ctx.restore();
+    }
+
+    function dibujarEscena(proyectil, puntosTrayectoria) {
+        ctx.clearRect(0, 0, W, H);
+        dibujarCuadricula();
+
+        ctx.strokeStyle = "#333"; ctx.lineWidth = 2;
+        ctx.beginPath(); ctx.moveTo(0, GROUND); ctx.lineTo(W, GROUND); ctx.stroke();
+
+        // Objetivo fijo.
+        const tx = LAUNCH_X + datos.objetivo_x, ty = GROUND - datos.objetivo_y;
+        ctx.strokeStyle = "#00aa00"; ctx.lineWidth = 2;
+        ctx.beginPath(); ctx.arc(tx, ty, datos.objetivo_radio, 0, Math.PI * 2); ctx.stroke();
+        ctx.beginPath(); ctx.arc(tx, ty, 6, 0, Math.PI * 2); ctx.stroke();
+
+        // Guía punteada de vista previa (solo el inicio), igual que el
+        // prototipo: ayuda a visualizar hacia dónde apunta el disparo sin
+        // revelar si acertará.
+        if (!disparando && !puntosTrayectoria) {
+            const { a, b } = parametrosPrevia();
+            const alcancePrevia = a ? b / a : 0;
+            const guia = puntosDeTrayectoria(a, b, alcancePrevia, 0.28);
+            ctx.save();
+            ctx.setLineDash([5, 7]);
+            ctx.strokeStyle = "rgba(0, 255, 0, 0.55)"; ctx.lineWidth = 2;
+            ctx.beginPath();
+            guia.forEach(([x, y], i) => (i ? ctx.lineTo(x, y) : ctx.moveTo(x, y)));
+            ctx.stroke();
+            ctx.restore();
+        }
+
+        if (puntosTrayectoria && puntosTrayectoria.length > 1) {
+            ctx.strokeStyle = "#00ff00"; ctx.lineWidth = 2.5;
+            ctx.beginPath();
+            puntosTrayectoria.forEach(([x, y], i) => (i ? ctx.lineTo(x, y) : ctx.moveTo(x, y)));
+            ctx.stroke();
+        }
+        if (proyectil) {
+            ctx.fillStyle = "#fff";
+            ctx.beginPath(); ctx.arc(proyectil[0], proyectil[1], 5, 0, Math.PI * 2); ctx.fill();
+        }
+    }
+
+    function mensaje(html, error = false) {
+        resultado.innerHTML = `<p class="mensaje ${error ? "error" : ""}">${html}</p>`;
+    }
+
     function animar(a, b, alcance, alFinalizar) {
         const puntos = puntosDeTrayectoria(a, b, alcance);
         let i = 0;
         disparando = true;
         function paso() {
-            dibujarEscena(puntos.slice(0, i + 1));
+            const trayectoHastaAqui = puntos.slice(0, i + 1);
+            dibujarEscena(puntos[i], trayectoHastaAqui);
             i++;
             if (i < puntos.length) {
                 requestAnimationFrame(paso);
@@ -133,24 +196,21 @@
         const premio = r.ya_otorgado
             ? "Ya habías completado este reto antes, así que no se otorgan bitcoins de nuevo."
             : `Ganaste <strong>₿ ${r.bitcoins_otorgados}</strong>.`;
+        document.getElementById("premio-exito").innerHTML = premio;
+        document.getElementById("exito-ecuacion").textContent =
+            `y(x) = ${r.b.toFixed(3)}x − ${r.a.toFixed(5)}x²`;
+        document.getElementById("exito-vertice").textContent =
+            `(${r.vertice.x.toFixed(1)}, ${r.vertice.y.toFixed(1)})`;
+        document.getElementById("exito-raices").textContent =
+            `x₁ = ${r.raices.x1}, x₂ = ${r.raices.x2.toFixed(1)}`;
         accionesNormal.hidden = true;
-        resultado.innerHTML = `
-            <div class="mensaje">
-                <p><strong>¡Impacto!</strong> ${premio}</p>
-                <div class="info-matematica">
-                    <p>Ecuación del disparo: <b>y(x) = ${r.b.toFixed(3)}x − ${r.a.toFixed(5)}x²</b></p>
-                    <p>Vértice (altura máxima): <b>(${r.vertice.x.toFixed(1)}, ${r.vertice.y.toFixed(1)})</b></p>
-                    <p>Raíces (nivel del suelo): <b>x₁ = ${r.raices.x1}, x₂ = ${r.raices.x2.toFixed(1)}</b></p>
-                    <p>El coeficiente de x² es negativo, por eso la parábola abre hacia abajo; el vértice es la altura máxima y las raíces marcan dónde la trayectoria toca el suelo.</p>
-                </div>
-            </div>
-            <a class="boton" href="${ReCode.reto.volverUrl}">Volver a los retos</a>`;
+        superposicionExito.hidden = false;
     }
 
     function agotado(r) {
         mensaje(r.mensaje, true);
         accionesNormal.hidden = true;
-        accionesAgotado.hidden = false;
+        superposicionAgotado.hidden = false;
     }
 
     async function reintentar() {
@@ -162,7 +222,7 @@
             pintarPuntos();
             dibujarEscena();
             resultado.innerHTML = "";
-            accionesAgotado.hidden = true;
+            superposicionAgotado.hidden = true;
             accionesNormal.hidden = false;
             btnDisparar.disabled = false;
         } catch (err) {
@@ -171,6 +231,8 @@
     }
 
     // --- FE-1: salir / rendirse con confirmación ----------------------------
+    // El botón "Salir / Rendirse" es el único punto de salida del reto
+    // (ver estilos: se oculta la flecha genérica para no duplicarlo).
 
     function pedirSalida(e) {
         if (e) e.preventDefault();
@@ -184,18 +246,25 @@
 
     document.getElementById("btn-salir").addEventListener("click", pedirSalida);
     document.getElementById("btn-salir-agotado").addEventListener("click", pedirSalida);
-    const flecha = document.querySelector(".btn-regresar");
-    if (flecha) flecha.addEventListener("click", (e) => { if (intentosUsados > 0 && !terminado) pedirSalida(e); });
     document.getElementById("btn-cancelar-salida").addEventListener("click", () => dialogo.close());
     document.getElementById("btn-confirmar-salida").addEventListener("click", () => {
         window.location.href = ReCode.reto.volverUrl;
     });
     btnDisparar.addEventListener("click", disparar);
-    document.getElementById("btn-reintentar").addEventListener("click", reintentar);
-    anguloInput.addEventListener("input", actualizarEtiquetas);
-    fuerzaInput.addEventListener("input", actualizarEtiquetas);
+    document.getElementById("btn-reintentar-overlay").addEventListener("click", reintentar);
+    anguloInput.addEventListener("input", () => {
+        actualizarEtiquetas();
+        actualizarEcuacionPrevia();
+        if (!disparando) dibujarEscena();
+    });
+    fuerzaInput.addEventListener("input", () => {
+        actualizarEtiquetas();
+        actualizarEcuacionPrevia();
+        if (!disparando) dibujarEscena();
+    });
 
     pintarPuntos();
     actualizarEtiquetas();
+    actualizarEcuacionPrevia();
     dibujarEscena();
 })();
