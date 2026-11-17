@@ -29,6 +29,11 @@
 
     dialog.confirmar { background: #000; color: var(--verde); border: 1px solid var(--verde); font-family: inherit; max-width: 420px; }
     dialog.confirmar::backdrop { background: rgba(0, 0, 0, 0.7); }
+
+    .superposicion { position: absolute; inset: 0; background: rgba(0, 0, 0, 0.92); display: flex; align-items: center; justify-content: center; text-align: center; padding: 16px; }
+    .superposicion .tarjeta { max-width: 360px; }
+    .superposicion h3 { margin: 0 0 8px; color: var(--verde); }
+    .superposicion p { color: var(--verde-medio); font-size: 0.85rem; line-height: 1.5; margin: 0 0 14px; }
 </style>
 {% endblock %}
 
@@ -40,6 +45,14 @@
     <div class="escenario">
         <canvas id="lienzo" width="700" height="580"></canvas>
         <div class="mensaje-flotante" id="toast" aria-live="polite"></div>
+
+        <div class="superposicion" id="superposicion-victoria" hidden>
+            <div class="tarjeta">
+                <h3>¡Has escapado del laberinto!</h3>
+                <p id="premio-victoria"></p>
+                <a class="boton" href="{{ volver_url }}">Volver a los retos</a>
+            </div>
+        </div>
     </div>
 
     <div class="controles-laberinto">

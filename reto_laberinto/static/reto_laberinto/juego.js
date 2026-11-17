@@ -13,11 +13,18 @@
     const progreso = document.getElementById("progreso");
     const preguntaEl = document.getElementById("pregunta");
     const toast = document.getElementById("toast");
-    const resultado = document.getElementById("resultado");
     const acciones = document.getElementById("acciones-laberinto");
     const dialogo = document.getElementById("dialogo-salir");
 
-    const W = 21, H = 17, T = 30, OX = 35, OY = 35;
+    // Laberinto más pequeño y con más atajos que el prototipo original
+    // (21×17, 12 enlaces extra): ese tamaño resultaba abrumador para
+    // explorar. Con menos celdas y más enlaces, los pasillos son más
+    // cortos y hay más rutas alternativas visibles sin perder el efecto
+    // de laberinto en penumbra.
+    // T (tamaño de celda) sube de 30 a 40 para que el laberinto más chico
+    // siga llenando el mismo lienzo de 700×580 en vez de dejarlo con
+    // espacio vacío alrededor.
+    const W = 15, H = 11, T = 40, OX = 35, OY = 35;
 
     let actual = ReCode.reto.datos; // {numero, total, pregunta, opciones}
     let grid = [], player = { x: 1, y: 1 }, exits = [];
@@ -46,8 +53,10 @@
             }
             if (!found) stack.pop();
         }
-        // Enlaces extra para dar rutas alternativas sin perder el laberinto.
-        for (let i = 0; i < 12; i++) {
+        // Enlaces extra para dar rutas alternativas sin perder el laberinto
+        // (más que el original: con el grid más chico, hacen falta más
+        // atajos proporcionalmente para que se sienta menos denso).
+        for (let i = 0; i < 40; i++) {
             const x = 2 + rand(W - 4), y = 2 + rand(H - 4);
             if (grid[y][x] === 1 && ((grid[y][x - 1] === 0 && grid[y][x + 1] === 0) || (grid[y - 1][x] === 0 && grid[y + 1][x] === 0))) {
                 grid[y][x] = 0;
@@ -67,14 +76,16 @@
                 }
             }
         }
+        // Umbral de distancia más bajo que el original (10): con el grid
+        // más chico, pocas celdas quedarían a esa distancia del inicio.
         const lados = [[], [], [], []];
         for (let y = 1; y < H - 1; y += 2) {
-            if (distancias[y][1] > 10) lados[0].push({ x: 1, y, lado: 0, d: distancias[y][1] });
-            if (distancias[y][W - 2] > 10) lados[1].push({ x: W - 2, y, lado: 1, d: distancias[y][W - 2] });
+            if (distancias[y][1] > 6) lados[0].push({ x: 1, y, lado: 0, d: distancias[y][1] });
+            if (distancias[y][W - 2] > 6) lados[1].push({ x: W - 2, y, lado: 1, d: distancias[y][W - 2] });
         }
         for (let x = 1; x < W - 1; x += 2) {
-            if (distancias[1][x] > 10) lados[2].push({ x, y: 1, lado: 2, d: distancias[1][x] });
-            if (distancias[H - 2][x] > 10) lados[3].push({ x, y: H - 2, lado: 3, d: distancias[H - 2][x] });
+            if (distancias[1][x] > 6) lados[2].push({ x, y: 1, lado: 2, d: distancias[1][x] });
+            if (distancias[H - 2][x] > 6) lados[3].push({ x, y: H - 2, lado: 3, d: distancias[H - 2][x] });
         }
         for (const l of lados) l.sort((a, b) => b.d - a.d);
         let elegidos = [];
@@ -149,6 +160,9 @@
 
         if (r.correcto) {
             flash = 1;
+            // El mensaje de acierto duraba 1200ms pero el siguiente paso
+            // llegaba a los 900ms y lo tapaba a la mitad; ahora se espera
+            // a que termine de verse antes de mostrar el siguiente aviso.
             decir("✓ " + r.mensaje, 1200);
             setTimeout(() => {
                 if (r.siguiente) {
@@ -162,7 +176,7 @@
                     actualizarCabecera();
                     terminarConExito(r);
                 }
-            }, 900);
+            }, 1300);
         } else {
             flash = -1;
             decir("✕ " + r.mensaje, 1500);
@@ -179,9 +193,8 @@
             ? "La recompensa de este reto ya se te había otorgado antes."
             : `Obtuviste <strong>₿ ${r.bitcoins_otorgados}</strong>.`;
         acciones.hidden = true;
-        resultado.innerHTML = `
-            <p class="mensaje"><strong>¡Has escapado del laberinto!</strong> ${premio}</p>
-            <a class="boton" href="${ReCode.reto.volverUrl}">Volver a los retos</a>`;
+        document.getElementById("premio-victoria").innerHTML = premio;
+        document.getElementById("superposicion-victoria").hidden = false;
     }
 
     // --- FE-1: salir / rendirse con confirmación ----------------------------
@@ -206,13 +219,17 @@
 
     // --- Controles -----------------------------------------------------------
 
+    // Controles más ágiles que el prototipo (85ms/135ms): el requisito
+    // (R64) solo pide poder mover al personaje, no fija una velocidad,
+    // así que se acorta la espera entre pasos para que se sienta más
+    // responsivo sin cambiar la mecánica.
     let lastMove = 0;
     document.addEventListener("keydown", (e) => {
         if (dialogo.open) return;
         const dir = { ArrowUp: [0, -1], ArrowDown: [0, 1], ArrowLeft: [-1, 0], ArrowRight: [1, 0], w: [0, -1], s: [0, 1], a: [-1, 0], d: [1, 0] }[e.key];
         if (dir) {
             e.preventDefault();
-            if (performance.now() - lastMove > 85) { step(...dir); lastMove = performance.now(); }
+            if (performance.now() - lastMove > 55) { step(...dir); lastMove = performance.now(); }
         }
     });
     let hold = null;
@@ -222,7 +239,7 @@
             e.preventDefault();
             step(dx, dy);
             clearInterval(hold);
-            hold = setInterval(() => step(dx, dy), 135);
+            hold = setInterval(() => step(dx, dy), 90);
         });
         ["pointerup", "pointercancel", "pointerleave"].forEach((ev) => b.addEventListener(ev, () => clearInterval(hold)));
     });
