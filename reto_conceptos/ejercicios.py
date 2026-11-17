@@ -37,59 +37,6 @@ EJERCICIOS = {
             ],
         ],
     },
-
-    # --- Lógica y Algoritmos · Lógica proposicional ------------------------
-    "proposicional": {
-        "titulo": "Relacionar conceptos: Lógica proposicional",
-        "bitcoins": 30,
-        "semilla": "proposicional",
-        "rondas": [
-            [
-                {"concepto": "Negación", "palabra": "¬", "definicion": "Invierte el valor de verdad de una proposición."},
-                {"concepto": "Conjunción", "palabra": "∧", "definicion": "Verdadera solo si ambas proposiciones son verdaderas."},
-                {"concepto": "Disyunción", "palabra": "∨", "definicion": "Verdadera si al menos una proposición es verdadera."},
-            ],
-            [
-                {"concepto": "Condicional", "palabra": "→", "definicion": "Falsa solo cuando el antecedente es verdadero y el consecuente es falso."},
-                {"concepto": "Bicondicional", "palabra": "↔", "definicion": "Verdadera cuando ambas proposiciones tienen el mismo valor de verdad."},
-                {"concepto": "Tautología", "palabra": "siempre V", "definicion": "Proposición compuesta que siempre es verdadera."},
-                {"concepto": "Contradicción", "palabra": "siempre F", "definicion": "Proposición compuesta que siempre es falsa."},
-            ],
-        ],
-    },
-
-    # --- Lógica y Algoritmos · Conjuntos ------------------------------------
-    "conjuntos": {
-        "titulo": "Relacionar conceptos: Conjuntos",
-        "bitcoins": 30,
-        "semilla": "conjuntos",
-        "rondas": [
-            [
-                {"concepto": "Conjunto vacío", "palabra": "∅", "definicion": "Conjunto que no tiene elementos."},
-                {"concepto": "Conjunto unitario", "palabra": "{a}", "definicion": "Conjunto que tiene exactamente un elemento."},
-                {"concepto": "Conjunto universal", "palabra": "U", "definicion": "Conjunto que contiene todos los elementos del dominio de estudio."},
-            ],
-            [
-                {"concepto": "Pertenencia", "palabra": "∈", "definicion": "Indica que un elemento forma parte de un conjunto."},
-                {"concepto": "Inclusión", "palabra": "⊆", "definicion": "Indica que todos los elementos de un conjunto están en otro."},
-                {"concepto": "Igualdad de conjuntos", "palabra": "=", "definicion": "Dos conjuntos tienen exactamente los mismos elementos."},
-            ],
-        ],
-    },
-
-    # --- Lógica y Algoritmos · Álgebra de proposiciones y demostración -----
-    "demostracion": {
-        "titulo": "Relacionar conceptos: Formas normales y demostración",
-        "bitcoins": 30,
-        "semilla": "demostracion",
-        "rondas": [
-            [
-                {"concepto": "Forma Normal Disyuntiva", "palabra": "FND", "definicion": "Expresión escrita como una disyunción (OR) de términos con conjunciones (AND)."},
-                {"concepto": "Forma Normal Conjuntiva", "palabra": "FNC", "definicion": "Expresión escrita como una conjunción (AND) de términos con disyunciones (OR)."},
-                {"concepto": "Ley de De Morgan", "palabra": "¬(p∧q) = ¬p∨¬q", "definicion": "Convierte la negación de una conjunción en una disyunción de negaciones."},
-            ],
-        ],
-    },
 }
 
 

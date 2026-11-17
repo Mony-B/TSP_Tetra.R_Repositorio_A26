@@ -27,41 +27,6 @@ EJERCICIOS = {
         ],
         "orden_mostrado": [3, 5, 1, 4, 0, 2],
     },
-
-    # --- Lógica y Algoritmos · Relaciones y Venn ---------------------------
-    "relaciones-venn": {
-        "titulo": "Construir un diagrama de Venn",
-        "bitcoins": 30,
-        "mision": (
-            "El panel de diagramas se desordenó. Reconstruye, en orden, los pasos "
-            "para dibujar el diagrama de Venn de A ∪ B."
-        ),
-        "pasos": [
-            "Dibuja el conjunto universal U como un rectángulo.",
-            "Dibuja el círculo del conjunto A dentro de U.",
-            "Dibuja el círculo del conjunto B traslapando al círculo de A.",
-            "Sombrea la región que pertenece a A, a B, o a ambos.",
-            "Esa región sombreada representa A ∪ B.",
-        ],
-        "orden_mostrado": [2, 4, 0, 3, 1],
-    },
-
-    # --- Lógica y Algoritmos · Álgebra de proposiciones y demostración -----
-    "demostracion": {
-        "titulo": "Demostración por inducción",
-        "bitcoins": 30,
-        "mision": (
-            "Los apuntes de la demostración se revolvieron. Reconstruye en orden "
-            "los pasos para probar por inducción que 1 + 2 + ... + n = n(n+1)/2."
-        ),
-        "pasos": [
-            "Caso base: verifica que la fórmula se cumple para n = 1.",
-            "Hipótesis inductiva: supón que la fórmula se cumple para n = k.",
-            "Paso inductivo: demuestra que, si se cumple para k, también se cumple para k + 1.",
-            "Concluye que la fórmula es válida para todo n ≥ 1.",
-        ],
-        "orden_mostrado": [2, 0, 3, 1],
-    },
 }
 
 

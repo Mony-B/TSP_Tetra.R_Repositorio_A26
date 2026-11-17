@@ -78,26 +78,6 @@ EJERCICIOS = {
         significado="Unión (A ∪ B): conjunto con todos los elementos que están en A, en B o en ambos.",
         pista="Su símbolo es ∪.",
     ),
-
-    # --- Lógica y Algoritmos · Lógica proposicional ------------------------
-    "proposicional": nuevo_termino(
-        "El término oculto · Lógica proposicional", "BICONDICIONAL", 6,
-        significado=(
-            "Bicondicional (p ↔ q): conector que es verdadero cuando las dos "
-            "proposiciones tienen el mismo valor de verdad."
-        ),
-        pista="Su símbolo es ↔, y combina dos condicionales en ambos sentidos.",
-    ),
-
-    # --- Lógica y Algoritmos · Lógica de programación ----------------------
-    "logica-programacion": nuevo_termino(
-        "El término oculto · Lógica de programación", "RECURSION", 5,
-        significado=(
-            "Recursión: técnica donde una función se llama a sí misma para "
-            "resolver una versión más pequeña del mismo problema."
-        ),
-        pista="Necesita siempre un caso base para no repetirse para siempre.",
-    ),
 }
 
 
