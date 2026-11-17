@@ -1,0 +1,86 @@
+/* Pantalla "Selección de retos" de una materia (Re:Code). */
+html, body {
+    margin: 0;
+    min-height: 100%;
+    background: #070708;
+    font-family: "Share Tech Mono", monospace;
+    color: #e8e6e3;
+}
+.wrap { min-height: 100vh; display: flex; flex-direction: column; }
+
+.topbar {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 22px 40px;
+    border-bottom: 1px solid rgba(255, 255, 255, .08);
+}
+.topbar-izq { display: flex; align-items: center; gap: 18px; }
+.volver {
+    display: flex; align-items: center; justify-content: center;
+    width: 34px; height: 34px;
+    border: 1px solid rgba(255, 255, 255, .12);
+    border-radius: 8px;
+    color: #8a8790;
+    text-decoration: none;
+    font-size: 16px;
+    flex: none;
+}
+.volver:hover { color: #e8e6e3; border-color: rgba(255, 255, 255, .3); }
+.brand {
+    font-family: "Chakra Petch", monospace;
+    letter-spacing: .06em; font-size: 13px; color: #8a8790;
+    text-transform: uppercase;
+}
+.subject {
+    font-family: "Chakra Petch", monospace; font-weight: 700;
+    font-size: 22px; color: #e8e6e3; margin-top: 2px;
+}
+.wallet {
+    display: flex; align-items: center; gap: 10px;
+    background: #0f0f12; border: 1px solid rgba(255, 255, 255, .1);
+    border-radius: 10px; padding: 10px 16px; flex: none;
+}
+.coin {
+    width: 18px; height: 18px; border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, #ffe27a, #e6a71a);
+    box-shadow: 0 0 10px rgba(230, 167, 26, .5);
+}
+
+.body { flex: 1; display: flex; justify-content: center; padding: 52px 40px; }
+.grid { width: 100%; max-width: 760px; display: flex; flex-direction: column; gap: 14px; }
+
+.reto {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 18px 22px; border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, .08);
+    background: #0f0f12;
+    text-decoration: none; color: inherit;
+}
+.reto .name { font-size: 15px; color: #e8e6e3; }
+.reto .st {
+    font-size: 11px; letter-spacing: .08em; text-transform: uppercase;
+    color: #8a8790;
+}
+.reto.done .st { color: #19ffb4; }
+.sin-retos { padding: 18px 22px; color: #8a8790; font-size: 14px; }
+
+.exam {
+    border: 1px solid rgba(225, 29, 46, .45);
+    background: linear-gradient(180deg, rgba(225, 29, 46, .10), rgba(225, 29, 46, .03));
+}
+.exam .name { font-family: "Chakra Petch", monospace; font-weight: 700; font-size: 17px; }
+a.go {
+    font-family: "Chakra Petch", monospace; font-size: 12px;
+    letter-spacing: .06em; text-transform: uppercase;
+    text-decoration: none; color: #070708; background: #19ffb4;
+    border-radius: 8px; padding: 11px 18px; flex: none;
+}
+a.go.hecho { background: #8a8790; }
+
+.hint { margin-top: 18px; font-size: 12px; color: #8a8790; max-width: 760px; }
+
+@media (max-width: 600px) {
+    .topbar { padding: 16px 20px; }
+    .body { padding: 28px 20px; }
+    .reto { flex-wrap: wrap; gap: 8px; }
+    a.go { width: 100%; text-align: center; }
+}

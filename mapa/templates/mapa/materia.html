@@ -1,32 +1,53 @@
-{% extends "comun/base.html" %}
-{% block titulo %}{{ materia.nombre }} - Re:Code{% endblock %}
+{% load static %}<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ materia.nombre }} - Re:Code</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'mapa/css/materia.css' %}">
+</head>
+<body>
+<div class="wrap">
+    <header class="topbar">
+        <div class="topbar-izq">
+            <a href="{% url 'mapa:inicio' %}" class="volver" title="Regresar al mapa">←</a>
+            <div>
+                <div class="brand">Re:Code — materia</div>
+                <div class="subject">{{ materia.nombre }}</div>
+            </div>
+        </div>
+        <div class="wallet"><span class="coin"></span> {{ bitcoins }} bitcoins</div>
+    </header>
 
-{% block contenido %}
-<h1>{{ materia.nombre }}</h1>
-<h2><a href="{% url 'novela:ver' materia.slug %}">↺ Ver introducción</a></h2>
+    <main class="body">
+        <div class="grid">
+            {% for reto in retos %}
+            <a href="{{ reto.url }}" class="reto{% if reto.resuelto %} done{% endif %}">
+                <span class="name">Reto {{ forloop.counter }} — {{ reto.titulo }}</span>
+                <span class="st">{% if reto.resuelto %}Completado{% else %}Pendiente{% endif %}</span>
+            </a>
+            {% empty %}
+            <p class="sin-retos">Esta materia todavía no tiene retos.</p>
+            {% endfor %}
 
-{% for sub in subtemas %}
-<h2>• {{ sub.nombre }}</h2>
-<!-- Todos los retos están disponibles desde el inicio -->
-<div class="ruta-retos">
-    {% for reto in sub.retos %}
-    <a href="{{ reto.url }}" class="caja-nodo {% if reto.resuelto %}completado{% endif %}">
-        {{ reto.titulo }}{% if reto.resuelto %}<br>✓{% endif %}
-    </a>
-    {% endfor %}
+            {% if tiene_examen %}
+            <div class="reto exam">
+                <span>
+                    <span class="name">Examen final — {{ materia.nombre }}</span><br>
+                    <span class="st">Disponible en cualquier momento</span>
+                </span>
+                <a class="go{% if examen_aprobado %} hecho{% endif %}" href="{% url 'batalla:examen' materia.slug %}">
+                    {% if examen_aprobado %}Repetir examen{% else %}Presentar examen{% endif %}
+                </a>
+            </div>
+            {% endif %}
+
+            <p class="hint">No es necesario completar todos los retos de la materia para presentar el examen final. Al aprobarlo por primera vez se otorgan bitcoins; si ya lo habías aprobado, puedes volver a intentarlo pero no se otorgan bitcoins de nuevo.</p>
+        </div>
+    </main>
 </div>
-{% empty %}
-<p>Esta materia todavía no tiene retos.</p>
-{% endfor %}
-
-{% if tiene_examen %}
-<h2>• Examen</h2>
-<div class="ruta-retos">
-    <a href="{% url 'batalla:examen' materia.slug %}" class="caja-nodo examen {% if examen_aprobado %}completado{% endif %}">
-        Examen{% if examen_aprobado %}<br>✓{% endif %}
-    </a>
-</div>
-{% endif %}
-
-<a href="{% url 'mapa:inicio' %}" class="btn-regresar" title="Regresar">←</a>
-{% endblock %}
+</body>
+</html>

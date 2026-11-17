@@ -1,0 +1,152 @@
+/* =====================================================================
+   Pantalla de reto: tarjeta plana centrada (sin monitor ni animación de
+   encendido). El contenido es interactivo desde que carga la página.
+   ===================================================================== */
+
+body.pantalla-reto {
+    display: block;
+    min-height: 100vh;
+    min-height: 100dvh;
+    margin: 0;
+    padding: 0;
+    background:
+        radial-gradient(circle at 20% -10%, rgba(225, 29, 46, .10), transparent 40%),
+        radial-gradient(circle at 100% 110%, rgba(25, 255, 180, .06), transparent 45%),
+        #070708;
+    color: #e8e6e3;
+    font-family: "Share Tech Mono", monospace;
+}
+
+.topbar {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 22px 40px;
+    border-bottom: 1px solid rgba(255, 255, 255, .08);
+}
+.topbar-izq { display: flex; align-items: center; gap: 18px; }
+.volver {
+    display: flex; align-items: center; justify-content: center;
+    width: 34px; height: 34px;
+    border: 1px solid rgba(255, 255, 255, .12);
+    border-radius: 8px;
+    color: #8a8790;
+    text-decoration: none;
+    font-size: 16px;
+    flex: none;
+}
+.volver:hover { color: #e8e6e3; border-color: rgba(255, 255, 255, .3); }
+.brand {
+    font-family: "Chakra Petch", monospace;
+    letter-spacing: .06em; font-size: 13px; color: #8a8790;
+    text-transform: uppercase;
+}
+.subject {
+    font-family: "Chakra Petch", monospace; font-weight: 700;
+    font-size: 20px; color: #e8e6e3; margin-top: 2px;
+}
+.subject .hecho { font-size: 13px; color: #19ffb4; font-weight: 400; }
+
+.body { display: flex; align-items: center; justify-content: center; padding: 40px; }
+.card {
+    width: 100%; max-width: 720px;
+    background: #0f0f12;
+    border: 1px solid rgba(255, 255, 255, .08);
+    border-radius: 14px;
+    padding: 40px;
+    box-shadow: 0 30px 60px -20px rgba(0, 0, 0, .6);
+
+    /* Recoloreado de los elementos de recode.css (botones, inputs, listas)
+       para que combinen con esta tarjeta en vez del verde terminal puro. */
+    --verde: #19ffb4;
+    --verde-medio: #22c45e;
+    --verde-oscuro: rgba(25, 255, 180, .1);
+    --borde: rgba(255, 255, 255, .15);
+    --rojo: #ff5a5f;
+    color: #e8e6e3;
+}
+.qnum {
+    font-size: 12px; color: #e11d2e; letter-spacing: .1em;
+    text-transform: uppercase; margin: 0 0 10px;
+}
+.qtext {
+    font-family: "Chakra Petch", "Share Tech Mono", monospace;
+    font-size: 22px; line-height: 1.4; font-weight: 700;
+    margin: 0 0 20px; color: #e8e6e3; text-decoration: none;
+}
+.instrucciones {
+    margin: 0 0 24px; padding: 12px 16px;
+    border-left: 2px solid #8a8790;
+    background: rgba(255, 255, 255, .03);
+    color: #c8c6c2;
+    font-size: 14px; line-height: 1.5;
+}
+
+/* Fila de opción estilo "opción múltiple" (radio): disponible para
+   cualquier reto que presente alternativas para elegir.
+   Marcado esperado: <button class="opt" type="button"><span class="dot"></span>Texto</button>
+   La opción elegida lleva la clase "sel". */
+.opt {
+    display: flex; align-items: center; gap: 14px; width: 100%;
+    text-align: left; padding: 16px 18px; margin-bottom: 12px;
+    border-radius: 10px; border: 1px solid rgba(255, 255, 255, .1);
+    background: #141417; color: #e8e6e3;
+    font-family: inherit; font-size: 15px; cursor: pointer;
+    transition: border-color .15s, background .15s;
+}
+.opt:hover { border-color: rgba(225, 29, 46, .4); }
+.opt.sel { border-color: #19ffb4; background: rgba(25, 255, 180, .08); }
+.opt .dot {
+    width: 10px; height: 10px; border-radius: 50%;
+    border: 1px solid #8a8790; flex: 0 0 auto;
+}
+.opt.sel .dot { background: #19ffb4; border-color: #19ffb4; }
+
+/* Barra inferior opcional con las acciones del reto (verificar, salir...).
+   Disponible para el reto que quiera usarla en vez de botones sueltos. */
+.footer {
+    display: flex; align-items: center; justify-content: space-between;
+    margin: 28px -40px -40px; padding: 22px 40px;
+    border-top: 1px solid rgba(255, 255, 255, .08);
+}
+a.btn, button.btn {
+    font-family: "Chakra Petch", "Share Tech Mono", monospace;
+    font-size: 13px; letter-spacing: .06em; text-transform: uppercase;
+    text-decoration: none; border-radius: 8px; padding: 13px 22px;
+    border: 1px solid transparent; cursor: pointer;
+    display: inline-flex; align-items: center; gap: 8px;
+}
+.btn-ghost { color: #e11d2e; border: 1px solid rgba(225, 29, 46, .4); background: transparent; }
+.btn-ghost:hover { background: rgba(225, 29, 46, .1); }
+.btn-primary { background: #19ffb4; color: #07140f; border: 1px solid #19ffb4; }
+.btn-primary[disabled] { opacity: .35; cursor: not-allowed; }
+.btn-primary:not([disabled]):hover { background: #58ffc8; }
+
+/* El contenido de cada reto (opciones, formularios, terminal) ya trae su
+   estilo de recode.css; aquí solo se ajustan detalles para que combinen
+   con la tarjeta oscura. */
+#juego .boton, #juego button {
+    font-family: "Chakra Petch", "Share Tech Mono", monospace;
+}
+#resultado:empty { display: none; }
+#resultado .mensaje { margin-top: 20px; }
+
+/* El reto de Linux ya era una terminal: que se funda con la tarjeta */
+.card .terminal {
+    background: transparent;
+    border: 0;
+    border-top: 1px dashed var(--borde, #333);
+    padding: 12px 0 0;
+    max-height: none;
+}
+
+@media (max-width: 600px) {
+    .topbar { padding: 16px 20px; }
+    .body { padding: 20px; }
+    .card { padding: 24px 20px; }
+    .footer { margin: 24px -20px -24px; padding: 18px 20px; flex-wrap: wrap; gap: 12px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .pantalla-reto *, .pantalla-reto *::before, .pantalla-reto *::after {
+        animation: none !important; transition: none !important;
+    }
+}

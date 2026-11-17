@@ -1,30 +1,61 @@
-{% extends "comun/base.html" %}
+{% load static %}<!DOCTYPE html>
 {% comment %}
-Plantilla que comparten las 6 apps de reto. Cada app llena el bloque "juego"
+Plantilla que comparten las apps de reto. Cada app llena el bloque "juego"
 (o lo dibuja con su JS dentro de #juego) y manda las respuestas con
 ReCode.enviarRespuesta(paso, respuesta). Django las revisa en el servidor.
+
+Pantalla plana (sin monitor ni animación): la tarjeta del reto es visible e
+interactiva desde que carga la página, sin ningún retraso artificial.
+No extiende comun/base.html porque usa su propio layout de pantalla completa.
 {% endcomment %}
-{% block titulo %}{{ ejercicio.titulo }} - Re:Code{% endblock %}
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block titulo %}{{ ejercicio.titulo }} - Re:Code{% endblock %}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'comun/css/recode.css' %}">
+    <link rel="stylesheet" href="{% static 'comun/css/reto.css' %}">
+    {% block estilos %}{% endblock %}
+</head>
+<body class="pantalla-reto">
+    {% url 'mapa:inicio' as url_mapa %}
+    {% if materia.slug %}{% url 'mapa:materia' materia.slug as url_materia %}{% endif %}
 
-{% block contenido %}
-<h1>{{ ejercicio.titulo }}</h1>
-<h2>{{ nombre_reto }}{% if ya_resuelto %} · ✓ resuelto{% endif %}</h2>
-{% if ejercicio.instrucciones %}<p>{{ ejercicio.instrucciones }}</p>{% endif %}
+    <header class="topbar">
+        <div class="topbar-izq">
+            <a href="{% firstof volver_url url_materia url_mapa %}" class="volver" title="Regresar">←</a>
+            <div>
+                <div class="brand">RE:CODE — RETO</div>
+                <div class="subject">{{ ejercicio.titulo }}{% if ya_resuelto %} <span class="hecho">✓ resuelto</span>{% endif %}</div>
+            </div>
+        </div>
+    </header>
 
-<div id="juego">{% block juego %}{% endblock %}</div>
-<div id="resultado"></div>
+    <main class="body">
+        <div class="card">
+            <p class="qnum">{{ nombre_reto|upper }}</p>
+            <h1 class="qtext">{{ ejercicio.titulo }}</h1>
+            {% if ejercicio.instrucciones %}<p class="instrucciones">{{ ejercicio.instrucciones }}</p>{% endif %}
 
-<a href="{{ volver_url }}" class="btn-regresar" title="Regresar">←</a>
-{{ datos_publicos|json_script:"datos-reto" }}
-{% endblock %}
+            <div id="juego">{% block juego %}{% endblock %}</div>
+            <div id="resultado"></div>
+        </div>
+    </main>
 
-{% block scripts %}
-<script>
-    ReCode.configurarReto({
-        revisarUrl: "{{ revisar_url }}",
-        volverUrl: "{{ volver_url }}",
-        datos: JSON.parse(document.getElementById("datos-reto").textContent),
-    });
-</script>
-{% block script_juego %}{% endblock %}
-{% endblock %}
+    {{ datos_publicos|json_script:"datos-reto" }}
+
+    <script src="{% static 'comun/js/recode.js' %}"></script>
+    <script>
+        ReCode.configurarReto({
+            revisarUrl: "{{ revisar_url }}",
+            volverUrl: "{% firstof volver_url url_materia url_mapa %}",
+            datos: JSON.parse(document.getElementById("datos-reto").textContent),
+        });
+    </script>
+    <script src="{% static 'comun/js/reto.js' %}"></script>
+    {% block script_juego %}{% endblock %}
+</body>
+</html>

@@ -209,7 +209,7 @@
 
     document.getElementById("btn-salir").addEventListener("click", pedirSalida);
     // La flecha de regresar de la plantilla también pide confirmación mientras se juega.
-    const flecha = document.querySelector(".btn-regresar");
+    const flecha = document.querySelector(".volver");
     if (flecha) flecha.addEventListener("click", (e) => { if (fila > 0 && !bloqueado) pedirSalida(e); });
     document.getElementById("btn-cancelar-salida").addEventListener("click", () => dialogo.close());
     document.getElementById("btn-confirmar-salida").addEventListener("click", () => {

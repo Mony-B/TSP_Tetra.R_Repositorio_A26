@@ -150,7 +150,7 @@
     }
 
     document.getElementById("btn-salir").addEventListener("click", pedirSalida);
-    const flecha = document.querySelector(".btn-regresar");
+    const flecha = document.querySelector(".volver");
     if (flecha) flecha.addEventListener("click", (e) => { if (colocados().size > 0 && !bloqueado) pedirSalida(e); });
     document.getElementById("btn-cancelar-salida").addEventListener("click", () => dialogo.close());
     document.getElementById("btn-confirmar-salida").addEventListener("click", () => {
