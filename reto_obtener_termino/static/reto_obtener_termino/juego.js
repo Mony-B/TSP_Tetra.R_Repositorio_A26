@@ -183,19 +183,12 @@
     }
 
     // --- FE-1: salir / rendirse con confirmación ----------------------------
-
-    const MENSAJE_SALIR = "Se perderá el progreso de este reto y no obtendrás bitcoins. ¿Salir?";
-    function pedirSalida(e) {
-        ReCode.dialogos.pedirSalida(dialogo, MENSAJE_SALIR, ReCode.reto.volverUrl, e);
-    }
-
-    document.getElementById("btn-salir").addEventListener("click", pedirSalida);
-    // La flecha de regresar de la plantilla también pide confirmación mientras se juega.
-    ReCode.dialogos.conectarFlechaSalir(dialogo, MENSAJE_SALIR, ReCode.reto.volverUrl, () => fila > 0 && !bloqueado);
-    document.getElementById("btn-cancelar-salida").addEventListener("click", () => ReCode.dialogos.cerrar(dialogo));
-    document.getElementById("btn-confirmar-salida").addEventListener("click", () => {
-        window.location.href = ReCode.reto.volverUrl;
+    // Diálogo y mensaje de salida compartidos con los demás retos
+    // (comun/reto_base.html + comun/js/reto_dialogos.js).
+    ReCode.dialogos.inicializarSalir({
+        hayProgreso: () => fila > 0 && !bloqueado,
     });
+
     btnReintentar.addEventListener("click", reintentar);
 
     // Teclado físico.

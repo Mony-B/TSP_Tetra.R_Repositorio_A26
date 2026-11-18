@@ -34,11 +34,8 @@
     .acciones-termino { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; margin-top: 12px; }
     .acciones-termino [hidden], .acciones-termino[hidden] { display: none; }
 
-    dialog.confirmar {
-        background: #000; color: var(--verde); border: 1px solid var(--verde);
-        font-family: inherit; max-width: 420px;
-    }
-    dialog.confirmar::backdrop { background: rgba(0, 0, 0, 0.7); }
+    /* Los diálogos de salir y de reto completado (dialog.confirmar) ya
+       vienen estilizados de comun/css/reto.css: no se redefinen aquí. */
 
     @media (max-width: 600px) {
         .fila { grid-auto-columns: 44px; }
@@ -66,23 +63,18 @@
     </div>
 </div>
 
-<dialog class="confirmar" id="dialogo-salir">
-    <p>¿Seguro que quieres salir? Se perderá el progreso de este reto y no obtendrás bitcoins.</p>
-    <div class="acciones-termino">
-        <button type="button" class="boton secundario" id="btn-cancelar-salida">Seguir jugando</button>
-        <button type="button" class="boton peligro" id="btn-confirmar-salida">Salir</button>
-    </div>
-</dialog>
+<!-- El diálogo de salir ya viene de comun/reto_base.html (dialogo-salir);
+     el de éxito se sobreescribe solo para agregar "exito-significado"
+     (el significado del término), que los demás retos no necesitan. -->
+{% endblock %}
 
-<!-- Paso 6-7: ventana emergente de victoria, sin redirección automática. -->
-<dialog class="confirmar" id="dialogo-exito">
-    <p id="exito-mensaje"></p>
-    <p id="exito-significado"></p>
-    <p id="exito-premio"></p>
-    <div class="acciones-termino">
-        <a class="boton" href="{{ volver_url }}">Volver a los retos</a>
-    </div>
-</dialog>
+{% block exito %}
+<p id="exito-mensaje"></p>
+<p id="exito-significado"></p>
+<p id="exito-premio"></p>
+<div class="dialogo-acciones">
+    <a class="boton" href="{% firstof volver_url url_materia url_mapa %}">Volver a los retos</a>
+</div>
 {% endblock %}
 
 {% block script_juego %}<script src="{% static 'reto_obtener_termino/juego.js' %}"></script>{% endblock %}
