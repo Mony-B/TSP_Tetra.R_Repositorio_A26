@@ -2,12 +2,6 @@
 {% load static %}
 {% block estilos %}
 <style>
-    /* "Volver" (barra superior) regresa sin preguntar nada: para cuando ya
-       no hay nada que perder (el reto está resuelto) o el alumno solo
-       quiere salir. "Salir / Rendirse" es distinto: sí advierte que se
-       pierde el intento en curso, por eso se deja aparte y no se oculta
-       uno por el otro. */
-
     .estado-tiro { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 10px; }
     .intentos-puntos { display: inline-flex; gap: 4px; margin-left: 6px; }
     .punto { width: 10px; height: 10px; border-radius: 50%; background: var(--verde); display: inline-block; }
@@ -37,19 +31,8 @@
     .info-matematica { font-size: 0.85rem; line-height: 1.5; margin-top: 10px; }
     .info-matematica b { color: #fff; }
 
-    dialog.confirmar { background: #000; color: var(--verde); border: 1px solid var(--verde); font-family: inherit; max-width: 420px; }
-    dialog.confirmar::backdrop { background: rgba(0, 0, 0, 0.7); }
-
-    .superposicion { position: absolute; inset: 0; background: rgba(0, 0, 0, 0.92); align-items: center; justify-content: center; text-align: center; padding: 16px; }
-    /* display solo cuando NO tiene [hidden]: una regla "display: flex" en
-       la clase le gana al [hidden] del navegador y la pantalla se queda
-       visible desde el inicio, tapando el juego. */
-    .superposicion:not([hidden]) { display: flex; }
-    .superposicion .tarjeta { max-width: 360px; }
-    .superposicion h3 { margin: 0 0 8px; }
-    .superposicion h3.mal { color: var(--rojo); }
-    .superposicion p { color: var(--verde-medio); font-size: 0.85rem; line-height: 1.5; margin: 0 0 12px; }
-    .superposicion .acciones-parabolica { justify-content: center; }
+    /* Los diálogos de salir y de reto completado (dialog.confirmar) ya
+       vienen estilizados de comun/css/reto.css: no se redefinen aquí. */
 </style>
 {% endblock %}
 
@@ -61,33 +44,6 @@
 
     <div class="lienzo-caja">
         <canvas id="lienzo" width="800" height="400"></canvas>
-
-        <div class="superposicion" id="superposicion-exito" hidden>
-            <div class="tarjeta">
-                <h3>¡Impacto!</h3>
-                <p id="premio-exito"></p>
-                <div class="info-matematica">
-                    <p>Ecuación del disparo: <b id="exito-ecuacion"></b></p>
-                    <p>Vértice (altura máxima): <b id="exito-vertice"></b></p>
-                    <p>Raíces (nivel del suelo): <b id="exito-raices"></b></p>
-                    <p>El coeficiente de x² es negativo, por eso la parábola abre hacia abajo; el vértice es la altura máxima y las raíces marcan dónde la trayectoria toca el suelo.</p>
-                </div>
-                <div class="acciones-parabolica">
-                    <a class="boton" id="btn-volver-exito" href="{{ volver_url }}">Regresar a la selección de retos</a>
-                </div>
-            </div>
-        </div>
-
-        <div class="superposicion" id="superposicion-agotado" hidden>
-            <div class="tarjeta">
-                <h3 class="mal">Se agotaron los intentos</h3>
-                <p>No se otorgaron bitcoins ni se mostró la información de ecuaciones.</p>
-                <div class="acciones-parabolica">
-                    <button type="button" class="boton" id="btn-reintentar-overlay">Reintentar</button>
-                    <button type="button" class="boton peligro" id="btn-salir-agotado">Salir / Rendirse</button>
-                </div>
-            </div>
-        </div>
     </div>
 
     <div class="trayectoria-info">
@@ -113,18 +69,30 @@
     </div>
 
     <div class="acciones-parabolica" id="acciones-parabolica">
+        <button type="button" class="boton" id="btn-reintentar" hidden>Reintentar</button>
         <button type="button" class="boton peligro" id="btn-salir">Salir / Rendirse</button>
         <button type="button" class="boton" id="btn-disparar">Disparar</button>
     </div>
 </div>
 
-<dialog class="confirmar" id="dialogo-salir">
-    <p>¿Seguro que quieres salir? Se perderá el progreso de este intento y no obtendrás bitcoins.</p>
-    <div class="acciones-parabolica">
-        <button type="button" class="boton secundario" id="btn-cancelar-salida">Seguir jugando</button>
-        <button type="button" class="boton peligro" id="btn-confirmar-salida">Salir</button>
-    </div>
-</dialog>
+<!-- Los diálogos de salir y de reto completado ya vienen de
+     comun/reto_base.html (dialogo-salir / dialogo-exito); el de éxito se
+     sobreescribe para agregar la ecuación, el vértice y las raíces del
+     disparo, que los demás retos no necesitan. -->
+{% endblock %}
+
+{% block exito %}
+<p id="exito-mensaje"><strong>¡Impacto!</strong></p>
+<p id="exito-premio"></p>
+<div class="info-matematica">
+    <p>Ecuación del disparo: <b id="exito-ecuacion"></b></p>
+    <p>Vértice (altura máxima): <b id="exito-vertice"></b></p>
+    <p>Raíces (nivel del suelo): <b id="exito-raices"></b></p>
+    <p>El coeficiente de x² es negativo, por eso la parábola abre hacia abajo; el vértice es la altura máxima y las raíces marcan dónde la trayectoria toca el suelo.</p>
+</div>
+<div class="dialogo-acciones">
+    <a class="boton" href="{% firstof volver_url url_materia url_mapa %}">Regresar a la selección de retos</a>
+</div>
 {% endblock %}
 
 {% block script_juego %}<script src="{% static 'reto_parabolica/juego.js' %}"></script>{% endblock %}

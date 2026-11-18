@@ -31,10 +31,9 @@
     const fuerzaInput = document.getElementById("fuerza");
     const resultado = document.getElementById("resultado");
     const accionesNormal = document.getElementById("acciones-parabolica");
-    const superposicionExito = document.getElementById("superposicion-exito");
-    const superposicionAgotado = document.getElementById("superposicion-agotado");
+    const dialogoExito = document.getElementById("dialogo-exito");
     const btnDisparar = document.getElementById("btn-disparar");
-    const dialogo = document.getElementById("dialogo-salir");
+    const btnReintentar = document.getElementById("btn-reintentar");
 
     let intentosRestantes = datos.intentos_restantes;
     let intentosUsados = datos.intentos - intentosRestantes;
@@ -205,7 +204,7 @@
         const premio = r.ya_otorgado
             ? "Ya habías completado este reto antes, así que no se otorgan bitcoins de nuevo."
             : `Ganaste <strong>₿ ${r.bitcoins_otorgados}</strong>.`;
-        document.getElementById("premio-exito").innerHTML = premio;
+        document.getElementById("exito-premio").innerHTML = premio;
         document.getElementById("exito-ecuacion").textContent =
             `y(x) = ${r.b.toFixed(3)}x − ${r.a.toFixed(5)}x²`;
         document.getElementById("exito-vertice").textContent =
@@ -213,13 +212,14 @@
         document.getElementById("exito-raices").textContent =
             `x₁ = ${r.raices.x1}, x₂ = ${r.raices.x2.toFixed(1)}`;
         accionesNormal.hidden = true;
-        superposicionExito.hidden = false;
+        ReCode.dialogos.abrir(dialogoExito);
     }
 
+    // FA-1: intentos agotados -> Reintentar o Salir.
     function agotado(r) {
         mensaje(r.mensaje, true);
-        accionesNormal.hidden = true;
-        superposicionAgotado.hidden = false;
+        btnDisparar.hidden = true;
+        btnReintentar.hidden = false;
     }
 
     async function reintentar() {
@@ -231,8 +231,8 @@
             pintarPuntos();
             dibujarEscena();
             resultado.innerHTML = "";
-            superposicionAgotado.hidden = true;
-            accionesNormal.hidden = false;
+            btnReintentar.hidden = true;
+            btnDisparar.hidden = false;
             btnDisparar.disabled = false;
         } catch (err) {
             mensaje(err.message, true);
@@ -240,22 +240,16 @@
     }
 
     // --- FE-1: salir / rendirse con confirmación ----------------------------
-    // El botón "Salir / Rendirse" es el único punto de salida del reto
-    // (ver estilos: se oculta la flecha genérica para no duplicarlo).
-
-    function pedirSalida(e) {
-        if (terminado) return;
-        ReCode.dialogos.pedirSalida(dialogo, "Se perderá el progreso de este intento y no obtendrás bitcoins. ¿Salir?", ReCode.reto.volverUrl, e);
-    }
-
-    document.getElementById("btn-salir").addEventListener("click", pedirSalida);
-    document.getElementById("btn-salir-agotado").addEventListener("click", pedirSalida);
-    document.getElementById("btn-cancelar-salida").addEventListener("click", () => ReCode.dialogos.cerrar(dialogo));
-    document.getElementById("btn-confirmar-salida").addEventListener("click", () => {
-        window.location.href = ReCode.reto.volverUrl;
+    // Diálogo y mensaje de salida compartidos con los demás retos
+    // (comun/reto_base.html + comun/js/reto_dialogos.js).
+    ReCode.dialogos.inicializarSalir({
+        hayProgreso: () => intentosUsados > 0,
+        puedeSalir: () => !terminado,
+        mensaje: "Se perderá el progreso de este intento y no obtendrás bitcoins. ¿Seguro que quieres salir?",
     });
+
     btnDisparar.addEventListener("click", disparar);
-    document.getElementById("btn-reintentar-overlay").addEventListener("click", reintentar);
+    btnReintentar.addEventListener("click", reintentar);
     anguloInput.addEventListener("input", () => {
         actualizarEtiquetas();
         actualizarEcuacionPrevia();
