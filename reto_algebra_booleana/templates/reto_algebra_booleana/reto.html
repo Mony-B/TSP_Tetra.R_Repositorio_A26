@@ -7,7 +7,6 @@
 
 <section id="puertas" class="puertas"
          data-revisar-url="{{ revisar_url }}"
-         data-volver-url="{{ volver_url }}"
          data-ya-resuelto="{% if ya_resuelto %}1{% else %}0{% endif %}">
 
     <p class="puertas-enunciado" id="puertas-enunciado"></p>
@@ -49,24 +48,10 @@
         </div>
     </div>
 
-    <!-- Reto completado (última puerta): ventana emergente, sin redirección automática. -->
-    <dialog class="puertas-confirmar" id="dialogo-exito">
-        <p class="puertas-mensaje" id="exito-mensaje"></p>
-        <p class="puertas-recompensa" id="exito-premio"></p>
-        <div class="puertas-acciones">
-            <a class="boton" href="{{ volver_url }}">Siguiente &#10145;</a>
-        </div>
-    </dialog>
-
-    <!-- Confirmación de abandono (FE-1): ventana emergente, mismos ids que
-         el resto de los retos (btn-cancelar-salida / btn-confirmar-salida). -->
-    <dialog class="puertas-confirmar" id="dialogo-salir">
-        <p id="confirmar-texto">Si sales, se pierde el progreso del reto actual y no obtendrás bitcoins.</p>
-        <div class="puertas-acciones">
-            <button type="button" class="boton secundario" id="btn-cancelar-salida">Seguir jugando</button>
-            <button type="button" class="boton peligro" id="btn-confirmar-salida">Salir</button>
-        </div>
-    </dialog>
+    <!-- Los diálogos de salir y de reto completado ya vienen de
+         comun/reto_base.html (dialogo-salir, dialogo-exito); este reto usa
+         el contenido default del segundo, así que no necesita sobreescribir
+         el bloque "exito". -->
 </section>
 {% endblock %}
 {% block script_juego %}<script src="{% static 'reto_algebra_booleana/juego.js' %}"></script>{% endblock %}

@@ -84,17 +84,10 @@
 
 .puertas-resultado { margin-top: 18px; }
 .puertas-mensaje.error { color: var(--rojo); }
-.puertas-recompensa { color: var(--ambar); font-weight: bold; }
 .puertas [hidden] { display: none !important; }
 
-/* Ventanas emergentes (<dialog> con showModal): confirmar salida y reto
-   completado, mismo marco que en los demás retos (p. ej. comandos_linux):
-   1px solid var(--verde), sin distinguir una de otra. */
-dialog.puertas-confirmar {
-    border: 1px solid var(--verde); background: #000; color: var(--verde);
-    font: inherit; padding: 14px 18px; max-width: 420px;
-}
-dialog.puertas-confirmar::backdrop { background: rgba(0, 0, 0, .7); }
+/* Los diálogos de salir y de reto completado (dialog.confirmar) ya vienen
+   estilizados de comun/css/reto.css: no se redefinen aquí. */
 
 @media (max-width: 560px) {
     .puertas-escena { grid-template-columns: 1fr; }

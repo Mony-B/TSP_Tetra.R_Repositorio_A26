@@ -17,10 +17,11 @@ function iniciarPuertas() {
     const $ = id => document.getElementById(id);
     const escena = $("escena");
     const resultado = $("resultado-puertas");
-    const confirmar = $("dialogo-salir");
+    const dialogoSalir = $("dialogo-salir");
     const dialogoExito = $("dialogo-exito");
     const foco = $("foco");
     const circuito = $("circuito");
+    const escapar = ReCode.dialogos.escaparHTML;
 
     const pasos = datos.pasos;
     let actual = 0;
@@ -102,7 +103,7 @@ function iniciarPuertas() {
 
     function mostrarEscena() {
         resultado.hidden = true;
-        ReCode.dialogos.cerrar(confirmar);
+        ReCode.dialogos.cerrar(dialogoSalir);
         escena.hidden = false;
         $("btn-verificar").disabled = false;
         ponerFoco("parpadea");
@@ -116,11 +117,13 @@ function iniciarPuertas() {
 
         const fin = ok && r.completado;
         if (fin) {
-            // Reto completado: ventana emergente, sin redirección automática.
-            $("exito-mensaje").textContent = r.mensaje || "Correcto.";
-            $("exito-premio").textContent = r.bitcoins_otorgados
-                ? `Recompensa: +₿ ${r.bitcoins_otorgados}`
-                : "La recompensa de este reto ya fue otorgada anteriormente.";
+            // Reto completado (última puerta): ventana emergente, sin
+            // redirección automática; los bitcoins solo se muestran si es
+            // la primera vez que se otorgan.
+            $("exito-mensaje").innerHTML = `<strong>${escapar(r.mensaje || "Correcto.")}</strong> Superaste el reto.`;
+            $("exito-premio").innerHTML = r.bitcoins_otorgados
+                ? `Obtuviste <strong>₿ ${r.bitcoins_otorgados}</strong>.`
+                : "La recompensa de este reto ya se te había otorgado antes.";
             ReCode.dialogos.abrir(dialogoExito);
             return;
         }
@@ -159,18 +162,12 @@ function iniciarPuertas() {
         cargarPuerta();
     });
 
-    // --- Salir / Rendirse (FE-1): ventana emergente, no se guarda nada -----------
-    const MENSAJE_SALIR = "Si sales, se pierde el progreso del reto actual y no obtendrás bitcoins. ¿Salir?";
-    function pedirSalida(e) {
-        ReCode.dialogos.pedirSalida(confirmar, MENSAJE_SALIR, raiz.dataset.volverUrl, e);
-    }
-    $("btn-salir").addEventListener("click", () => pedirSalida());
-    $("btn-cancelar-salida").addEventListener("click", () => ReCode.dialogos.cerrar(confirmar));
-    $("btn-confirmar-salida").addEventListener("click", () => {
-        window.location.href = raiz.dataset.volverUrl;
+    // --- Salir / Rendirse (FE-1): diálogo y mensaje compartidos con los
+    // demás retos (comun/reto_base.html + comun/js/reto_dialogos.js). Sin
+    // avance (todavía en la puerta 1) no hace falta confirmar.
+    ReCode.dialogos.inicializarSalir({
+        hayProgreso: () => actual > 0,
     });
-    // La flecha de regresar de la plantilla también pide confirmación mientras se juega.
-    ReCode.dialogos.conectarFlechaSalir(confirmar, MENSAJE_SALIR, raiz.dataset.volverUrl, () => actual > 0);
 
     cargarPuerta();
 }
