@@ -10,7 +10,7 @@ from importlib import import_module
 
 from django.urls import reverse
 
-from comun.colores import acento_de, acento_de_materia
+from comun.colores import ACENTO_MAPA, acento_de_materia
 
 
 MATERIAS = [
@@ -69,10 +69,13 @@ MATERIAS = [
     },
 ]
 
-# Color de acento de cada materia (mismo valor en su tarjeta de selección y
-# en la pantalla de cada uno de sus retos; ver comun/colores.py).
+# "acento" es el color fijo del mapa del campus (igual para las 5, ver
+# comun/colores.py). "acento_retos" es el color propio de la materia: se usa
+# en la tarjeta de cada reto en su selección y en la pantalla de cada uno de
+# sus retos (ver info_reto/retos_de_materia abajo y comun/context_processors.py).
 for _materia in MATERIAS:
-    _materia["acento"] = acento_de_materia(_materia["slug"])
+    _materia["acento"] = ACENTO_MAPA
+    _materia["acento_retos"] = acento_de_materia(_materia["slug"])
 del _materia
 
 
@@ -92,12 +95,16 @@ def info_reto(app, ejercicio_id):
         "titulo": ejercicio["titulo"],
         "bitcoins": ejercicio["bitcoins"],
         "url": reverse(f"{app}:jugar", args=[ejercicio_id]),
-        "acento": acento_de(app),
     }
 
 
 def retos_de_materia(materia):
-    return [info_reto(app, ej) for sub in materia["subtemas"] for app, ej in sub["retos"]]
+    # El acento de cada tarjeta es el de la materia, no el de la app del reto.
+    return [
+        {**info_reto(app, ej), "acento": materia["acento_retos"]}
+        for sub in materia["subtemas"]
+        for app, ej in sub["retos"]
+    ]
 
 
 def materia_de_reto(app, ejercicio_id):
