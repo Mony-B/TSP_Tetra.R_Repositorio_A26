@@ -26,6 +26,12 @@ body.pantalla-reto {
        necesitan). */
     display: flex;
     flex-direction: column;
+    /* recode.css define un body { align-items: center; justify-content:
+       center; } genérico (para sus pantallas de una sola tarjeta chica);
+       sin pisarlo aquí, la barra superior heredaba ese "center" y se
+       encogía a su contenido en vez de ocupar todo el ancho. */
+    align-items: stretch;
+    justify-content: flex-start;
     min-height: 100vh;
     min-height: 100dvh;
     margin: 0;
