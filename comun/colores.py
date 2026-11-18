@@ -1,35 +1,51 @@
 """
-Color de acento por materia (no por reto individual): todos los retos de
-una materia comparten un mismo color, igual en su tarjeta de la selección
-(mapa/materia.html), en su propia pantalla de juego
-(comun/context_processors.py la agrega como "color_acento" según la
-materia a la que pertenece el reto) y en el mapa del campus
-(mapa/views.py se lo pasa a cada edificio para la selección y los
-marcadores sobre el mapa).
+Dos cosas distintas, cada una con su propio color:
 
-Por ahora todas las materias comparten el mismo rojo (el de siempre en el
-mapa) para que mapa, selección y retos se vean como una sola interfaz.
-La asignación por materia se deja tal cual para poder darle a una materia
-su propio color el día que se necesite: basta con cambiar su entrada en
-ACENTOS_MATERIA, nada más se toca.
+1. Color de acento por app de reto (ACENTOS_RETO / acento_de): se usa en la
+   tarjeta de cada reto en la selección (mapa/materia.html) y en la propia
+   pantalla de juego del reto (comun/context_processors.py la agrega como
+   "color_acento" según la app que se está jugando). No depende de la
+   materia: dos retos de la misma materia pueden tener distinto color si
+   son de apps distintas, y el mismo reto se ve igual sin importar en qué
+   materia esté colocado.
+
+2. Color del mapa del campus (ACENTO_MAPA / acento_de_materia): el
+   marco/selección de cada edificio en el mapa (mapa/views.py, mapa.js).
+   Por ahora es un solo rojo para los 5, para que el mapa se vea como una
+   sola interfaz; se deja la función por si se necesita diferenciarlos más
+   adelante.
 """
 
-ROJO = "#ff3b44"
-AZUL = "#59c7ff"
+TEAL = "#2f9c8f"
 PURPURA = "#7c5cc4"
-AMARILLO = "#e8b93d"
-VERDE = "#3fae6a"
+NARANJA = "#c98a2e"
+AZUL = "#59c7ff"
+ROJO = "#ff3b44"
 
-ACENTO_POR_DEFECTO = ROJO
+ACENTO_POR_DEFECTO = AZUL
 
-ACENTOS_MATERIA = {
-    "logica": ROJO,      # Lógica y Algoritmos
-    "introprog": ROJO,   # Introducción a la Programación
-    "linux": ROJO,
-    "calculo": ROJO,
-    "algebra": ROJO,
+ACENTOS_RETO = {
+    "reto_sopa_letras": TEAL,
+    "reto_ordenamiento": TEAL,
+    "reto_comandos_linux": TEAL,       # incluye la terminal: queda en verde/teal
+    "reto_algebra_booleana": PURPURA,
+    "reto_obtener_termino": PURPURA,
+    "reto_conceptos": PURPURA,
+    "reto_clasificar": NARANJA,
+    "reto_parabolica": NARANJA,
+    "reto_ecuaciones": AZUL,
+    "reto_laberinto": AZUL,
 }
 
 
+def acento_de(app):
+    return ACENTOS_RETO.get(app, ACENTO_POR_DEFECTO)
+
+
+# --- Mapa del campus: un solo rojo para las 5 materias ----------------------
+
+ACENTO_MAPA = ROJO
+
+
 def acento_de_materia(slug):
-    return ACENTOS_MATERIA.get(slug, ACENTO_POR_DEFECTO)
+    return ACENTO_MAPA
