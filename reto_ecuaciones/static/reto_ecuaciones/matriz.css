@@ -11,7 +11,6 @@
     --verde-tenue: color-mix(in srgb, var(--verde) 65%, black);
     --fondo-celda: color-mix(in srgb, var(--verde) 8%, black);
     --fondo-caja: color-mix(in srgb, var(--verde) 4%, black);
-    --placeholder-caja: color-mix(in srgb, var(--verde) 40%, black);
     max-width: 820px;
 }
 [hidden] { display: none !important; }
@@ -30,7 +29,7 @@
 }
 .celda-incognita { font-style: italic; border-style: dashed; }
 .celda-caja { background: var(--fondo-caja); }
-.celda-caja::placeholder { color: var(--placeholder-caja); font-style: italic; }
+.celda-caja::placeholder { color: var(--verde-tenue); font-style: italic; }
 .celda-caja:focus { outline: 2px dashed var(--verde); outline-offset: 2px; border-color: var(--verde); }
 .celda-mala { border-color: var(--rojo); box-shadow: 0 0 8px var(--rojo); }
 
@@ -50,7 +49,6 @@ dialog.matriz-confirmar {
     border: 2px solid var(--verde-tenue); background: #000; color: var(--verde);
     font: inherit; padding: 20px 24px; max-width: 420px;
 }
-#confirmar-salir { border-color: var(--rojo); }
 dialog.matriz-confirmar::backdrop { background: rgba(0, 0, 0, .7); }
 dialog.matriz-confirmar p { margin: 0 0 16px; }
 .indice { display: flex; align-items: center; justify-content: center; color: var(--verde-tenue); font-size: .9rem; }
