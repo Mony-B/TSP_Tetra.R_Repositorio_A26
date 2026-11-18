@@ -7,20 +7,13 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'comun/css/topbar.css' %}">
     <link rel="stylesheet" href="{% static 'mapa/css/materia.css' %}">
 </head>
 <body>
 <div class="wrap">
-    <header class="topbar">
-        <div class="topbar-izq">
-            <a href="{% url 'mapa:inicio' %}" class="volver" title="Regresar al mapa">←</a>
-            <div>
-                <div class="brand">Re:Code — materia</div>
-                <div class="subject">{{ materia.nombre }}</div>
-            </div>
-        </div>
-        <div class="wallet"><span class="coin"></span> {{ bitcoins }} bitcoins</div>
-    </header>
+    {% url 'mapa:inicio' as url_mapa %}
+    {% include "comun/_topbar.html" with topbar_marca="RE:CODE — MATERIA" topbar_titulo=materia.nombre topbar_volver_url=url_mapa topbar_volver_tip="Regresar al mapa" %}
 
     <main class="body">
         <div class="grid-wrap">

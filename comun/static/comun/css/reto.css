@@ -32,49 +32,10 @@ body.pantalla-reto {
     font-family: "Share Tech Mono", monospace;
 }
 
-.topbar {
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 22px 40px;
-    border-bottom: 1px solid var(--line);
-}
-.topbar-izq { display: flex; align-items: center; gap: 18px; }
-.volver {
-    display: flex; align-items: center; gap: 8px;
-    height: 34px;
-    padding: 0 14px;
-    border: 1px solid var(--line);
-    border-radius: 8px;
-    color: var(--fg);
-    text-decoration: none;
-    font-size: 13px; font-weight: 600; letter-spacing: .02em;
-    flex: none;
-    transition: border-color .15s, background .15s;
-}
-.volver-flecha { font-size: 16px; line-height: 1; }
-.volver:hover { border-color: rgba(255, 255, 255, .35); background: rgba(255, 255, 255, .04); }
-.topbar-der { display: flex; align-items: center; gap: 14px; flex: none; }
-.wallet {
-    display: flex; align-items: center; gap: 8px;
-    font-size: 14px; color: var(--fg);
-    background: var(--surface-2); border: 1px solid var(--line);
-    border-radius: 10px; padding: 8px 14px;
-}
-.wallet .coin {
-    width: 16px; height: 16px; border-radius: 50%;
-    background: radial-gradient(circle at 30% 30%, #ffe27a, #e6a71a);
-    box-shadow: 0 0 8px rgba(230, 167, 26, .5);
-    flex: none;
-}
-.brand {
-    font-family: "Chakra Petch", monospace;
-    letter-spacing: .06em; font-size: 13px; color: var(--muted);
-    text-transform: uppercase;
-}
-.subject {
-    font-family: "Chakra Petch", monospace; font-weight: 700;
-    font-size: 20px; color: var(--fg); margin-top: 2px;
-}
-.subject .hecho { font-size: 13px; color: var(--hecho); font-weight: 400; }
+/* La barra superior (flecha, marca, título, billetera) ya no se define
+   aquí: vive en comun/static/comun/css/topbar.css, compartida con la
+   pantalla de selección de retos (mapa/materia.html). Esta hoja solo
+   trae lo propio de la tarjeta del reto. */
 
 .body { display: flex; align-items: center; justify-content: center; padding: 40px; }
 .card {
@@ -172,8 +133,6 @@ a.btn, button.btn {
 }
 
 @media (max-width: 600px) {
-    .topbar { padding: 16px 20px; flex-wrap: wrap; gap: 10px; }
-    .volver-texto { display: none; }
     .body { padding: 20px; }
     .card { padding: 24px 20px; }
     .footer { margin: 24px -20px -24px; padding: 18px 20px; flex-wrap: wrap; gap: 12px; }

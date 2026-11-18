@@ -110,5 +110,7 @@ def materia(request, slug):
         "retos": retos,
         "tiene_examen": tiene_examen(slug),
         "examen_aprobado": servicios.examen_aprobado(request.user, slug),
-        "bitcoins": servicios.obtener_progreso(request.user).bitcoins,
+        # los bitcoins ya los pone progreso.context_processors.progreso_alumno
+        # en todas las pantallas; la barra superior (comun/_topbar.html) los
+        # lee de ahí.
     })
