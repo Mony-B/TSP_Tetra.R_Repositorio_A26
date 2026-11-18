@@ -20,7 +20,7 @@
 .espacio.correcto .espacio-cuerpo, .espacio.correcto .espacio-num { border-color: var(--verde); }
 
 .paso-boton { background: var(--verde-oscuro); border: 1px solid var(--verde); color: var(--verde); padding: 8px 12px; font-family: inherit; cursor: pointer; text-align: left; }
-.paso-boton:hover { background: #004400; color: #fff; }
+.paso-boton:hover { background: color-mix(in srgb, var(--verde) 30%, black); color: #fff; }
 .espacio-cuerpo .paso-boton { flex: 1; display: flex; justify-content: space-between; gap: 10px; border: none; background: none; }
 .espacio-cuerpo .paso-boton .quitar { font-size: 0.75rem; color: var(--verde-medio); }
 
