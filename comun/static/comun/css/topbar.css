@@ -36,6 +36,16 @@
     font-size: 22px; color: var(--fg); margin-top: 2px;
 }
 .subject .hecho { font-size: 13px; color: var(--hecho, #19ffb4); font-weight: 400; }
+.topbar-der { display: flex; align-items: center; gap: 14px; flex: none; }
+.pedir-pista {
+    display: flex; align-items: center; gap: 6px;
+    font-family: "Chakra Petch", monospace; letter-spacing: .03em;
+    font-size: 13px; color: #ff6fd4;
+    border: 1px solid rgba(255, 47, 176, .4); border-radius: 10px;
+    padding: 9px 14px; text-decoration: none; flex: none;
+    transition: background .15s, color .15s, border-color .15s;
+}
+.pedir-pista:hover { background: rgba(255, 47, 176, .12); color: #ffa8e6; border-color: rgba(255, 47, 176, .7); }
 .wallet {
     display: flex; align-items: center; gap: 10px;
     background: var(--surface); border: 1px solid var(--line);
@@ -52,4 +62,5 @@
 @media (max-width: 600px) {
     .topbar { padding: 16px 20px; flex-wrap: wrap; gap: 10px; }
     .subject { font-size: 19px; }
+    .pedir-pista { padding: 7px 10px; font-size: 12px; }
 }

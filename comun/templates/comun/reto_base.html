@@ -26,7 +26,7 @@ No extiende comun/base.html porque usa su propio layout de pantalla completa.
     {% if materia.slug %}{% url 'mapa:materia' materia.slug as url_materia %}{% endif %}
     {% firstof volver_url url_materia url_mapa as topbar_url_volver %}
 
-    {% include "comun/_topbar.html" with topbar_marca="RE:CODE — RETO" topbar_titulo=ejercicio.titulo topbar_volver_url=topbar_url_volver topbar_volver_tip="Regresar a los retos" topbar_resuelto=ya_resuelto %}
+    {% include "comun/_topbar.html" with topbar_marca="RE:CODE — RETO" topbar_titulo=ejercicio.titulo topbar_volver_url=topbar_url_volver topbar_volver_tip="Regresar a los retos" topbar_resuelto=ya_resuelto topbar_pedir_pista=True %}
 
     <main class="body">
         <div class="card">
