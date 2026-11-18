@@ -8,10 +8,11 @@
     display: grid;
     grid-template-columns: 1fr auto;
     gap: 16px 32px;
-    align-items: end;
+    align-items: center;
     border: 2px solid #1f4d1f;
     background: rgba(0, 20, 0, 0.5);
     padding: 20px 24px;
+    margin-bottom: 16px;
 }
 .puertas-circuito { display: flex; align-items: flex-end; gap: 22px; }
 .puertas-columna { display: flex; flex-direction: column; align-items: center; gap: 6px; }
@@ -44,7 +45,7 @@
 .interruptor-on .int-1 { background: #0f2a0f; color: var(--verde); border-color: var(--verde-tenue); }
 
 /* Foco grande de la habitación */
-.puertas-foco { grid-row: 1 / span 2; grid-column: 2; align-self: center; }
+.puertas-foco { grid-column: 2; align-self: center; }
 .foco { width: 120px; height: 180px; overflow: visible; }
 .foco * { fill: none; stroke: var(--verde-tenue); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
 .foco .foco-casquillo { fill: #0a1a0a; }
@@ -71,9 +72,10 @@
 }
 
 /* Botones y mensajes */
-.puertas-acciones { display: flex; gap: 12px; flex-wrap: wrap; grid-column: 1; }
+.puertas-acciones { display: flex; gap: 12px; flex-wrap: wrap; }
 .puertas .boton:disabled { opacity: .4; cursor: not-allowed; }
 .boton-secundario { opacity: .8; }
+#puertas-avance { margin-top: 10px; }
 
 .puertas-resultado { margin-top: 18px; }
 .puertas-mensaje.error { color: var(--rojo); }
@@ -91,7 +93,7 @@ dialog.puertas-confirmar::backdrop { background: rgba(0, 0, 0, .7); }
 
 @media (max-width: 560px) {
     .puertas-escena { grid-template-columns: 1fr; }
-    .puertas-foco { grid-row: auto; grid-column: 1; justify-self: center; }
+    .puertas-foco { grid-column: 1; justify-self: center; }
 }
 @media (prefers-reduced-motion: reduce) {
     .foco-parpadea .foco-vidrio, .foco-parpadea .foco-filamento, .foco-roto .foco-vidrio { animation: none; }
