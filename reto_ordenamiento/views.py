@@ -6,6 +6,7 @@ Colocar y retirar pasos de la línea de secuencia ocurre solo en el navegador
 nunca recibe ni expone el orden correcto; solo valida la secuencia completa
 que el alumno arma y, si es correcta, registra el reto con progreso.
 """
+
 import json
 
 from django.contrib.auth.decorators import login_required
@@ -36,14 +37,22 @@ def jugar(request, ejercicio_id):
     ejercicio = _ejercicio(ejercicio_id)
     clave = f"{APP}:{ejercicio_id}"
     materia = materia_de_reto(APP, ejercicio_id)
-    return render(request, f"{APP}/reto.html", {
-        "nombre_reto": "Ordenar pasos",
-        "ejercicio": ejercicio,
-        "datos_publicos": datos_publicos(ejercicio),
-        "revisar_url": reverse(f"{APP}:verificar", args=[ejercicio_id]),
-        "volver_url": reverse("mapa:materia", args=[materia["slug"]]) if materia else reverse("mapa:inicio"),
-        "ya_resuelto": servicios.reto_resuelto(request.user, clave),
-    })
+    if materia:
+        volver_url = reverse("mapa:materia", args=[materia["slug"]])
+    else:
+        volver_url = reverse("mapa:inicio")
+    return render(
+        request,
+        f"{APP}/reto.html",
+        {
+            "nombre_reto": "Ordenar pasos",
+            "ejercicio": ejercicio,
+            "datos_publicos": datos_publicos(ejercicio),
+            "revisar_url": reverse(f"{APP}:verificar", args=[ejercicio_id]),
+            "volver_url": volver_url,
+            "ya_resuelto": servicios.reto_resuelto(request.user, clave),
+        },
+    )
 
 
 @login_required
@@ -73,6 +82,8 @@ def verificar(request, ejercicio_id):
         return JsonResponse({"correcto": False})
 
     clave = f"{APP}:{ejercicio_id}"
-    resultado = servicios.procesar_paso(request, clave, 0, True, 1, ejercicio["bitcoins"])
+    resultado = servicios.procesar_paso(
+        request, clave, 0, True, 1, ejercicio["bitcoins"]
+    )
     resultado["ya_otorgado"] = resultado["bitcoins_otorgados"] == 0
     return JsonResponse(resultado)
