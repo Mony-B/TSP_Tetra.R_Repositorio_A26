@@ -24,7 +24,8 @@ def jugar(request, ejercicio_id):
         return redirect("mapa:inicio")
     servicios.reiniciar_pasos(request, _clave(ejercicio_id))      # salir y volver = empezar de cero
     return render(request, "reto_ecuaciones/reto.html", {
-        "titulo": ejercicio["titulo"],
+        "nombre_reto": "Ecuaciones lineales",
+        "ejercicio": ejercicio,
         "datos_publicos": ejercicios.datos_publicos(ejercicio),
         "revisar_url": reverse("reto_ecuaciones:revisar", args=[ejercicio_id]),
         "volver_url": reverse("mapa:materia", args=["algebra"]),   # selección de retos de la materia
