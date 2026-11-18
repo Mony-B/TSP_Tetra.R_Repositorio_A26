@@ -10,7 +10,7 @@ from importlib import import_module
 
 from django.urls import reverse
 
-from comun.colores import acento_de
+from comun.colores import acento_de_materia
 
 
 MATERIAS = [
@@ -69,6 +69,12 @@ MATERIAS = [
     },
 ]
 
+# Color de acento de cada materia (mismo valor en su tarjeta de selección y
+# en la pantalla de cada uno de sus retos; ver comun/colores.py).
+for _materia in MATERIAS:
+    _materia["acento"] = acento_de_materia(_materia["slug"])
+del _materia
+
 
 def obtener_materia(slug):
     for materia in MATERIAS:
@@ -86,12 +92,14 @@ def info_reto(app, ejercicio_id):
         "titulo": ejercicio["titulo"],
         "bitcoins": ejercicio["bitcoins"],
         "url": reverse(f"{app}:jugar", args=[ejercicio_id]),
-        "acento": acento_de(app),
     }
 
 
 def retos_de_materia(materia):
-    return [info_reto(app, ej) for sub in materia["subtemas"] for app, ej in sub["retos"]]
+    retos = [info_reto(app, ej) for sub in materia["subtemas"] for app, ej in sub["retos"]]
+    for reto in retos:
+        reto["acento"] = materia["acento"]
+    return retos
 
 
 def materia_de_reto(app, ejercicio_id):

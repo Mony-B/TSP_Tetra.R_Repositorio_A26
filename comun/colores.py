@@ -1,11 +1,9 @@
 """
-Color de acento por reto (app de Django), igual que el prototipo integrado:
-cada tipo de reto tiene su propio color en vez de un solo acento para todos.
-
-Se usa en dos lugares con el mismo valor para que se vea como una sola
-interfaz: la tarjeta de cada reto en mapa/materia.html (mapa/temas.py la
-agrega a info_reto) y la pantalla del propio reto (comun/context_processors.py
-la agrega como "color_acento" a partir del app_name de la URL).
+Color de acento por materia (no por reto individual): todos los retos de
+una materia comparten un mismo color, igual en su tarjeta de la selección
+(mapa/materia.html) y en su propia pantalla de juego
+(comun/context_processors.py la agrega como "color_acento" según la
+materia a la que pertenece el reto).
 """
 
 TEAL = "#2f9c8f"
@@ -15,19 +13,14 @@ AZUL = "#59c7ff"
 
 ACENTO_POR_DEFECTO = AZUL
 
-ACENTOS = {
-    "reto_sopa_letras": TEAL,
-    "reto_ordenamiento": TEAL,
-    "reto_comandos_linux": TEAL,       # la terminal, en verde/teal
-    "reto_algebra_booleana": PURPURA,
-    "reto_obtener_termino": PURPURA,
-    "reto_conceptos": PURPURA,
-    "reto_clasificar": NARANJA,
-    "reto_parabolica": NARANJA,
-    "reto_ecuaciones": AZUL,
-    "reto_laberinto": AZUL,
+ACENTOS_MATERIA = {
+    "logica": PURPURA,
+    "introprog": AZUL,
+    "linux": TEAL,       # incluye la terminal: queda en verde/teal
+    "calculo": NARANJA,
+    "algebra": AZUL,
 }
 
 
-def acento_de(app_name):
-    return ACENTOS.get(app_name, ACENTO_POR_DEFECTO)
+def acento_de_materia(slug):
+    return ACENTOS_MATERIA.get(slug, ACENTO_POR_DEFECTO)
