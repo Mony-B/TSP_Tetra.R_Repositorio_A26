@@ -26,12 +26,19 @@ No extiende comun/base.html porque usa su propio layout de pantalla completa.
 
     <header class="topbar">
         <div class="topbar-izq">
-            <a href="{% firstof volver_url url_materia url_mapa %}" class="volver" title="Regresar">←</a>
+            <a href="{% firstof volver_url url_materia url_mapa %}" class="volver" title="Regresar a los retos">
+                <span class="volver-flecha">←</span><span class="volver-texto">Volver</span>
+            </a>
             <div>
                 <div class="brand">RE:CODE — RETO</div>
                 <div class="subject">{{ ejercicio.titulo }}{% if ya_resuelto %} <span class="hecho">✓ resuelto</span>{% endif %}</div>
             </div>
         </div>
+        {% if user.is_authenticated %}
+        <div class="topbar-der">
+            <span class="wallet"><span class="coin"></span> <span id="bitcoins-alumno">{{ progreso_alumno.bitcoins }}</span></span>
+        </div>
+        {% endif %}
     </header>
 
     <main class="body">
