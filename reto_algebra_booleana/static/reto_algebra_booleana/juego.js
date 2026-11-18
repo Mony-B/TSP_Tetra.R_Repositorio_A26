@@ -13,6 +13,7 @@ function iniciarPuertas() {
         return;
     }
     const revisarUrl = raiz.dataset.revisarUrl;
+    const volverUrl = raiz.dataset.volverUrl;
 
     const $ = id => document.getElementById(id);
     const escena = $("escena");
@@ -160,17 +161,19 @@ function iniciarPuertas() {
     });
 
     // --- Salir / Rendirse (FE-1): ventana emergente, no se guarda nada -----------
+    // Mismos ids (btn-salir / btn-cancelar-salida / btn-confirmar-salida) que el
+    // resto de los retos, para que se comporte exactamente igual en todos lados.
     const MENSAJE_SALIR = "Si sales, se pierde el progreso del reto actual y no obtendrás bitcoins. ¿Salir?";
     function pedirSalida(e) {
-        ReCode.dialogos.pedirSalida(confirmar, MENSAJE_SALIR, raiz.dataset.volverUrl, e);
+        ReCode.dialogos.pedirSalida(confirmar, MENSAJE_SALIR, volverUrl, e);
     }
     $("btn-salir").addEventListener("click", () => pedirSalida());
-    $("btn-seguir").addEventListener("click", () => ReCode.dialogos.cerrar(confirmar));
+    $("btn-cancelar-salida").addEventListener("click", () => ReCode.dialogos.cerrar(confirmar));
     $("btn-confirmar-salida").addEventListener("click", () => {
-        window.location.href = raiz.dataset.volverUrl;
+        window.location.href = volverUrl;
     });
     // La flecha de regresar de la plantilla también pide confirmación mientras se juega.
-    ReCode.dialogos.conectarFlechaSalir(confirmar, MENSAJE_SALIR, raiz.dataset.volverUrl, () => actual > 0);
+    ReCode.dialogos.conectarFlechaSalir(confirmar, MENSAJE_SALIR, volverUrl, () => actual > 0);
 
     cargarPuerta();
 }

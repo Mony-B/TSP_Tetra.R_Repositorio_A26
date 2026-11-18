@@ -58,11 +58,13 @@
         </div>
     </dialog>
 
-    <!-- Confirmación de abandono (FE-1): ventana emergente. -->
+    <!-- Confirmación de abandono (FE-1): ventana emergente, con los mismos
+         ids que usan los demás retos (btn-cancelar-salida / btn-confirmar-salida)
+         para que ReCode.dialogos la maneje igual en todos lados. -->
     <dialog class="puertas-confirmar" id="confirmar-salir">
         <p id="confirmar-texto">Si sales, se pierde el progreso del reto actual y no obtendrás bitcoins.</p>
         <div class="puertas-acciones">
-            <button type="button" class="boton boton-secundario" id="btn-seguir">Seguir jugando</button>
+            <button type="button" class="boton boton-secundario" id="btn-cancelar-salida">Seguir jugando</button>
             <button type="button" class="boton" id="btn-confirmar-salida">Sí, salir</button>
         </div>
     </dialog>

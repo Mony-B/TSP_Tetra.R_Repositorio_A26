@@ -1,5 +1,23 @@
-/* Puertas lógicas (CU-05). Mismo estilo terminal verde sobre negro del resto de Re:Code. */
-.puertas { --verde: #00ff00; --verde-tenue: #00aa00; --rojo: #ff3b3b; --ambar: #ffd84a; max-width: 760px; }
+/* Puertas lógicas (CU-05).
+   No fijamos --verde/--rojo aquí: se heredan de .card (comun/css/reto.css),
+   que los deriva de --accent según la materia del reto (comun/colores.py:
+   ACENTOS_RETO["reto_algebra_booleana"] = PURPURA). Antes esta hoja los
+   sobreescribía con un verde fijo (#00ff00), así que el panel, los
+   interruptores y los bordes se veían siempre verdes sin importar el
+   acento asignado a la app. Ahora todo (--verde-tenue y los fondos
+   oscuros de abajo) se deriva de var(--verde) con color-mix(), así que
+   cambia junto con el acento con solo tocar una variable. */
+.puertas {
+    --verde-tenue: color-mix(in srgb, var(--verde) 65%, black);
+    --fondo-panel: color-mix(in srgb, var(--verde) 8%, black);
+    --borde-panel: color-mix(in srgb, var(--verde) 28%, black);
+    --fondo-interruptor: color-mix(in srgb, var(--verde) 5%, black);
+    --fondo-interruptor-activo: color-mix(in srgb, var(--verde) 12%, black);
+    /* El foco encendido es una luz cálida: no sigue el acento del reto a
+       propósito (es la señal universal de "éxito", igual en cualquier materia). */
+    --ambar: #ffd84a;
+    max-width: 760px;
+}
 
 .puertas-enunciado { margin: 0 0 18px; }
 
@@ -9,8 +27,8 @@
     grid-template-columns: 1fr auto;
     gap: 16px 32px;
     align-items: center;
-    border: 2px solid #1f4d1f;
-    background: rgba(0, 20, 0, 0.5);
+    border: 2px solid var(--borde-panel);
+    background: var(--fondo-panel);
     padding: 20px 24px;
     margin-bottom: 16px;
 }
@@ -25,13 +43,13 @@
     border: 2px solid var(--verde-tenue); background: transparent;
     transition: background .12s, box-shadow .12s;
 }
-.led-on { background: var(--verde); border-color: var(--verde); box-shadow: 0 0 10px 3px rgba(0, 255, 0, .7); }
+.led-on { background: var(--verde); border-color: var(--verde); box-shadow: 0 0 10px 3px color-mix(in srgb, var(--verde) 70%, transparent); }
 
 /* Interruptor tipo balancín con 1 arriba y 0 abajo */
 .interruptor {
     width: 64px; height: 104px; padding: 6px; cursor: pointer;
     display: flex; flex-direction: column; justify-content: space-between; align-items: center;
-    background: #061406; color: var(--verde-tenue); border: 2px solid var(--verde-tenue);
+    background: var(--fondo-interruptor); color: var(--verde-tenue); border: 2px solid var(--verde-tenue);
     font: inherit; font-weight: bold; font-size: 1.2rem;
 }
 .interruptor:hover { border-color: var(--verde); }
@@ -40,15 +58,15 @@
     width: 100%; flex: 1; display: flex; align-items: center; justify-content: center;
     border: 1px solid transparent;
 }
-.interruptor .int-0 { background: #0f2a0f; color: var(--verde); border-color: var(--verde-tenue); }
+.interruptor .int-0 { background: var(--fondo-interruptor-activo); color: var(--verde); border-color: var(--verde-tenue); }
 .interruptor-on .int-0 { background: transparent; color: var(--verde-tenue); border-color: transparent; }
-.interruptor-on .int-1 { background: #0f2a0f; color: var(--verde); border-color: var(--verde-tenue); }
+.interruptor-on .int-1 { background: var(--fondo-interruptor-activo); color: var(--verde); border-color: var(--verde-tenue); }
 
 /* Foco grande de la habitación */
 .puertas-foco { grid-column: 2; align-self: center; }
 .foco { width: 120px; height: 180px; overflow: visible; }
 .foco * { fill: none; stroke: var(--verde-tenue); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
-.foco .foco-casquillo { fill: #0a1a0a; }
+.foco .foco-casquillo { fill: var(--fondo-interruptor); }
 .foco .foco-rayos, .foco .foco-grieta { display: none; }
 .foco .foco-vidrio { transition: fill .25s; }
 
@@ -56,7 +74,7 @@
 .foco-parpadea .foco-filamento { animation: parpadeo 1.6s steps(1) infinite; }
 @keyframes parpadeo { 0%, 55% { opacity: 1; } 60%, 70% { opacity: .25; } 75%, 100% { opacity: 1; } }
 
-.foco-encendido .foco-vidrio { fill: rgba(255, 216, 74, .35); stroke: var(--ambar); filter: drop-shadow(0 0 14px var(--ambar)); }
+.foco-encendido .foco-vidrio { fill: color-mix(in srgb, var(--ambar) 35%, transparent); stroke: var(--ambar); filter: drop-shadow(0 0 14px var(--ambar)); }
 .foco-encendido .foco-filamento { stroke: var(--ambar); }
 .foco-encendido .foco-rayos { display: block; }
 .foco-encendido .foco-rayos line { stroke: var(--ambar); }

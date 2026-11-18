@@ -1,6 +1,6 @@
 """
-Álgebra booleana (CU-05). Revisa las respuestas en el servidor.
-Las respuestas correctas están en ejercicios.py y nunca se mandan al navegador.
+Vistas del reto de álgebra booleana (CU-05). Jugar muestra el reto (siempre
+desde cero) y revisar valida la expresión en el servidor.
 """
 import json
 
@@ -25,12 +25,15 @@ def _ejercicio(ejercicio_id):
     return EJERCICIOS[ejercicio_id]
 
 
+def _clave(ejercicio_id):
+    return f"{APP}:{ejercicio_id}"
+
+
 @login_required
-@ensure_csrf_cookie
+@ensure_csrf_cookie   # la página necesita la cookie csrftoken para poder mandar el POST de /revisar/
 def jugar(request, ejercicio_id):
     ejercicio = _ejercicio(ejercicio_id)
-    clave = f"{APP}:{ejercicio_id}"
-    servicios.reiniciar_pasos(request, clave)
+    servicios.reiniciar_pasos(request, _clave(ejercicio_id))   # salir y volver = empezar de cero
     materia = materia_de_reto(APP, ejercicio_id)
     return render(request, f"{APP}/reto.html", {
         "nombre_reto": "Álgebra booleana",
@@ -38,14 +41,14 @@ def jugar(request, ejercicio_id):
         "datos_publicos": datos_publicos(ejercicio),
         "revisar_url": reverse(f"{APP}:revisar", args=[ejercicio_id]),
         "volver_url": reverse("mapa:materia", args=[materia["slug"]]) if materia else reverse("mapa:inicio"),
-        "ya_resuelto": servicios.reto_resuelto(request.user, clave),
+        "ya_resuelto": servicios.reto_resuelto(request.user, _clave(ejercicio_id)),
     })
 
 
 @login_required
 @require_POST
 def revisar(request, ejercicio_id):
-    """Recibe {"paso": n, "respuesta": "..."} y contesta si es correcta."""
+    """Recibe {"paso": n, "respuesta": "p=1,q=0"} y contesta si el circuito cierra."""
     ejercicio = _ejercicio(ejercicio_id)
     try:
         datos = json.loads(request.body or "{}")
@@ -57,13 +60,8 @@ def revisar(request, ejercicio_id):
         return JsonResponse({"error": "Paso inválido"}, status=400)
 
     resultado = servicios.procesar_paso(
-        request, f"{APP}:{ejercicio_id}", paso, correcto,
-        ejercicio_total_pasos(ejercicio), ejercicio["bitcoins"],
+        request, _clave(ejercicio_id), paso, correcto, len(ejercicio["pasos"]), ejercicio["bitcoins"],
     )
     resultado["mensaje"] = mensaje
     resultado["paso"] = paso
     return JsonResponse(resultado)
-
-
-def ejercicio_total_pasos(ejercicio):
-    return len(ejercicio["pasos"])
