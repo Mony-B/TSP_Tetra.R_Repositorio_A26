@@ -8,7 +8,6 @@
   const linea = document.getElementById("linea");
   const resultado = document.getElementById("resultado");
   const acciones = document.getElementById("acciones-ordenamiento");
-  const dialogo = document.getElementById("dialogo-salir");
   const dialogoExito = document.getElementById("dialogo-exito");
 
   const textoDe = {};
@@ -137,26 +136,19 @@
       ? "Este reto ya estaba completado, así que no se otorgan bitcoins de nuevo."
       : `Ganaste <strong>₿ ${respuesta.bitcoins_otorgados}</strong>.`;
     acciones.hidden = true;
-    document.getElementById("exito-mensaje").innerHTML = `<strong>¡Algoritmo restaurado!</strong> ${premio}`;
+    document.getElementById("exito-mensaje").innerHTML = "<strong>¡Algoritmo restaurado!</strong>";
+    document.getElementById("exito-premio").innerHTML = premio;
     ReCode.dialogos.abrir(dialogoExito);
   }
 
-  // --- FE-1: salir / rendirse con confirmación --------------------------
-  // Mismo patrón que los demás retos: confirmar salida navega a volverUrl
-  // (sin guardar nada); no se queda en la página mostrando un mensaje.
-  const MENSAJE_SALIR = "Se perderá el progreso de este reto y no obtendrás bitcoins. ¿Salir?";
-
-  function pedirSalida(evento) {
-    if (bloqueado) return;
-    ReCode.dialogos.pedirSalida(dialogo, MENSAJE_SALIR, ReCode.reto.volverUrl, evento);
-  }
-
-  document.getElementById("btn-salir").addEventListener("click", pedirSalida);
-  ReCode.dialogos.conectarFlechaSalir(dialogo, MENSAJE_SALIR, ReCode.reto.volverUrl, () => colocados().size > 0 && !bloqueado);
-  document.getElementById("btn-cancelar-salida").addEventListener("click", () => ReCode.dialogos.cerrar(dialogo));
-  document.getElementById("btn-confirmar-salida").addEventListener("click", () => {
-    window.location.href = ReCode.reto.volverUrl; // no se guarda nada ni se dan bitcoins
+  // --- FE-1: salir / rendirse con confirmación ----------------------------
+  // Diálogo y mensaje de salida compartidos con los demás retos
+  // (comun/reto_base.html + comun/js/reto_dialogos.js).
+  ReCode.dialogos.inicializarSalir({
+    hayProgreso: () => colocados().size > 0,
+    puedeSalir: () => !bloqueado,
   });
+
   document.getElementById("btn-verificar").addEventListener("click", verificar);
 
   dibujar();

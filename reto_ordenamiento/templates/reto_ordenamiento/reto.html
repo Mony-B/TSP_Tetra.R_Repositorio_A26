@@ -18,21 +18,9 @@
   </div>
 </div>
 
-<dialog class="confirmar" id="dialogo-salir">
-  <p>¿Seguro que quieres salir? Se perderá el progreso de este reto y no obtendrás bitcoins.</p>
-  <div class="acciones-ordenamiento">
-    <button type="button" class="boton secundario" id="btn-cancelar-salida">Seguir jugando</button>
-    <button type="button" class="boton peligro" id="btn-confirmar-salida">Salir</button>
-  </div>
-</dialog>
-
-<!-- Éxito: ventana emergente, sin redirección automática. -->
-<dialog class="confirmar" id="dialogo-exito">
-    <p id="exito-mensaje"></p>
-    <div class="acciones-ordenamiento">
-        <a class="boton" href="{{ volver_url }}">Volver a los retos</a>
-    </div>
-</dialog>
+<!-- Los diálogos de salir y de reto completado ya vienen de
+     comun/reto_base.html (dialogo-salir / dialogo-exito); este reto usa
+     el bloque "exito" por defecto, no necesita contenido extra. -->
 {% endblock %}
 
 {% block script_juego %}<script src="{% static 'reto_ordenamiento/juego.js' %}"></script>{% endblock %}
