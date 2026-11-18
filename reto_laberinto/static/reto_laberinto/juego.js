@@ -21,10 +21,12 @@
     // explorar. Con menos celdas y más enlaces, los pasillos son más
     // cortos y hay más rutas alternativas visibles sin perder el efecto
     // de laberinto en penumbra.
-    // T (tamaño de celda) sube de 30 a 40 para que el laberinto más chico
-    // siga llenando el mismo lienzo de 700×580 en vez de dejarlo con
-    // espacio vacío alrededor.
-    const W = 15, H = 11, T = 40, OX = 35, OY = 35;
+    // El lienzo (ver reto.html) mide exactamente W*T × H*T: así el grid
+    // cubre el lienzo completo (y por lo tanto el marco de .escenario,
+    // que lo escala con width:100%) sin dejar franjas vacías alrededor;
+    // no hace falta ningún margen (OX/OY) porque no sobra espacio que
+    // repartir.
+    const W = 15, H = 11, T = 40, OX = 0, OY = 0;
 
     let actual = ReCode.reto.datos; // {numero, total, pregunta, opciones}
     let grid = [], player = { x: 1, y: 1 }, exits = [];
@@ -248,7 +250,7 @@
 
     function render() {
         ctx.fillStyle = "#02060c";
-        ctx.fillRect(0, 0, 700, 580);
+        ctx.fillRect(0, 0, W * T, H * T);
         ctx.save();
         ctx.translate(OX, OY);
         const px = player.x * T + T / 2, py = player.y * T + T / 2;
@@ -329,14 +331,14 @@
         ctx.restore();
         if (flash !== 0) {
             ctx.fillStyle = flash > 0 ? "rgba(89,199,255,.18)" : "rgba(255,30,60,.2)";
-            ctx.fillRect(0, 0, 700, 580);
+            ctx.fillRect(0, 0, W * T, H * T);
             flash *= 0.85;
             if (Math.abs(flash) < 0.02) flash = 0;
         }
         if (finished) {
             ctx.fillStyle = "#59c7ff"; ctx.textAlign = "center"; ctx.font = "bold 32px monospace";
             ctx.shadowColor = "#59c7ff"; ctx.shadowBlur = 20;
-            ctx.fillText("✦ SALIDA ENCONTRADA ✦", 350, 290);
+            ctx.fillText("✦ SALIDA ENCONTRADA ✦", (W * T) / 2, (H * T) / 2);
             ctx.textAlign = "left"; ctx.shadowBlur = 0;
         }
         requestAnimationFrame(render);
