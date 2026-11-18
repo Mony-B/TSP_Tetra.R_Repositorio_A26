@@ -57,12 +57,8 @@
 .cl-mensaje.error { color: var(--rojo); }
 .cl-mensaje.bien { color: var(--verde); }
 
-
-dialog.confirmar {
-    background: #000; color: var(--verde); border: 1px solid var(--verde);
-    font-family: inherit; max-width: 420px;
-}
-dialog.confirmar::backdrop { background: rgba(0, 0, 0, 0.7); }
+/* Los diálogos de salir y de reto completado (dialog.confirmar) ya vienen
+   estilizados de comun/css/reto.css: no se redefinen aquí. */
 
 @keyframes cl-sacudir {
     0%, 100% { transform: translateX(0); }

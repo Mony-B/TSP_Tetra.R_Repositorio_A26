@@ -9,7 +9,6 @@
     const bandeja = document.getElementById("bandeja");
     const canvas = document.getElementById("grafica");
     const aviso = document.getElementById("aviso");
-    const dialogo = document.getElementById("dialogo-salir");
     const dialogoExito = document.getElementById("dialogo-exito");
     const COLORES = ["#1e88e5", "#2e9e44", "#d93a3a", "#c98f00", "#8e44ad", "#00899b"];
     const UMBRAL_ARRASTRE = 6; // px; menos que esto se considera un toque
@@ -276,16 +275,10 @@
     // jugar() siempre reinicia la partida en el servidor, así que recargar basta.
     document.getElementById("btn-reiniciar").addEventListener("click", () => window.location.reload());
 
-    const MENSAJE_SALIR = "Se perderá el progreso de este reto y no obtendrás bitcoins. ¿Salir?";
-    function pedirSalida(e) {
-        ReCode.dialogos.pedirSalida(dialogo, MENSAJE_SALIR, ReCode.reto.volverUrl, e);
-    }
-    document.getElementById("btn-salir").addEventListener("click", pedirSalida);
-    // La flecha de regresar de la plantilla también pide confirmación mientras se juega.
-    ReCode.dialogos.conectarFlechaSalir(dialogo, MENSAJE_SALIR, ReCode.reto.volverUrl, () => !terminado);
-    document.getElementById("btn-cancelar-salida").addEventListener("click", () => ReCode.dialogos.cerrar(dialogo));
-    document.getElementById("btn-confirmar-salida").addEventListener("click", () => {
-        window.location.href = ReCode.reto.volverUrl; // no se guarda nada ni se dan bitcoins
+    // Diálogo y mensaje de salida compartidos con los demás retos
+    // (comun/reto_base.html + comun/js/reto_dialogos.js).
+    ReCode.dialogos.inicializarSalir({
+        hayProgreso: () => !terminado,
     });
 
     dibujar();
