@@ -1,0 +1,133 @@
+/* Catálogo de la red corrupta (CU03). Misma paleta oscura que el resto de
+   Re:Code (ver comun/static/comun/css/reto.css); --accent viene de
+   comun.colores.ACENTOS_RETO["red_corrupta"] (magenta, para distinguirla
+   de los acentos de materia/reto). */
+:root {
+    --bg: #0b0a0d;
+    --surface: #15131a;
+    --surface-2: #1d1a24;
+    --line: #2c2733;
+    --fg: #ece8f0;
+    --muted: #9b94a8;
+    --accent: #ff2fb0;
+    --hecho: #19ffb4;
+}
+
+body.pantalla-red-corrupta {
+    display: block;
+    min-height: 100vh;
+    min-height: 100dvh;
+    margin: 0;
+    padding: 0 0 60px;
+    background:
+        radial-gradient(circle at 20% -10%, rgba(225, 29, 46, .10), transparent 40%),
+        radial-gradient(circle at 100% 110%, color-mix(in srgb, var(--accent) 12%, transparent), transparent 45%),
+        var(--bg);
+    color: var(--fg);
+    font-family: "Share Tech Mono", monospace;
+}
+
+.body { max-width: 980px; margin: 0 auto; padding: 30px 24px; }
+
+.intro {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-left: 2px solid var(--accent);
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin-bottom: 30px;
+    color: #c8c6c2;
+    font-size: 14px;
+    line-height: 1.6;
+}
+.intro strong { color: var(--fg); }
+
+.materia { margin-bottom: 34px; }
+.materia h2 {
+    font-family: "Chakra Petch", monospace;
+    font-size: 20px;
+    color: var(--accent);
+    letter-spacing: .03em;
+    margin: 0 0 14px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--line);
+}
+.subtema { margin-bottom: 18px; }
+.subtema h3 {
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    color: var(--muted);
+    margin: 0 0 10px;
+    font-weight: 400;
+}
+
+.pistas { display: flex; flex-wrap: wrap; gap: 10px; }
+.pista {
+    display: flex; align-items: center; gap: 8px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    padding: 9px 16px 9px 12px;
+    color: var(--fg);
+    font-family: "Share Tech Mono", monospace;
+    font-size: 13.5px;
+    cursor: pointer;
+    transition: border-color .15s, background .15s;
+}
+.pista:hover { border-color: color-mix(in srgb, var(--accent) 60%, var(--line)); }
+.pista .candado { font-size: 12px; opacity: .8; }
+.pista.obtenida {
+    background: color-mix(in srgb, var(--hecho) 10%, var(--surface));
+    border-color: color-mix(in srgb, var(--hecho) 40%, var(--line));
+}
+.pista.obtenida .candado { color: var(--hecho); }
+
+/* --- Panel modal (dialog nativo) ----------------------------------- */
+.panel-pista {
+    background: var(--surface);
+    color: var(--fg);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 26px;
+    max-width: 460px;
+    width: calc(100% - 40px);
+    font-family: "Share Tech Mono", monospace;
+}
+.panel-pista::backdrop { background: rgba(5, 4, 8, .82); }
+.panel-cabecera { margin-bottom: 16px; }
+.panel-materia {
+    display: block; font-size: 11px; letter-spacing: .08em;
+    text-transform: uppercase; color: var(--accent); margin-bottom: 4px;
+}
+.panel-cabecera h3 {
+    font-family: "Chakra Petch", monospace;
+    font-size: 19px; margin: 0; color: var(--fg);
+}
+.vista p { line-height: 1.6; color: #c8c6c2; margin: 0 0 18px; }
+.vista .definicion { color: var(--fg); font-size: 14.5px; }
+.acciones { display: flex; gap: 10px; flex-wrap: wrap; }
+.acciones .boton { flex: 1; text-align: center; }
+
+/* --- Snake ----------------------------------------------------------- */
+.snake-estado { color: var(--fg) !important; font-size: 13px; margin-bottom: 10px !important; }
+.snake-estado span { color: var(--accent); font-weight: bold; }
+.snake-escenario {
+    position: relative; width: 100%; aspect-ratio: 1 / 1;
+    border: 1px solid var(--line); border-radius: 8px; overflow: hidden;
+    background: #060509; margin-bottom: 14px;
+}
+.snake-escenario canvas { display: block; width: 100%; height: 100%; image-rendering: pixelated; }
+.snake-mensaje {
+    position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+    text-align: center; padding: 16px; background: rgba(0, 0, 0, .85);
+    color: var(--fg); font-size: 15px; line-height: 1.5; opacity: 0; pointer-events: none;
+    transition: opacity .15s;
+}
+.snake-mensaje.mostrar { opacity: 1; }
+.snake-ayuda { font-size: 12px !important; color: var(--muted) !important; margin: 10px 0 0 !important; text-align: center; }
+
+@media (max-width: 600px) {
+    .body { padding: 20px 16px; }
+    .materia h2 { font-size: 17px; }
+}

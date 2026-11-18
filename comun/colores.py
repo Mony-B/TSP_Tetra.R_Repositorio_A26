@@ -21,6 +21,7 @@ PURPURA = "#7c5cc4"
 NARANJA = "#c98a2e"
 AZUL = "#59c7ff"
 ROJO = "#ff3b44"
+MAGENTA = "#ff2fb0"  # red corrupta (CU03): no es un reto de materia, color propio
 
 ACENTO_POR_DEFECTO = AZUL
 
@@ -35,6 +36,7 @@ ACENTOS_RETO = {
     "reto_parabolica": NARANJA,
     "reto_ecuaciones": AZUL,
     "reto_laberinto": AZUL,
+    "red_corrupta": MAGENTA,
 }
 
 
