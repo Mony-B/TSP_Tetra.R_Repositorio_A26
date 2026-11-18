@@ -152,6 +152,12 @@ function iniciarMatriz() {
     // --- Salir / Rendirse (FE-1): no se guarda nada -------------------------------
     $("btn-salir").addEventListener("click", () => { $("confirmar-salir").hidden = false; });
     $("btn-salir-no").addEventListener("click", () => { $("confirmar-salir").hidden = true; });
+    // La flecha de regresar de la plantilla también pide confirmación mientras se juega.
+    const flecha = document.querySelector(".volver");
+    if (flecha) flecha.addEventListener("click", (e) => {
+        const tieneProgreso = Object.values(cajas).some(c => c.value.trim() !== "");
+        if (tieneProgreso) { e.preventDefault(); $("confirmar-salir").hidden = false; }
+    });
 
     pintarVivas();
 }

@@ -83,6 +83,9 @@
             $(id).style.top = ed.y + "%";
         }
 
+        // El kernel no es una materia: se queda con el rojo por defecto del tema.
+        $("escenario").style.setProperty("--acento-edificio", ed.acento || "#ff3b44");
+
         const vista = $("vista");
         if (ed.imagen) {
             vista.className = "vista";

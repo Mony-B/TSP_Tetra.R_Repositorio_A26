@@ -62,7 +62,7 @@ body.pantalla-reto {
 
 .body { display: flex; align-items: center; justify-content: center; padding: 40px; }
 .card {
-    width: 100%; max-width: 720px;
+    width: 100%; max-width: 920px;
     background: var(--surface);
     border: 1px solid var(--line);
     border-radius: 14px;

@@ -67,6 +67,7 @@ def inicio(request):
             "imagen": _imagen(visual["imagen"]),
             "villano": visual["villano"],
             "aliado": visual.get("aliado"),
+            "acento": materia["acento"],
             "estado": estado,
             "examen": examen,
             "retos": f"{hechos}/{len(claves)} retos" if claves else "Sin retos todavía",

@@ -18,6 +18,11 @@
     --bisel:       #0b0b0c;
     --mono:  "Share Tech Mono", "JetBrains Mono", monospace;
     --mono2: "JetBrains Mono", "Share Tech Mono", monospace;
+
+    /* Color del edificio/materia seleccionado (mapa.js lo actualiza al elegir
+       uno de la lista); el resto del rojo de la interfaz (logo, estados de
+       progreso, menú) se queda fijo porque no identifica a ninguna materia. */
+    --acento-edificio: var(--rojo-claro);
 }
 
 * { box-sizing: border-box; }
@@ -295,10 +300,13 @@ html, body {
 .item[data-estado="corrupto"] .marca { background: var(--rojo-osc); }
 .item:hover { background: #1d1d20; border-color: #444; }
 .item.activo {
-    background: linear-gradient(90deg, #a5161d, #7a1015 70%, #5c0c10);
-    border-color: var(--rojo-claro);
-    border-left-color: #ff6a70;
-    box-shadow: 0 0 16px var(--rojo-glow);
+    background: linear-gradient(90deg,
+        color-mix(in srgb, var(--acento-edificio) 75%, black),
+        color-mix(in srgb, var(--acento-edificio) 45%, black) 70%,
+        color-mix(in srgb, var(--acento-edificio) 25%, black));
+    border-color: var(--acento-edificio);
+    border-left-color: color-mix(in srgb, var(--acento-edificio) 70%, white);
+    box-shadow: 0 0 16px color-mix(in srgb, var(--acento-edificio) 55%, transparent);
 }
 .item.activo .codigo, .item.activo .nombre { color: #fff; }
 .item.activo .flecha { color: #fff; }
@@ -359,8 +367,10 @@ html, body {
     transition: background .2s, border-color .2s, color .2s;
 }
 .chip.activo {
-    color: #fff; background: rgba(140,14,20,.9); border-color: var(--rojo-claro);
-    box-shadow: 0 0 12px var(--rojo-glow);
+    color: #fff;
+    background: color-mix(in srgb, var(--acento-edificio) 55%, #0a0a0a);
+    border-color: var(--acento-edificio);
+    box-shadow: 0 0 12px color-mix(in srgb, var(--acento-edificio) 55%, transparent);
 }
 .mapa-rejilla {
     position: absolute; inset: 0; pointer-events: none;
@@ -375,16 +385,17 @@ html, body {
     pointer-events: none; transition: left .35s ease, top .35s ease;
     z-index: 4;
 }
-.pin svg { display: block; filter: drop-shadow(0 0 6px var(--rojo)); }
+.pin svg { display: block; filter: drop-shadow(0 0 6px var(--acento-edificio)); }
+.pin svg path, .pin svg rect { stroke: var(--acento-edificio); }
 .pin::after { /* línea vertical hacia el edificio */
     content: ""; position: absolute; left: 50%; top: 100%; width: 1px; height: 36px; margin-top: 2px; z-index: -1;
-    background: linear-gradient(var(--rojo-claro), transparent);
+    background: linear-gradient(var(--acento-edificio), transparent);
 }
 .pulso-suelo {
     position: absolute; width: 64px; height: 30px; border-radius: 50%;
     transform: translate(-50%, -50%);
-    border: 1.5px solid var(--rojo-claro);
-    box-shadow: 0 0 14px var(--rojo);
+    border: 1.5px solid var(--acento-edificio);
+    box-shadow: 0 0 14px color-mix(in srgb, var(--acento-edificio) 70%, transparent);
     pointer-events: none; transition: left .35s ease, top .35s ease;
     animation: pulso-suelo 1.6s ease-out infinite;
     z-index: 3;
@@ -481,9 +492,10 @@ html, body {
     font-size: 12px; line-height: 1;
 }
 .btn-entrar:hover {
-    color: #fff; border-color: var(--rojo-claro);
-    box-shadow: 0 0 18px var(--rojo-glow), inset 0 0 12px rgba(227,38,47,.25);
-    text-shadow: 2px 0 0 rgba(255,0,0,.6), -2px 0 0 rgba(0,120,255,.4);
+    color: #fff; border-color: var(--acento-edificio);
+    box-shadow: 0 0 18px color-mix(in srgb, var(--acento-edificio) 55%, transparent),
+                inset 0 0 12px color-mix(in srgb, var(--acento-edificio) 25%, transparent);
+    text-shadow: 2px 0 0 color-mix(in srgb, var(--acento-edificio) 60%, transparent), -2px 0 0 rgba(0,120,255,.4);
 }
 .btn-entrar:hover .x { border-color: #fff; }
 .btn-entrar.deshabilitado {

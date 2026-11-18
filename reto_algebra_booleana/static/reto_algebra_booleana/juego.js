@@ -165,6 +165,11 @@ function iniciarPuertas() {
     // --- Salir / Rendirse (FE-1) ---------------------------------------------
     $("btn-salir").addEventListener("click", () => { confirmar.hidden = false; });
     $("btn-seguir").addEventListener("click", () => { confirmar.hidden = true; });
+    // La flecha de regresar de la plantilla también pide confirmación mientras se juega.
+    const flecha = document.querySelector(".volver");
+    if (flecha) flecha.addEventListener("click", (e) => {
+        if (actual > 0) { e.preventDefault(); confirmar.hidden = false; }
+    });
 
     cargarPuerta();
 }
