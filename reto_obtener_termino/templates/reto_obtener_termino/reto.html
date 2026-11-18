@@ -58,7 +58,6 @@
     <div class="teclado" id="teclado"></div>
 
     <div class="acciones-termino" id="acciones">
-        <button type="button" class="boton" id="btn-reintentar" hidden>Reintentar</button>
         <button type="button" class="boton peligro" id="btn-salir">Salir / Rendirse</button>
     </div>
 </div>
@@ -66,6 +65,19 @@
 <!-- El diálogo de salir ya viene de comun/reto_base.html (dialogo-salir);
      el de éxito se sobreescribe solo para agregar "exito-significado"
      (el significado del término), que los demás retos no necesitan. -->
+
+<!-- FA-1: intentos agotados. Ventana emergente propia de este reto (y de
+     reto_parabolica, los únicos dos con intentos limitados): el botón
+     "Salir / Rendirse" normal de arriba se queda tal cual la plantilla
+     (nunca se oculta); aquí solo se ofrecen Reintentar o Salir mientras
+     dura el estado de "sin intentos". -->
+<dialog class="confirmar" id="dialogo-agotado">
+    <p id="agotado-mensaje"></p>
+    <div class="dialogo-acciones">
+        <button type="button" class="boton" id="btn-reintentar">Reintentar</button>
+        <button type="button" class="boton peligro" id="btn-salir-agotado">Salir / Rendirse</button>
+    </div>
+</dialog>
 {% endblock %}
 
 {% block exito %}

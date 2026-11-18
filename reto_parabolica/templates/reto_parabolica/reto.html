@@ -69,7 +69,6 @@
     </div>
 
     <div class="acciones-parabolica" id="acciones-parabolica">
-        <button type="button" class="boton" id="btn-reintentar" hidden>Reintentar</button>
         <button type="button" class="boton peligro" id="btn-salir">Salir / Rendirse</button>
         <button type="button" class="boton" id="btn-disparar">Disparar</button>
     </div>
@@ -79,6 +78,19 @@
      comun/reto_base.html (dialogo-salir / dialogo-exito); el de éxito se
      sobreescribe para agregar la ecuación, el vértice y las raíces del
      disparo, que los demás retos no necesitan. -->
+
+<!-- FA-1: intentos agotados. Ventana emergente propia de este reto (y de
+     reto_obtener_termino, los únicos dos con intentos limitados): el botón
+     "Salir / Rendirse" normal de arriba se queda tal cual la plantilla
+     (nunca se oculta); aquí solo se ofrecen Reintentar o Salir mientras
+     dura el estado de "sin intentos". -->
+<dialog class="confirmar" id="dialogo-agotado">
+    <p id="agotado-mensaje"></p>
+    <div class="dialogo-acciones">
+        <button type="button" class="boton" id="btn-reintentar">Reintentar</button>
+        <button type="button" class="boton peligro" id="btn-salir-agotado">Salir / Rendirse</button>
+    </div>
+</dialog>
 {% endblock %}
 
 {% block exito %}

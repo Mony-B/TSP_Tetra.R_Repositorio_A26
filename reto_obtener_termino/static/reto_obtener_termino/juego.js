@@ -9,8 +9,10 @@
     const teclado = document.getElementById("teclado");
     const resultado = document.getElementById("resultado");
     const btnReintentar = document.getElementById("btn-reintentar");
+    const btnSalir = document.getElementById("btn-salir");
     const dialogo = document.getElementById("dialogo-salir");
     const dialogoExito = document.getElementById("dialogo-exito");
+    const dialogoAgotado = document.getElementById("dialogo-agotado");
 
     const RENGLONES = ["QWERTYUIOP", "ASDFGHJKL", "ZXCVBNM"];
     const PRIORIDAD = { gris: 1, amarillo: 2, verde: 3 };
@@ -156,15 +158,17 @@
         ReCode.dialogos.abrir(dialogoExito);
     }
 
-    // FA-1: intentos agotados -> Reintentar o Salir.
+    // FA-1: intentos agotados -> ventana emergente con Reintentar o Salir.
+    // El botón "Salir / Rendirse" normal (fuera del diálogo) nunca se oculta.
     function agotado(r) {
-        mensaje(r.mensaje, true);
-        btnReintentar.hidden = false;
+        document.getElementById("agotado-mensaje").textContent = r.mensaje;
+        ReCode.dialogos.abrir(dialogoAgotado);
     }
 
     async function reintentar() {
         try {
             const r = await ReCode.postJSON(reiniciarUrl);
+            ReCode.dialogos.cerrar(dialogoAgotado);
             iniciar(r.intentos_restantes);
         } catch (err) {
             mensaje(err.message, true);
@@ -175,7 +179,6 @@
         fila = 0;
         escrito = "";
         bloqueado = false;
-        btnReintentar.hidden = true;
         resultado.innerHTML = "";
         armarCuadricula();
         armarTeclado();
@@ -184,10 +187,12 @@
 
     // --- FE-1: salir / rendirse con confirmación ----------------------------
     // Diálogo y mensaje de salida compartidos con los demás retos
-    // (comun/reto_base.html + comun/js/reto_dialogos.js).
+    // (comun/reto_base.html + comun/js/reto_dialogos.js). "Salir / Rendirse"
+    // dentro de la ventana de agotado reusa el mismo flujo (FA-1.4.5).
     ReCode.dialogos.inicializarSalir({
         hayProgreso: () => fila > 0 && !bloqueado,
     });
+    document.getElementById("btn-salir-agotado").addEventListener("click", () => btnSalir.click());
 
     btnReintentar.addEventListener("click", reintentar);
 

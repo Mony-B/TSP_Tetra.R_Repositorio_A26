@@ -32,6 +32,7 @@
     const resultado = document.getElementById("resultado");
     const accionesNormal = document.getElementById("acciones-parabolica");
     const dialogoExito = document.getElementById("dialogo-exito");
+    const dialogoAgotado = document.getElementById("dialogo-agotado");
     const btnDisparar = document.getElementById("btn-disparar");
     const btnReintentar = document.getElementById("btn-reintentar");
 
@@ -215,11 +216,11 @@
         ReCode.dialogos.abrir(dialogoExito);
     }
 
-    // FA-1: intentos agotados -> Reintentar o Salir.
+    // FA-1: intentos agotados -> ventana emergente con Reintentar o Salir.
+    // El botón "Salir / Rendirse" normal (fuera del diálogo) nunca se oculta.
     function agotado(r) {
-        mensaje(r.mensaje, true);
-        btnDisparar.hidden = true;
-        btnReintentar.hidden = false;
+        document.getElementById("agotado-mensaje").textContent = r.mensaje;
+        ReCode.dialogos.abrir(dialogoAgotado);
     }
 
     async function reintentar() {
@@ -231,8 +232,7 @@
             pintarPuntos();
             dibujarEscena();
             resultado.innerHTML = "";
-            btnReintentar.hidden = true;
-            btnDisparar.hidden = false;
+            ReCode.dialogos.cerrar(dialogoAgotado);
             btnDisparar.disabled = false;
         } catch (err) {
             mensaje(err.message, true);
@@ -241,12 +241,15 @@
 
     // --- FE-1: salir / rendirse con confirmación ----------------------------
     // Diálogo y mensaje de salida compartidos con los demás retos
-    // (comun/reto_base.html + comun/js/reto_dialogos.js).
+    // (comun/reto_base.html + comun/js/reto_dialogos.js). "Salir / Rendirse"
+    // dentro de la ventana de agotado reusa el mismo flujo (FA-1.4.5).
+    const btnSalir = document.getElementById("btn-salir");
     ReCode.dialogos.inicializarSalir({
         hayProgreso: () => intentosUsados > 0,
         puedeSalir: () => !terminado,
         mensaje: "Se perderá el progreso de este intento y no obtendrás bitcoins. ¿Seguro que quieres salir?",
     });
+    document.getElementById("btn-salir-agotado").addEventListener("click", () => btnSalir.click());
 
     btnDisparar.addEventListener("click", disparar);
     btnReintentar.addEventListener("click", reintentar);
