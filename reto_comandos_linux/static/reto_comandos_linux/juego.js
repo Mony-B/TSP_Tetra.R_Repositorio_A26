@@ -47,6 +47,7 @@
         if (!comando.trim() && !oculto) return; // solo Enter: nuevo prompt (FA-1)
 
         ocupado = true;
+        inputComando.disabled = true;   // mientras se espera, no se "pierden" comandos escritos de más
         try {
             const r = await ReCode.postJSON(comandoUrl, { comando });
             if (r.limpiar) lineas.innerHTML = "";
@@ -58,6 +59,7 @@
             escribir(err.message, "error");
         } finally {
             ocupado = false;
+            if (!terminado) inputComando.disabled = false;
             inputComando.focus();
         }
     });
@@ -87,17 +89,23 @@
             return;
         }
         ocupado = true;
+        inputClave.disabled = true;
+        document.getElementById("btn-abrir").disabled = true;
         try {
             const r = await ReCode.postJSON(ReCode.reto.revisarUrl, { respuesta: clave });
             const saldo = document.getElementById("bitcoins-alumno");
             if (saldo) saldo.textContent = r.bitcoins_total;
             if (r.correcto) return exito(r);
-            mensaje(escapar(r.mensaje), true); // FA-3: la puerta sigue cerrada, sin límite
-            inputClave.select();
-        } catch (err) {
-            mensaje(escapar(err.message), true);
-        } finally {
             ocupado = false;
+            inputClave.disabled = false;
+            document.getElementById("btn-abrir").disabled = false;
+            mensaje(escapar(r.mensaje), true); // FA-3: la puerta sigue cerrada, sin límite
+            inputClave.select();               // ya re-habilitado: sí se ve seleccionado
+        } catch (err) {
+            ocupado = false;
+            inputClave.disabled = false;
+            document.getElementById("btn-abrir").disabled = false;
+            mensaje(escapar(err.message), true);
         }
     });
 

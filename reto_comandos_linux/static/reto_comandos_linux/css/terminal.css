@@ -13,6 +13,10 @@
     flex: 1; min-width: 0; background: transparent; border: none; color: var(--verde);
     font-family: inherit; font-size: inherit; outline: none; padding: 0;
 }
+/* Mientras se espera la respuesta del servidor el campo se deshabilita (para
+   no "perder" en silencio un comando escrito de más); esto lo hace visible,
+   para que no se sienta como que el reto se quedó pasmado. */
+.terminal input:disabled { opacity: .5; }
 
 .puerta {
     display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
@@ -25,6 +29,7 @@
     border: 1px solid var(--verde-medio); font-family: inherit; font-size: 1rem;
 }
 .puerta.abierta { border-color: var(--verde); }
+.puerta input:disabled, .puerta button:disabled { opacity: .5; }
 
 .acciones-linux { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
 .acciones-linux[hidden] { display: none; }
