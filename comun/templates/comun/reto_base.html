@@ -20,7 +20,7 @@ No extiende comun/base.html porque usa su propio layout de pantalla completa.
     <link rel="stylesheet" href="{% static 'comun/css/reto.css' %}">
     {% block estilos %}{% endblock %}
 </head>
-<body class="pantalla-reto">
+<body class="pantalla-reto" style="--accent: {{ color_acento }};">
     {% url 'mapa:inicio' as url_mapa %}
     {% if materia.slug %}{% url 'mapa:materia' materia.slug as url_materia %}{% endif %}
 

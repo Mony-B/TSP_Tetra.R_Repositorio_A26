@@ -26,7 +26,7 @@ body.pantalla-reto {
     padding: 0;
     background:
         radial-gradient(circle at 20% -10%, rgba(225, 29, 46, .10), transparent 40%),
-        radial-gradient(circle at 100% 110%, rgba(89, 199, 255, .08), transparent 45%),
+        radial-gradient(circle at 100% 110%, color-mix(in srgb, var(--accent) 12%, transparent), transparent 45%),
         var(--bg);
     color: var(--fg);
     font-family: "Share Tech Mono", monospace;
@@ -70,10 +70,12 @@ body.pantalla-reto {
     box-shadow: 0 30px 60px -20px rgba(0, 0, 0, .6);
 
     /* Recoloreado de los elementos de recode.css (botones, inputs, listas)
-       para que combinen con esta tarjeta en vez del verde terminal puro. */
+       para que combinen con esta tarjeta en vez del verde terminal puro.
+       --verde-medio/--verde-oscuro se derivan de --accent (color-mix) para
+       que cambien junto con el acento de cada reto, no solo con el azul. */
     --verde: var(--accent);
-    --verde-medio: #3a9cc9;
-    --verde-oscuro: rgba(89, 199, 255, .1);
+    --verde-medio: color-mix(in srgb, var(--accent) 65%, black);
+    --verde-oscuro: color-mix(in srgb, var(--accent) 12%, transparent);
     --borde: var(--line);
     --rojo: #ff5a5f;
     color: var(--fg);
@@ -108,7 +110,7 @@ body.pantalla-reto {
     transition: border-color .15s, background .15s;
 }
 .opt:hover { border-color: rgba(225, 29, 46, .4); }
-.opt.sel { border-color: var(--accent); background: rgba(89, 199, 255, .1); }
+.opt.sel { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 10%, transparent); }
 .opt .dot {
     width: 10px; height: 10px; border-radius: 50%;
     border: 1px solid var(--muted); flex: 0 0 auto;

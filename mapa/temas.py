@@ -10,6 +10,8 @@ from importlib import import_module
 
 from django.urls import reverse
 
+from comun.colores import acento_de
+
 
 MATERIAS = [
     {
@@ -84,6 +86,7 @@ def info_reto(app, ejercicio_id):
         "titulo": ejercicio["titulo"],
         "bitcoins": ejercicio["bitcoins"],
         "url": reverse(f"{app}:jugar", args=[ejercicio_id]),
+        "acento": acento_de(app),
     }
 
 

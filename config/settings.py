@@ -90,6 +90,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'progreso.context_processors.progreso_alumno',
+                'comun.context_processors.color_reto',
             ],
         },
     },
