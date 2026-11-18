@@ -57,4 +57,44 @@ ReCode.dialogos = {
         d.textContent = texto;
         return d.innerHTML;
     },
+
+    // Conecta #dialogo-salir / #btn-salir / #btn-cancelar-salida /
+    // #btn-confirmar-salida (ya vienen armados desde comun/reto_base.html)
+    // con el patrón de los 10 retos: cancelar sigue jugando, confirmar
+    // navega a ReCode.reto.volverUrl sin guardar nada.
+    //
+    // Cada reto solo necesita llamar esto una vez desde su juego.js:
+    //   ReCode.dialogos.inicializarSalir({
+    //       hayProgreso: () => /* ¿ya hizo algo que se perdería? */,
+    //       puedeSalir: () => /* opcional: false si ya terminó el reto */,
+    //       alCancelar: () => /* opcional: algo extra al seguir jugando, p. ej. refocar un input */,
+    //   });
+    inicializarSalir({ hayProgreso = () => true, puedeSalir = () => true, alCancelar, mensaje } = {}) {
+        const dialogo = document.getElementById("dialogo-salir");
+        const btnSalir = document.getElementById("btn-salir");
+        const btnCancelar = document.getElementById("btn-cancelar-salida");
+        const btnConfirmar = document.getElementById("btn-confirmar-salida");
+        if (!dialogo || !btnSalir || !btnCancelar || !btnConfirmar) {
+            console.error("ReCode.dialogos.inicializarSalir: falta #dialogo-salir o sus botones (revisa que reto.html extienda comun/reto_base.html).");
+            return;
+        }
+        const MENSAJE_SALIR = mensaje || dialogo.querySelector("p")?.textContent
+            || "Se perderá el progreso de este reto y no obtendrás bitcoins. ¿Seguro que quieres salir?";
+        const volverUrl = window.ReCode?.reto?.volverUrl;
+
+        function pedirSalida(evento) {
+            if (!puedeSalir()) return;
+            ReCode.dialogos.pedirSalida(dialogo, MENSAJE_SALIR, volverUrl, evento);
+        }
+        btnSalir.addEventListener("click", pedirSalida);
+        btnCancelar.addEventListener("click", () => {
+            ReCode.dialogos.cerrar(dialogo);
+            if (alCancelar) alCancelar();
+        });
+        btnConfirmar.addEventListener("click", () => {
+            window.location.href = volverUrl; // no se guarda nada ni se dan bitcoins
+        });
+        // La flecha de regresar de la barra superior también pide confirmación mientras se juega.
+        ReCode.dialogos.conectarFlechaSalir(dialogo, MENSAJE_SALIR, volverUrl, () => puedeSalir() && hayProgreso());
+    },
 };

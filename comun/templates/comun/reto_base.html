@@ -39,6 +39,31 @@ No extiende comun/base.html porque usa su propio layout de pantalla completa.
         </div>
     </main>
 
+    <!-- Reto completado: ventana emergente, sin redirección automática (el
+         alumno decide cuándo volver). El contenido varía por reto (algunos
+         muestran info extra como la ecuación o el vértice), por eso es un
+         bloque; la mayoría puede usar el default tal cual. -->
+    <dialog class="confirmar" id="dialogo-exito">
+        {% block exito %}
+        <p id="exito-mensaje"></p>
+        <p id="exito-premio"></p>
+        <div class="dialogo-acciones">
+            <a class="boton" href="{% firstof volver_url url_materia url_mapa %}">Volver a los retos</a>
+        </div>
+        {% endblock %}
+    </dialog>
+
+    <!-- Confirmación de abandono (FE-1): mismo texto y botones en los 10
+         retos; cada reto solo tiene que llamar a
+         ReCode.dialogos.inicializarSalir() desde su juego.js. -->
+    <dialog class="confirmar" id="dialogo-salir">
+        <p>Se perderá el progreso de este reto y no obtendrás bitcoins. ¿Seguro que quieres salir?</p>
+        <div class="dialogo-acciones">
+            <button type="button" class="boton secundario" id="btn-cancelar-salida">Seguir jugando</button>
+            <button type="button" class="boton peligro" id="btn-confirmar-salida">Salir</button>
+        </div>
+    </dialog>
+
     {{ datos_publicos|json_script:"datos-reto" }}
 
     <script src="{% static 'comun/js/recode.js' %}"></script>
