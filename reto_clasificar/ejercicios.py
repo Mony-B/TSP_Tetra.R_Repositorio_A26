@@ -217,7 +217,6 @@ def datos_publicos(ejercicio_id):
         "enunciado": ejercicio["enunciado"],
         "categorias": ejercicio.get("categorias", CATEGORIAS),
         "fichas": fichas(ejercicio),
-        "ayuda": ejercicio["ayuda"],
     }
     if _es_grafica(ejercicio):
         datos["grafica"] = _grafica(ejercicio_id)

@@ -2,7 +2,7 @@
 // El navegador solo dibuja y manda dónde soltó cada ficha; Django decide si es
 // correcto y cuándo se completó el reto (la categoría correcta nunca llega aquí).
 (() => {
-    const { enunciado, categorias, fichas, grafica, ayuda } = ReCode.reto.datos;
+    const { enunciado, categorias, fichas, grafica } = ReCode.reto.datos;
     const raiz = document.getElementById("clasificar");
     const clasificarUrl = raiz.dataset.clasificarUrl;
     const zonasEl = document.getElementById("zonas");
@@ -265,13 +265,10 @@
         ReCode.dialogos.abrir(dialogoExito);
     }
 
-    // --- Ayuda, reiniciar y FE-1 (salir / rendirse) ---------------------------------
+    // --- Reiniciar y FE-1 (salir / rendirse) ---------------------------------
+    // (La pista/PE-1 vía CU-03 todavía no está conectada a ningún reto; se
+    // integrará desde la plantilla compartida cuando exista.)
 
-    document.getElementById("btn-ayuda").addEventListener("click", () => {
-        const a = document.getElementById("ayuda");
-        a.textContent = ayuda;
-        a.hidden = !a.hidden;
-    });
     // jugar() siempre reinicia la partida en el servidor, así que recargar basta.
     document.getElementById("btn-reiniciar").addEventListener("click", () => window.location.reload());
 
