@@ -8,9 +8,6 @@
 <div id="clasificar" data-clasificar-url="{{ clasificar_url }}">
     <div class="cl-barra">
         <div class="cl-enunciado" id="enunciado" aria-live="polite"></div>
-        <div class="cl-progreso" role="progressbar" aria-label="Progreso" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="progreso">
-            <div class="cl-progreso-relleno" id="progreso-relleno"></div>
-        </div>
     </div>
 
     <div class="cl-tablero">
@@ -25,7 +22,13 @@
             <button type="button" class="boton secundario" id="btn-reiniciar">Reiniciar</button>
             <button type="button" class="boton peligro" id="btn-salir">Salir / Rendirse</button>
         </div>
-        <div class="cl-puntos">Puntos: <span id="puntos">0</span>/<span id="total">0</span></div>
+        <div class="cl-avance">
+            <span class="cl-avance-etiqueta">Avance</span>
+            <div class="cl-progreso" role="progressbar" aria-label="Progreso" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="progreso">
+                <div class="cl-progreso-relleno" id="progreso-relleno"></div>
+            </div>
+            <span class="cl-avance-fraccion"><span id="puntos">0</span>/<span id="total">0</span></span>
+        </div>
     </div>
     <p class="cl-mensaje etiqueta" id="aviso" aria-live="polite">Arrastra cada ficha a una caja (o toca la ficha y luego la caja).</p>
 </div>

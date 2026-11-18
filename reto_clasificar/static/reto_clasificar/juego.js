@@ -30,13 +30,16 @@
     document.getElementById("total").textContent = fichas.length;
 
     const zonas = {};
-    categorias.forEach((c) => {
+    categorias.forEach((c, i) => {
         const z = document.createElement("div");
         z.className = `cl-zona ${c.id}`;
         z.dataset.categoria = c.id;
         z.tabIndex = 0;
         z.setAttribute("role", "button");
         z.setAttribute("aria-label", `${c.nombre} ${c.detalle}`);
+        const num = document.createElement("span");
+        num.className = "cl-zona-num";
+        num.textContent = i + 1;
         const h = document.createElement("h3");
         h.textContent = c.nombre;
         const det = document.createElement("small");
@@ -44,7 +47,7 @@
         h.appendChild(det);
         const cont = document.createElement("div");
         cont.className = "cl-zona-fichas";
-        z.append(h, document.createElement("hr"), cont);
+        z.append(num, h, cont);
         zonasEl.appendChild(z);
         zonas[c.id] = { el: z, cont };
         z.addEventListener("click", () => soltarSeleccionada(c.id));
@@ -57,9 +60,13 @@
         const b = document.createElement("button");
         b.type = "button";
         b.className = "cl-ficha";
-        b.textContent = f.etiqueta !== undefined ? f.etiqueta : `(${f.x}, ${f.y})`;
-        b.style.background = COLORES[i % COLORES.length];
         b.dataset.id = f.id;
+        const punto = document.createElement("span");
+        punto.className = "cl-ficha-punto";
+        punto.style.background = COLORES[i % COLORES.length];
+        const texto = document.createElement("span");
+        texto.textContent = f.etiqueta !== undefined ? f.etiqueta : `(${f.x}, ${f.y})`;
+        b.append(punto, texto);
         bandeja.appendChild(b);
         elFicha[f.id] = b;
         engancharArrastre(b, f);
