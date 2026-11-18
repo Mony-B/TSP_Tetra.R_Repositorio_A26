@@ -138,29 +138,21 @@
       : `Ganaste <strong>₿ ${respuesta.bitcoins_otorgados}</strong>.`;
     acciones.hidden = true;
     document.getElementById("exito-mensaje").innerHTML = `<strong>¡Algoritmo restaurado!</strong> ${premio}`;
-    if (typeof dialogoExito.showModal === "function") {
-      dialogoExito.showModal();
-    } else {
-      dialogoExito.setAttribute("open", "");
-    }
+    ReCode.dialogos.abrir(dialogoExito);
   }
 
   // --- FE-1: salir / rendirse con confirmación --------------------------
+  const MENSAJE_SALIR = "Se perderá el progreso de este reto y no obtendrás bitcoins. ¿Salir?";
 
   function pedirSalida(evento) {
-    if (evento) evento.preventDefault();
     if (bloqueado) return;
-    if (typeof dialogo.showModal === "function") {
-      dialogo.showModal();
-    } else if (window.confirm("Se perderá el progreso de este reto y no obtendrás bitcoins. ¿Salir?")) {
-      cerrarReto();
-    }
+    ReCode.dialogos.pedirSalida(dialogo, MENSAJE_SALIR, cerrarReto, evento);
   }
 
   // FE-1.4: cierra el reto sin guardar nada y muestra el botón para que el
   // alumno regrese manualmente (sin redirección automática, R8).
   function cerrarReto() {
-    if (dialogo.open) dialogo.close();
+    ReCode.dialogos.cerrar(dialogo);
     bloqueado = true;
     secuencia.fill(null);
     dibujar();
@@ -171,13 +163,8 @@
   }
 
   document.getElementById("btn-salir").addEventListener("click", pedirSalida);
-  const flecha = document.querySelector(".volver");
-  if (flecha) {
-    flecha.addEventListener("click", (evento) => {
-      if (colocados().size > 0 && !bloqueado) pedirSalida(evento);
-    });
-  }
-  document.getElementById("btn-cancelar-salida").addEventListener("click", () => dialogo.close());
+  ReCode.dialogos.conectarFlechaSalir(dialogo, MENSAJE_SALIR, cerrarReto, () => colocados().size > 0 && !bloqueado);
+  document.getElementById("btn-cancelar-salida").addEventListener("click", () => ReCode.dialogos.cerrar(dialogo));
   document.getElementById("btn-confirmar-salida").addEventListener("click", cerrarReto);
   document.getElementById("btn-verificar").addEventListener("click", verificar);
 

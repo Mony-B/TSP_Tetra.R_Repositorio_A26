@@ -139,40 +139,25 @@ function iniciarMatriz() {
         }
     });
 
-    // Ventana emergente de verdad (<dialog> con showModal), igual que en los
-    // demás retos; si el navegador no la soporta, cae a un confirm() nativo
-    // para salir, y a solo abrir el <dialog> sin "modal" para el de éxito.
     function mostrarExito(r) {
         Object.values(cajas).forEach(c => { c.readOnly = true; });
         $("exito-recompensa").textContent = r.bitcoins_otorgados
             ? `+${r.bitcoins_otorgados} ₿`
             : "La recompensa de este reto ya fue otorgada anteriormente.";
-        const dialogoExito = $("dialogo-exito");
-        if (typeof dialogoExito.showModal === "function") {
-            dialogoExito.showModal();
-        } else {
-            dialogoExito.setAttribute("open", "");
-        }
+        ReCode.dialogos.abrir($("dialogo-exito"));
     }
 
     // --- Salir / Rendirse (FE-1): no se guarda nada -------------------------------
     const dialogoSalir = $("confirmar-salir");
+    const MENSAJE_SALIR = "Se perderá el progreso del reto actual y no obtendrás bitcoins. ¿Seguro que quieres salir?";
     function pedirSalida(e) {
-        if (e) e.preventDefault();
-        if (typeof dialogoSalir.showModal === "function") {
-            dialogoSalir.showModal();
-        } else if (window.confirm("Se perderá el progreso del reto actual y no obtendrás bitcoins. ¿Seguro que quieres salir?")) {
-            window.location.href = raiz.dataset.volverUrl;
-        }
+        ReCode.dialogos.pedirSalida(dialogoSalir, MENSAJE_SALIR, raiz.dataset.volverUrl, e);
     }
     $("btn-salir").addEventListener("click", () => pedirSalida());
-    $("btn-salir-no").addEventListener("click", () => dialogoSalir.close());
+    $("btn-salir-no").addEventListener("click", () => ReCode.dialogos.cerrar(dialogoSalir));
     // La flecha de regresar de la plantilla también pide confirmación mientras se juega.
-    const flecha = document.querySelector(".volver");
-    if (flecha) flecha.addEventListener("click", (e) => {
-        const tieneProgreso = Object.values(cajas).some(c => c.value.trim() !== "");
-        if (tieneProgreso) pedirSalida(e);
-    });
+    ReCode.dialogos.conectarFlechaSalir(dialogoSalir, MENSAJE_SALIR, raiz.dataset.volverUrl,
+        () => Object.values(cajas).some(c => c.value.trim() !== ""));
 
     pintarVivas();
 }

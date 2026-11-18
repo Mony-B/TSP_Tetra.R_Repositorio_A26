@@ -200,21 +200,16 @@
     }
 
     // --- FE-1: salir / rendirse con confirmación ----------------------------
+    const MENSAJE_SALIR = "Se perderá el progreso de este reto y no obtendrás bitcoins. ¿Salir?";
 
     function pedirSalida(e) {
-        if (e) e.preventDefault();
         if (finished) return;
-        if (typeof dialogo.showModal === "function") {
-            dialogo.showModal();
-        } else if (window.confirm("Se perderá el progreso de este reto y no obtendrás bitcoins. ¿Salir?")) {
-            window.location.href = ReCode.reto.volverUrl;
-        }
+        ReCode.dialogos.pedirSalida(dialogo, MENSAJE_SALIR, ReCode.reto.volverUrl, e);
     }
 
     document.getElementById("btn-salir").addEventListener("click", pedirSalida);
-    const flecha = document.querySelector(".volver");
-    if (flecha) flecha.addEventListener("click", (e) => { if (visited.size > 1 && !finished) pedirSalida(e); });
-    document.getElementById("btn-cancelar-salida").addEventListener("click", () => dialogo.close());
+    ReCode.dialogos.conectarFlechaSalir(dialogo, MENSAJE_SALIR, ReCode.reto.volverUrl, () => visited.size > 1 && !finished);
+    document.getElementById("btn-cancelar-salida").addEventListener("click", () => ReCode.dialogos.cerrar(dialogo));
     document.getElementById("btn-confirmar-salida").addEventListener("click", () => {
         window.location.href = ReCode.reto.volverUrl;
     });

@@ -249,11 +249,7 @@
 
     // --- Victoria (pasos 7-9) -----------------------------------------------------
 
-    function escapar(texto) {
-        const d = document.createElement("div");
-        d.textContent = texto;
-        return d.innerHTML;
-    }
+    const escapar = ReCode.dialogos.escaparHTML;
 
     async function completar() {
         const r = await ReCode.postJSON(ReCode.reto.revisarUrl, {});
@@ -267,11 +263,7 @@
             : `Obtuviste <strong>₿ ${r.bitcoins_otorgados}</strong>.`;
         document.getElementById("exito-mensaje").innerHTML = `<strong>${escapar(r.mensaje)}</strong> Clasificaste todas las fichas.`;
         document.getElementById("exito-premio").innerHTML = premio;
-        if (typeof dialogoExito.showModal === "function") {
-            dialogoExito.showModal();
-        } else {
-            dialogoExito.setAttribute("open", "");
-        }
+        ReCode.dialogos.abrir(dialogoExito);
     }
 
     // --- Ayuda, reiniciar y FE-1 (salir / rendirse) ---------------------------------
@@ -284,19 +276,14 @@
     // jugar() siempre reinicia la partida en el servidor, así que recargar basta.
     document.getElementById("btn-reiniciar").addEventListener("click", () => window.location.reload());
 
+    const MENSAJE_SALIR = "Se perderá el progreso de este reto y no obtendrás bitcoins. ¿Salir?";
     function pedirSalida(e) {
-        if (e) e.preventDefault();
-        if (typeof dialogo.showModal === "function") {
-            dialogo.showModal();
-        } else if (window.confirm("Se perderá el progreso de este reto y no obtendrás bitcoins. ¿Salir?")) {
-            window.location.href = ReCode.reto.volverUrl;
-        }
+        ReCode.dialogos.pedirSalida(dialogo, MENSAJE_SALIR, ReCode.reto.volverUrl, e);
     }
     document.getElementById("btn-salir").addEventListener("click", pedirSalida);
     // La flecha de regresar de la plantilla también pide confirmación mientras se juega.
-    const flecha = document.querySelector(".volver");
-    if (flecha) flecha.addEventListener("click", (e) => { if (!terminado) pedirSalida(e); });
-    document.getElementById("btn-cancelar-salida").addEventListener("click", () => dialogo.close());
+    ReCode.dialogos.conectarFlechaSalir(dialogo, MENSAJE_SALIR, ReCode.reto.volverUrl, () => !terminado);
+    document.getElementById("btn-cancelar-salida").addEventListener("click", () => ReCode.dialogos.cerrar(dialogo));
     document.getElementById("btn-confirmar-salida").addEventListener("click", () => {
         window.location.href = ReCode.reto.volverUrl; // no se guarda nada ni se dan bitcoins
     });

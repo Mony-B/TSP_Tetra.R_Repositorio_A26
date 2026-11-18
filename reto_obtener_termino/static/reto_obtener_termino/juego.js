@@ -153,11 +153,7 @@
         document.getElementById("exito-mensaje").innerHTML = `<strong>${r.mensaje}</strong>`;
         document.getElementById("exito-significado").innerHTML = r.significado;
         document.getElementById("exito-premio").innerHTML = premio;
-        if (typeof dialogoExito.showModal === "function") {
-            dialogoExito.showModal();
-        } else {
-            dialogoExito.setAttribute("open", "");
-        }
+        ReCode.dialogos.abrir(dialogoExito);
     }
 
     // FA-1: intentos agotados -> Reintentar o Salir.
@@ -188,20 +184,15 @@
 
     // --- FE-1: salir / rendirse con confirmación ----------------------------
 
+    const MENSAJE_SALIR = "Se perderá el progreso de este reto y no obtendrás bitcoins. ¿Salir?";
     function pedirSalida(e) {
-        if (e) e.preventDefault();
-        if (typeof dialogo.showModal === "function") {
-            dialogo.showModal();
-        } else if (window.confirm("Se perderá el progreso de este reto y no obtendrás bitcoins. ¿Salir?")) {
-            window.location.href = ReCode.reto.volverUrl;
-        }
+        ReCode.dialogos.pedirSalida(dialogo, MENSAJE_SALIR, ReCode.reto.volverUrl, e);
     }
 
     document.getElementById("btn-salir").addEventListener("click", pedirSalida);
     // La flecha de regresar de la plantilla también pide confirmación mientras se juega.
-    const flecha = document.querySelector(".volver");
-    if (flecha) flecha.addEventListener("click", (e) => { if (fila > 0 && !bloqueado) pedirSalida(e); });
-    document.getElementById("btn-cancelar-salida").addEventListener("click", () => dialogo.close());
+    ReCode.dialogos.conectarFlechaSalir(dialogo, MENSAJE_SALIR, ReCode.reto.volverUrl, () => fila > 0 && !bloqueado);
+    document.getElementById("btn-cancelar-salida").addEventListener("click", () => ReCode.dialogos.cerrar(dialogo));
     document.getElementById("btn-confirmar-salida").addEventListener("click", () => {
         window.location.href = ReCode.reto.volverUrl;
     });

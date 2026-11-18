@@ -158,11 +158,7 @@
       ? `¡Felicidades! +${respuesta.bitcoins_otorgados} bitcoins`
       : '¡Felicidades! Ya habías recibido los bitcoins de este reto.';
     botonSalir.hidden = true;
-    if (typeof victoria.showModal === 'function') {
-      victoria.showModal();
-    } else {
-      victoria.setAttribute('open', '');
-    }
+    ReCode.dialogos.abrir(victoria);
   }
 
   /** Avisa que se superó el nivel y, tras una pausa, muestra el siguiente. */
@@ -282,12 +278,7 @@
     if (terminado) {
       return;
     }
-    evento.preventDefault();
-    if (typeof dialogo.showModal === 'function') {
-      dialogo.showModal();
-    } else if (window.confirm(MENSAJE_SALIR)) {
-      window.location.href = ReCode.reto.volverUrl;
-    }
+    ReCode.dialogos.pedirSalida(dialogo, MENSAJE_SALIR, ReCode.reto.volverUrl, evento);
   }
 
   cargarNivel(ReCode.reto.datos);
@@ -309,7 +300,7 @@
     flecha.addEventListener('click', pedirSalida);
   }
   document.getElementById('btn-cancelar-salida').addEventListener('click', () => {
-    dialogo.close();
+    ReCode.dialogos.cerrar(dialogo);
   });
   document.getElementById('btn-confirmar-salida').addEventListener('click', () => {
     window.location.href = ReCode.reto.volverUrl;

@@ -244,18 +244,13 @@
     // (ver estilos: se oculta la flecha genérica para no duplicarlo).
 
     function pedirSalida(e) {
-        if (e) e.preventDefault();
         if (terminado) return;
-        if (typeof dialogo.showModal === "function") {
-            dialogo.showModal();
-        } else if (window.confirm("Se perderá el progreso de este intento y no obtendrás bitcoins. ¿Salir?")) {
-            window.location.href = ReCode.reto.volverUrl;
-        }
+        ReCode.dialogos.pedirSalida(dialogo, "Se perderá el progreso de este intento y no obtendrás bitcoins. ¿Salir?", ReCode.reto.volverUrl, e);
     }
 
     document.getElementById("btn-salir").addEventListener("click", pedirSalida);
     document.getElementById("btn-salir-agotado").addEventListener("click", pedirSalida);
-    document.getElementById("btn-cancelar-salida").addEventListener("click", () => dialogo.close());
+    document.getElementById("btn-cancelar-salida").addEventListener("click", () => ReCode.dialogos.cerrar(dialogo));
     document.getElementById("btn-confirmar-salida").addEventListener("click", () => {
         window.location.href = ReCode.reto.volverUrl;
     });

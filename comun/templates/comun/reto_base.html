@@ -42,6 +42,7 @@ No extiende comun/base.html porque usa su propio layout de pantalla completa.
     {{ datos_publicos|json_script:"datos-reto" }}
 
     <script src="{% static 'comun/js/recode.js' %}"></script>
+    <script src="{% static 'comun/js/reto_dialogos.js' %}"></script>
     <script>
         ReCode.configurarReto({
             revisarUrl: "{{ revisar_url }}",

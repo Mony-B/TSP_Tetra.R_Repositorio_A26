@@ -102,7 +102,7 @@ function iniciarPuertas() {
 
     function mostrarEscena() {
         resultado.hidden = true;
-        if (confirmar.open) confirmar.close();
+        ReCode.dialogos.cerrar(confirmar);
         escena.hidden = false;
         $("btn-verificar").disabled = false;
         ponerFoco("parpadea");
@@ -121,11 +121,7 @@ function iniciarPuertas() {
             $("exito-premio").textContent = r.bitcoins_otorgados
                 ? `Recompensa: +₿ ${r.bitcoins_otorgados}`
                 : "La recompensa de este reto ya fue otorgada anteriormente.";
-            if (typeof dialogoExito.showModal === "function") {
-                dialogoExito.showModal();
-            } else {
-                dialogoExito.setAttribute("open", "");
-            }
+            ReCode.dialogos.abrir(dialogoExito);
             return;
         }
 
@@ -164,24 +160,17 @@ function iniciarPuertas() {
     });
 
     // --- Salir / Rendirse (FE-1): ventana emergente, no se guarda nada -----------
+    const MENSAJE_SALIR = "Si sales, se pierde el progreso del reto actual y no obtendrás bitcoins. ¿Salir?";
     function pedirSalida(e) {
-        if (e) e.preventDefault();
-        if (typeof confirmar.showModal === "function") {
-            confirmar.showModal();
-        } else if (window.confirm("Si sales, se pierde el progreso del reto actual y no obtendrás bitcoins. ¿Salir?")) {
-            window.location.href = raiz.dataset.volverUrl;
-        }
+        ReCode.dialogos.pedirSalida(confirmar, MENSAJE_SALIR, raiz.dataset.volverUrl, e);
     }
     $("btn-salir").addEventListener("click", () => pedirSalida());
-    $("btn-seguir").addEventListener("click", () => confirmar.close());
+    $("btn-seguir").addEventListener("click", () => ReCode.dialogos.cerrar(confirmar));
     $("btn-confirmar-salida").addEventListener("click", () => {
         window.location.href = raiz.dataset.volverUrl;
     });
     // La flecha de regresar de la plantilla también pide confirmación mientras se juega.
-    const flecha = document.querySelector(".volver");
-    if (flecha) flecha.addEventListener("click", (e) => {
-        if (actual > 0) pedirSalida(e);
-    });
+    ReCode.dialogos.conectarFlechaSalir(confirmar, MENSAJE_SALIR, raiz.dataset.volverUrl, () => actual > 0);
 
     cargarPuerta();
 }
