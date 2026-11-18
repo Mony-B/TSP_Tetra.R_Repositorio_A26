@@ -123,6 +123,13 @@ a.btn, button.btn {
 #resultado:empty { display: none; }
 #resultado .mensaje { margin-top: 20px; }
 
+/* Botón "peligro" (salir/rendirse, confirmar salida): mismo estándar en
+   los 10 retos, antes repetido suelto en 7 archivos distintos. Transparente,
+   marco y letras en --rojo; sin cambio al pasar el mouse (a diferencia del
+   resto de los botones, que sí responden al hover). */
+.boton.peligro { border-color: var(--rojo); color: var(--rojo); background: transparent; }
+.boton.peligro:hover { background: transparent; color: var(--rojo); }
+
 /* El reto de Linux ya era una terminal: que se funda con la tarjeta */
 .card .terminal {
     background: transparent;

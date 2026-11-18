@@ -33,7 +33,6 @@
 
 .acciones-linux { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
 .acciones-linux[hidden] { display: none; }
-.boton.peligro { border-color: var(--rojo); color: var(--rojo); background: transparent; }
 
 dialog.confirmar {
     background: #000; color: var(--verde); border: 1px solid var(--verde);

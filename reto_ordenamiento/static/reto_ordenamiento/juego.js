@@ -142,30 +142,21 @@
   }
 
   // --- FE-1: salir / rendirse con confirmación --------------------------
+  // Mismo patrón que los demás retos: confirmar salida navega a volverUrl
+  // (sin guardar nada); no se queda en la página mostrando un mensaje.
   const MENSAJE_SALIR = "Se perderá el progreso de este reto y no obtendrás bitcoins. ¿Salir?";
 
   function pedirSalida(evento) {
     if (bloqueado) return;
-    ReCode.dialogos.pedirSalida(dialogo, MENSAJE_SALIR, cerrarReto, evento);
-  }
-
-  // FE-1.4: cierra el reto sin guardar nada y muestra el botón para que el
-  // alumno regrese manualmente (sin redirección automática, R8).
-  function cerrarReto() {
-    ReCode.dialogos.cerrar(dialogo);
-    bloqueado = true;
-    secuencia.fill(null);
-    dibujar();
-    acciones.hidden = true;
-    resultado.innerHTML = `
-      <p class="mensaje">Saliste del reto. No se guardó el progreso ni se otorgaron bitcoins.</p>
-      <a class="boton" href="${ReCode.reto.volverUrl}">Regresar a la selección de retos</a>`;
+    ReCode.dialogos.pedirSalida(dialogo, MENSAJE_SALIR, ReCode.reto.volverUrl, evento);
   }
 
   document.getElementById("btn-salir").addEventListener("click", pedirSalida);
-  ReCode.dialogos.conectarFlechaSalir(dialogo, MENSAJE_SALIR, cerrarReto, () => colocados().size > 0 && !bloqueado);
+  ReCode.dialogos.conectarFlechaSalir(dialogo, MENSAJE_SALIR, ReCode.reto.volverUrl, () => colocados().size > 0 && !bloqueado);
   document.getElementById("btn-cancelar-salida").addEventListener("click", () => ReCode.dialogos.cerrar(dialogo));
-  document.getElementById("btn-confirmar-salida").addEventListener("click", cerrarReto);
+  document.getElementById("btn-confirmar-salida").addEventListener("click", () => {
+    window.location.href = ReCode.reto.volverUrl; // no se guarda nada ni se dan bitcoins
+  });
   document.getElementById("btn-verificar").addEventListener("click", verificar);
 
   dibujar();

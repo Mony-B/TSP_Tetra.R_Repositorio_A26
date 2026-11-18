@@ -148,13 +148,16 @@ function iniciarMatriz() {
     }
 
     // --- Salir / Rendirse (FE-1): no se guarda nada -------------------------------
-    const dialogoSalir = $("confirmar-salir");
+    const dialogoSalir = $("dialogo-salir");
     const MENSAJE_SALIR = "Se perderá el progreso del reto actual y no obtendrás bitcoins. ¿Seguro que quieres salir?";
     function pedirSalida(e) {
         ReCode.dialogos.pedirSalida(dialogoSalir, MENSAJE_SALIR, raiz.dataset.volverUrl, e);
     }
     $("btn-salir").addEventListener("click", () => pedirSalida());
-    $("btn-salir-no").addEventListener("click", () => ReCode.dialogos.cerrar(dialogoSalir));
+    $("btn-cancelar-salida").addEventListener("click", () => ReCode.dialogos.cerrar(dialogoSalir));
+    $("btn-confirmar-salida").addEventListener("click", () => {
+        window.location.href = raiz.dataset.volverUrl; // no se guarda nada ni se dan bitcoins
+    });
     // La flecha de regresar de la plantilla también pide confirmación mientras se juega.
     ReCode.dialogos.conectarFlechaSalir(dialogoSalir, MENSAJE_SALIR, raiz.dataset.volverUrl,
         () => Object.values(cajas).some(c => c.value.trim() !== ""));

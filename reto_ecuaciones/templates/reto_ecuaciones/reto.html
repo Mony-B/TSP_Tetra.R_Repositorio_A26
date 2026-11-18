@@ -1,7 +1,7 @@
 {% extends "comun/reto_base.html" %}
 {% load static %}
+{% block estilos %}<link rel="stylesheet" href="{% static 'reto_ecuaciones/matriz.css' %}">{% endblock %}
 {% block juego %}
-<link rel="stylesheet" href="{% static 'reto_ecuaciones/matriz.css' %}">
 
 {{ datos_publicos|json_script:"matriz-datos" }}
 
@@ -40,7 +40,7 @@
 
         <div class="matriz-acciones">
             <button type="button" class="boton" id="btn-verificar">&#10145; Verificar</button>
-            <button type="button" class="boton boton-secundario" id="btn-salir">Salir / Rendirse</button>
+            <button type="button" class="boton peligro" id="btn-salir">Salir / Rendirse</button>
         </div>
     </div>
 
@@ -51,16 +51,16 @@
         <a class="boton" id="btn-continuar" href="{{ volver_url }}">Continuar &#10145;</a>
     </dialog>
 
-    <!-- Confirmación de abandono (FE-1): ventana emergente, igual que en
-         los demás retos (reto_laberinto, reto_parabolica...), no un
-         mensaje dentro de la propia página. Va adentro de .matriz para
-         heredar sus variables de color (--verde, --rojo); showModal()
+    <!-- Confirmación de abandono (FE-1): ventana emergente, mismos ids que
+         el resto de los retos (btn-cancelar-salida / btn-confirmar-salida),
+         no un mensaje dentro de la propia página. Va adentro de .matriz
+         para heredar sus variables de color (--verde, --rojo); showModal()
          igual la saca por encima de todo lo demás. -->
-    <dialog class="matriz-confirmar" id="confirmar-salir">
+    <dialog class="matriz-confirmar" id="dialogo-salir">
         <p id="confirmar-texto">Se perderá el progreso del reto actual y no obtendrás bitcoins. ¿Seguro que quieres salir?</p>
         <div class="matriz-acciones">
-            <a class="boton" href="{{ volver_url }}" id="btn-salir-si">Sí</a>
-            <button type="button" class="boton boton-secundario" id="btn-salir-no">NO</button>
+            <button type="button" class="boton secundario" id="btn-cancelar-salida">Seguir jugando</button>
+            <button type="button" class="boton peligro" id="btn-confirmar-salida">Salir</button>
         </div>
     </dialog>
 </section>

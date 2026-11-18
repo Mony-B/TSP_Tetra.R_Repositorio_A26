@@ -1,5 +1,10 @@
-/* Puertas lógicas (CU-05). Mismo estilo terminal verde sobre negro del resto de Re:Code. */
-.puertas { --verde: #00ff00; --verde-tenue: #00aa00; --rojo: #ff3b3b; --ambar: #ffd84a; max-width: 760px; }
+/* Puertas lógicas (CU-05). --verde/--rojo se heredan de .card (comun/css/
+   reto.css), que los deriva de --accent según la materia del reto
+   (comun/colores.py). No se redefinen aquí: --verde-tenue se deriva de
+   var(--verde) con color-mix() para que cambie junto con el acento.
+   --ambar sí queda fijo a propósito: es el "encendido" universal del foco,
+   no depende de la materia. */
+.puertas { --verde-tenue: color-mix(in srgb, var(--verde) 65%, black); --ambar: #ffd84a; max-width: 760px; }
 
 .puertas-enunciado { margin: 0 0 18px; }
 
@@ -83,12 +88,12 @@
 .puertas [hidden] { display: none !important; }
 
 /* Ventanas emergentes (<dialog> con showModal): confirmar salida y reto
-   completado, igual que en los demás retos. */
+   completado, mismo marco que en los demás retos (p. ej. comandos_linux):
+   1px solid var(--verde), sin distinguir una de otra. */
 dialog.puertas-confirmar {
-    border: 2px dashed var(--rojo); background: #000; color: var(--verde);
+    border: 1px solid var(--verde); background: #000; color: var(--verde);
     font: inherit; padding: 14px 18px; max-width: 420px;
 }
-#dialogo-exito.puertas-confirmar { border-style: solid; border-color: var(--verde-tenue); }
 dialog.puertas-confirmar::backdrop { background: rgba(0, 0, 0, .7); }
 
 @media (max-width: 560px) {

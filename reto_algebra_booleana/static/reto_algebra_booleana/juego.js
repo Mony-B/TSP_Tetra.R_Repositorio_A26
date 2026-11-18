@@ -17,7 +17,7 @@ function iniciarPuertas() {
     const $ = id => document.getElementById(id);
     const escena = $("escena");
     const resultado = $("resultado-puertas");
-    const confirmar = $("confirmar-salir");
+    const confirmar = $("dialogo-salir");
     const dialogoExito = $("dialogo-exito");
     const foco = $("foco");
     const circuito = $("circuito");
@@ -165,7 +165,7 @@ function iniciarPuertas() {
         ReCode.dialogos.pedirSalida(confirmar, MENSAJE_SALIR, raiz.dataset.volverUrl, e);
     }
     $("btn-salir").addEventListener("click", () => pedirSalida());
-    $("btn-seguir").addEventListener("click", () => ReCode.dialogos.cerrar(confirmar));
+    $("btn-cancelar-salida").addEventListener("click", () => ReCode.dialogos.cerrar(confirmar));
     $("btn-confirmar-salida").addEventListener("click", () => {
         window.location.href = raiz.dataset.volverUrl;
     });

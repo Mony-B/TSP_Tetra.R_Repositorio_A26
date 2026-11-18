@@ -1,7 +1,7 @@
 {% extends "comun/reto_base.html" %}
 {% load static %}
+{% block estilos %}<link rel="stylesheet" href="{% static 'reto_algebra_booleana/puertas.css' %}">{% endblock %}
 {% block juego %}
-<link rel="stylesheet" href="{% static 'reto_algebra_booleana/puertas.css' %}">
 
 {{ datos_publicos|json_script:"puertas-datos" }}
 
@@ -36,7 +36,7 @@
 
     <div class="puertas-acciones">
         <button type="button" class="boton" id="btn-verificar">&#10145; Verificar</button>
-        <button type="button" class="boton boton-secundario" id="btn-salir">Salir / Rendirse</button>
+        <button type="button" class="boton peligro" id="btn-salir">Salir / Rendirse</button>
     </div>
     <p class="etiqueta" id="puertas-avance"></p>
 
@@ -58,12 +58,13 @@
         </div>
     </dialog>
 
-    <!-- Confirmación de abandono (FE-1): ventana emergente. -->
-    <dialog class="puertas-confirmar" id="confirmar-salir">
+    <!-- Confirmación de abandono (FE-1): ventana emergente, mismos ids que
+         el resto de los retos (btn-cancelar-salida / btn-confirmar-salida). -->
+    <dialog class="puertas-confirmar" id="dialogo-salir">
         <p id="confirmar-texto">Si sales, se pierde el progreso del reto actual y no obtendrás bitcoins.</p>
         <div class="puertas-acciones">
-            <button type="button" class="boton boton-secundario" id="btn-seguir">Seguir jugando</button>
-            <button type="button" class="boton" id="btn-confirmar-salida">Sí, salir</button>
+            <button type="button" class="boton secundario" id="btn-cancelar-salida">Seguir jugando</button>
+            <button type="button" class="boton peligro" id="btn-confirmar-salida">Salir</button>
         </div>
     </dialog>
 </section>
