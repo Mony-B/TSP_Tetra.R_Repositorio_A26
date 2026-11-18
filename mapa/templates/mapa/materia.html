@@ -23,20 +23,24 @@
     </header>
 
     <main class="body">
-        <div class="grid">
-            {% for reto in retos %}
-            <a href="{{ reto.url }}" class="reto{% if reto.resuelto %} done{% endif %}">
-                <span class="name">Reto {{ forloop.counter }} — {{ reto.titulo }}</span>
-                <span class="st">{% if reto.resuelto %}Completado{% else %}Pendiente{% endif %}</span>
-            </a>
-            {% empty %}
-            <p class="sin-retos">Esta materia todavía no tiene retos.</p>
-            {% endfor %}
+        <div class="grid-wrap">
+            <div class="grid">
+                {% for reto in retos %}
+                <a href="{{ reto.url }}" class="reto{% if reto.resuelto %} done{% endif %}">
+                    <span class="tag">RETO {{ forloop.counter }}</span>
+                    <span class="name">{{ reto.titulo }}</span>
+                    <span class="st">{% if reto.resuelto %}✓ Completado{% else %}Pendiente{% endif %}</span>
+                    <span class="enter">Entrar al reto →</span>
+                </a>
+                {% empty %}
+                <p class="sin-retos">Esta materia todavía no tiene retos.</p>
+                {% endfor %}
+            </div>
 
             {% if tiene_examen %}
-            <div class="reto exam">
+            <div class="exam-card">
                 <span>
-                    <span class="name">Examen final — {{ materia.nombre }}</span><br>
+                    <span class="name">Examen final — {{ materia.nombre }}</span>
                     <span class="st">Disponible en cualquier momento</span>
                 </span>
                 <a class="go{% if examen_aprobado %} hecho{% endif %}" href="{% url 'batalla:examen' materia.slug %}">

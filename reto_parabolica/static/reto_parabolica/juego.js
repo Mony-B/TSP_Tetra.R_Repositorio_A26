@@ -86,7 +86,7 @@
         const paso = 50;
         ctx.save();
         ctx.lineWidth = 1;
-        ctx.strokeStyle = "rgba(0, 255, 0, 0.12)";
+        ctx.strokeStyle = "rgba(89, 199, 255, 0.14)";
         for (let x = LAUNCH_X; x < W; x += paso) {
             ctx.beginPath(); ctx.moveTo(x, 8); ctx.lineTo(x, GROUND); ctx.stroke();
         }
@@ -96,7 +96,7 @@
         for (let y = GROUND; y >= 10; y -= paso) {
             ctx.beginPath(); ctx.moveTo(5, y); ctx.lineTo(W - 4, y); ctx.stroke();
         }
-        ctx.strokeStyle = "rgba(0, 255, 0, 0.4)"; ctx.lineWidth = 1.3;
+        ctx.strokeStyle = "rgba(89, 199, 255, 0.45)"; ctx.lineWidth = 1.3;
         ctx.beginPath(); ctx.moveTo(LAUNCH_X, 8); ctx.lineTo(LAUNCH_X, GROUND); ctx.lineTo(W - 4, GROUND); ctx.stroke();
         ctx.restore();
     }
@@ -110,7 +110,7 @@
 
         // Objetivo fijo.
         const tx = LAUNCH_X + datos.objetivo_x, ty = GROUND - datos.objetivo_y;
-        ctx.strokeStyle = "#00aa00"; ctx.lineWidth = 2;
+        ctx.strokeStyle = "#3a9cc9"; ctx.lineWidth = 2;
         ctx.beginPath(); ctx.arc(tx, ty, datos.objetivo_radio, 0, Math.PI * 2); ctx.stroke();
         ctx.beginPath(); ctx.arc(tx, ty, 6, 0, Math.PI * 2); ctx.stroke();
 
@@ -123,7 +123,7 @@
             const guia = puntosDeTrayectoria(a, b, alcancePrevia, 0.28);
             ctx.save();
             ctx.setLineDash([5, 7]);
-            ctx.strokeStyle = "rgba(0, 255, 0, 0.55)"; ctx.lineWidth = 2;
+            ctx.strokeStyle = "rgba(89, 199, 255, 0.6)"; ctx.lineWidth = 2;
             ctx.beginPath();
             guia.forEach(([x, y], i) => (i ? ctx.lineTo(x, y) : ctx.moveTo(x, y)));
             ctx.stroke();
@@ -131,7 +131,7 @@
         }
 
         if (puntosTrayectoria && puntosTrayectoria.length > 1) {
-            ctx.strokeStyle = "#00ff00"; ctx.lineWidth = 2.5;
+            ctx.strokeStyle = "#59c7ff"; ctx.lineWidth = 2.5;
             ctx.beginPath();
             puntosTrayectoria.forEach(([x, y], i) => (i ? ctx.lineTo(x, y) : ctx.moveTo(x, y)));
             ctx.stroke();
