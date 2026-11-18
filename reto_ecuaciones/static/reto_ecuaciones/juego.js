@@ -14,6 +14,7 @@ function iniciarMatriz() {
     }
     const revisarUrl = raiz.dataset.revisarUrl;
     const $ = id => document.getElementById(id);
+    const escapar = ReCode.dialogos.escaparHTML;
     const cajas = {};                       // nombre de celda -> <input>
 
     $("matriz-mision").textContent = datos.mision;
@@ -141,26 +142,19 @@ function iniciarMatriz() {
 
     function mostrarExito(r) {
         Object.values(cajas).forEach(c => { c.readOnly = true; });
-        $("exito-recompensa").textContent = r.bitcoins_otorgados
-            ? `+${r.bitcoins_otorgados} ₿`
-            : "La recompensa de este reto ya fue otorgada anteriormente.";
+        $("exito-mensaje").innerHTML = `<strong>${escapar(r.mensaje || "Correcto.")}</strong> Resolviste la matriz.`;
+        $("exito-premio").innerHTML = r.bitcoins_otorgados
+            ? `Obtuviste <strong>₿ ${r.bitcoins_otorgados}</strong>.`
+            : "La recompensa de este reto ya se te había otorgado antes.";
         ReCode.dialogos.abrir($("dialogo-exito"));
     }
 
     // --- Salir / Rendirse (FE-1): no se guarda nada -------------------------------
-    const dialogoSalir = $("dialogo-salir");
-    const MENSAJE_SALIR = "Se perderá el progreso del reto actual y no obtendrás bitcoins. ¿Seguro que quieres salir?";
-    function pedirSalida(e) {
-        ReCode.dialogos.pedirSalida(dialogoSalir, MENSAJE_SALIR, raiz.dataset.volverUrl, e);
-    }
-    $("btn-salir").addEventListener("click", () => pedirSalida());
-    $("btn-cancelar-salida").addEventListener("click", () => ReCode.dialogos.cerrar(dialogoSalir));
-    $("btn-confirmar-salida").addEventListener("click", () => {
-        window.location.href = raiz.dataset.volverUrl; // no se guarda nada ni se dan bitcoins
+    // Diálogo y mensaje de salida compartidos con los demás retos
+    // (comun/reto_base.html + comun/js/reto_dialogos.js).
+    ReCode.dialogos.inicializarSalir({
+        hayProgreso: () => Object.values(cajas).some(c => c.value.trim() !== ""),
     });
-    // La flecha de regresar de la plantilla también pide confirmación mientras se juega.
-    ReCode.dialogos.conectarFlechaSalir(dialogoSalir, MENSAJE_SALIR, raiz.dataset.volverUrl,
-        () => Object.values(cajas).some(c => c.value.trim() !== ""));
 
     pintarVivas();
 }

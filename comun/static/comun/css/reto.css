@@ -19,7 +19,13 @@
 }
 
 body.pantalla-reto {
-    display: block;
+    /* Columna (barra arriba, .body abajo) para que .body pueda crecer con
+       flex: 1 y la tarjeta llegue hasta abajo de la pantalla en vez de
+       quedar flotando centrada con espacio vacío debajo (ver .body más
+       abajo: retos con mucho contenido, como reto_ecuaciones, la
+       necesitan). */
+    display: flex;
+    flex-direction: column;
     min-height: 100vh;
     min-height: 100dvh;
     margin: 0;
@@ -50,7 +56,10 @@ body.pantalla-reto {
    pantalla de selección de retos (mapa/materia.html). Esta hoja solo
    trae lo propio de la tarjeta del reto. */
 
-.body { display: flex; align-items: center; justify-content: center; padding: 40px; }
+.body {
+    display: flex; flex: 1; align-items: stretch; justify-content: center;
+    padding: 40px;
+}
 .card {
     width: 100%; max-width: 920px;
     background: var(--surface);

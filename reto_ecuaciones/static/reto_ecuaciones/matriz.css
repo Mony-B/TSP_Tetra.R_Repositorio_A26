@@ -28,18 +28,9 @@
 
 .matriz-mensaje { margin: 12px 0; font-size: 1.1rem; }
 .matriz-mensaje.error { color: var(--rojo); }
-.matriz-recompensa { font-size: 1.6rem; margin: 6px 0 14px; }
 .matriz-acciones { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 12px; }
 
-/* Ventanas emergentes (<dialog> con showModal): confirmar salida y éxito,
-   igual que en los demás retos. Van adentro de .matriz para heredar sus
-   variables de color (--verde, --rojo); showModal() las saca por encima
-   de todo lo demás de todas formas. */
-dialog.matriz-confirmar {
-    border: 2px solid var(--verde-tenue); background: #000; color: var(--verde);
-    font: inherit; padding: 20px 24px; max-width: 420px;
-}
-dialog.matriz-confirmar::backdrop { background: rgba(0, 0, 0, .7); }
-dialog.matriz-confirmar p { margin: 0 0 16px; }
+/* Los diálogos de salir y de reto completado (dialog.confirmar) ya vienen
+   estilizados de comun/css/reto.css: no se redefinen aquí. */
 .indice { display: flex; align-items: center; justify-content: center; color: var(--verde-tenue); font-size: .9rem; }
 .matriz-pistas li { font-size: 1rem; }
