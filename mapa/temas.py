@@ -36,6 +36,9 @@ MATERIAS = [
                 ("reto_obtener_termino", "conceptos-basicos-2"),
                 ("reto_obtener_termino", "conceptos-basicos-3"),
             ]},
+            {"nombre": "Control de flujo: condicionales y ciclos", "retos": [
+                ("reto_clasificar", "condicionales-ciclos"),
+            ]},
         ],
     },
     {

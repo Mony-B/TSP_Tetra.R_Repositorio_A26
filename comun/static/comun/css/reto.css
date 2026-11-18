@@ -30,6 +30,19 @@ body.pantalla-reto {
         var(--bg);
     color: var(--fg);
     font-family: "Share Tech Mono", monospace;
+
+    /* Recoloreado de los elementos de recode.css (botones, inputs, listas)
+       para que combinen con el acento del reto en vez del verde terminal
+       puro. --verde-medio/--verde-oscuro se derivan de --accent
+       (color-mix) para que cambien junto con el acento de cada reto/
+       materia. Van en el body (no solo en .card) para que también los
+       hereden los <dialog> de salir/victoria, que son hermanos de .card,
+       no sus hijos. */
+    --verde: var(--accent);
+    --verde-medio: color-mix(in srgb, var(--accent) 65%, black);
+    --verde-oscuro: color-mix(in srgb, var(--accent) 12%, transparent);
+    --borde: var(--line);
+    --rojo: #ff5a5f;
 }
 
 /* La barra superior (flecha, marca, título, billetera) ya no se define
@@ -45,16 +58,6 @@ body.pantalla-reto {
     border-radius: 14px;
     padding: 40px;
     box-shadow: 0 30px 60px -20px rgba(0, 0, 0, .6);
-
-    /* Recoloreado de los elementos de recode.css (botones, inputs, listas)
-       para que combinen con esta tarjeta en vez del verde terminal puro.
-       --verde-medio/--verde-oscuro se derivan de --accent (color-mix) para
-       que cambien junto con el acento de cada reto, no solo con el azul. */
-    --verde: var(--accent);
-    --verde-medio: color-mix(in srgb, var(--accent) 65%, black);
-    --verde-oscuro: color-mix(in srgb, var(--accent) 12%, transparent);
-    --borde: var(--line);
-    --rojo: #ff5a5f;
     color: var(--fg);
 }
 .qnum {

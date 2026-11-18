@@ -104,6 +104,31 @@ EJERCICIOS = {
         "ayuda": "Revisa cada desigualdad por separado; si falla una, el punto no es solución.",
         "bitcoins": 125,
     },
+    # Primer ejercicio "genérico" del catálogo real (sin gráfica): prueba de
+    # que la mecánica sirve para otra materia, no solo Cálculo (ver
+    # Temario_A26, 4.2 Introducción a la programación → Control de flujo).
+    "condicionales-ciclos": {
+        "kind": "generico",
+        "nivel": 1,
+        "subtema": "Control de flujo: condicionales y ciclos",
+        "titulo": "Condicionales y ciclos",
+        "instrucciones": "Arrastra cada ficha a la caja correcta: ¿es un condicional o un ciclo?",
+        "enunciado": ["Clasifica cada palabra reservada de Python según si controla una decisión o una repetición."],
+        "categorias": [
+            {"id": "condicional", "nombre": "Condicional", "detalle": "(decide qué bloque ejecutar)"},
+            {"id": "ciclo", "nombre": "Ciclo", "detalle": "(repite un bloque)"},
+        ],
+        "fichas": [
+            {"etiqueta": "if", "categoria": "condicional"},
+            {"etiqueta": "elif", "categoria": "condicional"},
+            {"etiqueta": "else", "categoria": "condicional"},
+            {"etiqueta": "while", "categoria": "ciclo"},
+            {"etiqueta": "for", "categoria": "ciclo"},
+            {"etiqueta": "break", "categoria": "ciclo"},
+        ],
+        "ayuda": "if/elif/else deciden qué bloque se ejecuta según una condición. while/for repiten un bloque; break también pertenece a un ciclo, porque lo interrumpe.",
+        "bitcoins": 50,
+    },
 }
 
 
