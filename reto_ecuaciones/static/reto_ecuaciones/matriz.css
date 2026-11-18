@@ -1,5 +1,19 @@
-/* Ecuaciones lineales (CU-07). Mismo estilo terminal verde sobre negro del resto de Re:Code. */
-.matriz { --verde: #00ff00; --verde-tenue: #00aa00; --rojo: #ff3b3b; max-width: 820px; }
+/* Ecuaciones lineales (CU-07).
+   No fijamos --verde/--rojo aquí: se heredan de .card (comun/css/reto.css),
+   que los deriva de --accent según la materia del reto (comun/colores.py:
+   ACENTOS_RETO["reto_ecuaciones"] = AZUL). Antes esta hoja los sobreescribía
+   con un verde fijo (#00ff00), igual que le pasaba a reto_algebra_booleana,
+   así que las celdas, los bordes y los diálogos se veían siempre verdes sin
+   importar el acento asignado a la app. Ahora --verde-tenue y los fondos
+   oscuros se derivan de var(--verde) con color-mix(), así que cambian
+   solos si el acento cambia. */
+.matriz {
+    --verde-tenue: color-mix(in srgb, var(--verde) 65%, black);
+    --fondo-celda: color-mix(in srgb, var(--verde) 8%, black);
+    --fondo-caja: color-mix(in srgb, var(--verde) 4%, black);
+    --placeholder-caja: color-mix(in srgb, var(--verde) 40%, black);
+    max-width: 820px;
+}
 [hidden] { display: none !important; }
 
 .matriz-mision { margin: 0 0 18px; }
@@ -11,12 +25,12 @@
 .celda {
     width: 88px; height: 56px; box-sizing: border-box;
     display: flex; align-items: center; justify-content: center;
-    border: 2px solid var(--verde-tenue); background: rgba(0, 20, 0, .5);
+    border: 2px solid var(--verde-tenue); background: var(--fondo-celda);
     color: var(--verde); font: inherit; font-size: 1.3rem; text-align: center;
 }
 .celda-incognita { font-style: italic; border-style: dashed; }
-.celda-caja { background: #061406; }
-.celda-caja::placeholder { color: #1f6b1f; font-style: italic; }
+.celda-caja { background: var(--fondo-caja); }
+.celda-caja::placeholder { color: var(--placeholder-caja); font-style: italic; }
 .celda-caja:focus { outline: 2px dashed var(--verde); outline-offset: 2px; border-color: var(--verde); }
 .celda-mala { border-color: var(--rojo); box-shadow: 0 0 8px var(--rojo); }
 
