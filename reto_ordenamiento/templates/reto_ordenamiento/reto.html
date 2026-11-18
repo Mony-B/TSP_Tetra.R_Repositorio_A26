@@ -54,6 +54,14 @@
         <button type="button" class="boton peligro" id="btn-confirmar-salida">Salir</button>
     </div>
 </dialog>
+
+<!-- Éxito: ventana emergente, sin redirección automática. -->
+<dialog class="confirmar" id="dialogo-exito">
+    <p id="exito-mensaje"></p>
+    <div class="acciones-ordenamiento">
+        <a class="boton" href="{{ volver_url }}">Volver a los retos</a>
+    </div>
+</dialog>
 {% endblock %}
 
 {% block script_juego %}<script src="{% static 'reto_ordenamiento/juego.js' %}"></script>{% endblock %}

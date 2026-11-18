@@ -7,6 +7,7 @@
     const resultado = document.getElementById("resultado");
     const acciones = document.getElementById("acciones-conceptos");
     const dialogo = document.getElementById("dialogo-salir");
+    const dialogoExito = document.getElementById("dialogo-exito");
 
     let ronda = 0;
     let idx = [0, 0, 0];
@@ -83,9 +84,12 @@
                 ? "Ya habías completado el reto, por lo que no se otorgan bitcoins de nuevo."
                 : `Ganaste <strong>₿ ${r.bitcoins_otorgados}</strong>.`;
             acciones.hidden = true;
-            resultado.innerHTML = `
-                <p class="mensaje"><strong>¡Reto completado!</strong> ${premio}</p>
-                <a class="boton" href="${ReCode.reto.volverUrl}">Volver a los retos</a>`;
+            document.getElementById("exito-premio").innerHTML = `<strong>¡Reto completado!</strong> ${premio}`;
+            if (typeof dialogoExito.showModal === "function") {
+                dialogoExito.showModal();
+            } else {
+                dialogoExito.setAttribute("open", "");
+            }
             return;
         }
 

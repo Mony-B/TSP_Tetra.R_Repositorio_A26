@@ -18,6 +18,7 @@ function iniciarPuertas() {
     const escena = $("escena");
     const resultado = $("resultado-puertas");
     const confirmar = $("confirmar-salir");
+    const dialogoExito = $("dialogo-exito");
     const foco = $("foco");
     const circuito = $("circuito");
 
@@ -101,7 +102,7 @@ function iniciarPuertas() {
 
     function mostrarEscena() {
         resultado.hidden = true;
-        confirmar.hidden = true;
+        if (confirmar.open) confirmar.close();
         escena.hidden = false;
         $("btn-verificar").disabled = false;
         ponerFoco("parpadea");
@@ -112,26 +113,27 @@ function iniciarPuertas() {
         $("btn-verificar").disabled = true;
         const ok = r.correcto;
         ponerFoco(ok ? "encendido" : "roto");
-        resultado.hidden = false;
 
-        $("puertas-mensaje").textContent = r.mensaje || (ok ? "Correcto." : "Incorrecto.");
-        $("puertas-mensaje").className = "puertas-mensaje" + (ok ? "" : " error");
-
-        const rec = $("puertas-recompensa");
-        if (ok) {
-            rec.hidden = false;
-            rec.textContent = r.bitcoins_otorgados
+        const fin = ok && r.completado;
+        if (fin) {
+            // Reto completado: ventana emergente, sin redirección automática.
+            $("exito-mensaje").textContent = r.mensaje || "Correcto.";
+            $("exito-premio").textContent = r.bitcoins_otorgados
                 ? `Recompensa: +₿ ${r.bitcoins_otorgados}`
                 : "La recompensa de este reto ya fue otorgada anteriormente.";
-        } else {
-            rec.hidden = true;
+            if (typeof dialogoExito.showModal === "function") {
+                dialogoExito.showModal();
+            } else {
+                dialogoExito.setAttribute("open", "");
+            }
+            return;
         }
-        const fin = ok && r.completado;
+
+        resultado.hidden = false;
+        $("puertas-mensaje").textContent = r.mensaje || (ok ? "Correcto." : "Incorrecto.");
+        $("puertas-mensaje").className = "puertas-mensaje" + (ok ? "" : " error");
         $("btn-reintentar").hidden = ok;
         $("btn-siguiente-puerta").hidden = !(ok && !r.completado);
-        $("btn-siguiente").hidden = !fin;
-        // La recompensa solo se muestra al terminar la última puerta.
-        if (ok && !r.completado) rec.hidden = true;
     }
 
     // --- Verificar (el servidor decide) ----------------------------------------
@@ -149,7 +151,6 @@ function iniciarPuertas() {
             $("puertas-mensaje").className = "puertas-mensaje error";
             $("btn-reintentar").hidden = true;
             $("btn-siguiente-puerta").hidden = true;
-            $("btn-siguiente").hidden = true;
         }
     });
 
@@ -162,13 +163,24 @@ function iniciarPuertas() {
         cargarPuerta();
     });
 
-    // --- Salir / Rendirse (FE-1) ---------------------------------------------
-    $("btn-salir").addEventListener("click", () => { confirmar.hidden = false; });
-    $("btn-seguir").addEventListener("click", () => { confirmar.hidden = true; });
+    // --- Salir / Rendirse (FE-1): ventana emergente, no se guarda nada -----------
+    function pedirSalida(e) {
+        if (e) e.preventDefault();
+        if (typeof confirmar.showModal === "function") {
+            confirmar.showModal();
+        } else if (window.confirm("Si sales, se pierde el progreso del reto actual y no obtendrás bitcoins. ¿Salir?")) {
+            window.location.href = raiz.dataset.volverUrl;
+        }
+    }
+    $("btn-salir").addEventListener("click", () => pedirSalida());
+    $("btn-seguir").addEventListener("click", () => confirmar.close());
+    $("btn-confirmar-salida").addEventListener("click", () => {
+        window.location.href = raiz.dataset.volverUrl;
+    });
     // La flecha de regresar de la plantilla también pide confirmación mientras se juega.
     const flecha = document.querySelector(".volver");
     if (flecha) flecha.addEventListener("click", (e) => {
-        if (actual > 0) { e.preventDefault(); confirmar.hidden = false; }
+        if (actual > 0) pedirSalida(e);
     });
 
     cargarPuerta();

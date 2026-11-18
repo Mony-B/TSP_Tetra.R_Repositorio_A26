@@ -9,6 +9,7 @@
     const resultado = document.getElementById("resultado");
     const acciones = document.getElementById("acciones-ordenamiento");
     const dialogo = document.getElementById("dialogo-salir");
+    const dialogoExito = document.getElementById("dialogo-exito");
 
     const textoDe = {};
     pasos.forEach((p) => { textoDe[p.id] = p.texto; });
@@ -132,9 +133,12 @@
             ? "Este reto ya estaba completado, así que no se otorgan bitcoins de nuevo."
             : `Ganaste <strong>₿ ${r.bitcoins_otorgados}</strong>.`;
         acciones.hidden = true;
-        resultado.innerHTML = `
-            <p class="mensaje"><strong>¡Algoritmo restaurado!</strong> ${premio}</p>
-            <a class="boton" href="${ReCode.reto.volverUrl}">Volver a los retos</a>`;
+        document.getElementById("exito-mensaje").innerHTML = `<strong>¡Algoritmo restaurado!</strong> ${premio}`;
+        if (typeof dialogoExito.showModal === "function") {
+            dialogoExito.showModal();
+        } else {
+            dialogoExito.setAttribute("open", "");
+        }
     }
 
     // --- FE-1: salir / rendirse con confirmación --------------------------

@@ -75,11 +75,19 @@
 .puertas .boton:disabled { opacity: .4; cursor: not-allowed; }
 .boton-secundario { opacity: .8; }
 
-.puertas-resultado, .puertas-confirmar { margin-top: 18px; }
+.puertas-resultado { margin-top: 18px; }
 .puertas-mensaje.error { color: var(--rojo); }
 .puertas-recompensa { color: var(--ambar); font-weight: bold; }
-.puertas-confirmar { border: 2px dashed var(--rojo); padding: 14px 18px; }
 .puertas [hidden] { display: none !important; }
+
+/* Ventanas emergentes (<dialog> con showModal): confirmar salida y reto
+   completado, igual que en los demás retos. */
+dialog.puertas-confirmar {
+    border: 2px dashed var(--rojo); background: #000; color: var(--verde);
+    font: inherit; padding: 14px 18px; max-width: 420px;
+}
+#dialogo-exito.puertas-confirmar { border-style: solid; border-color: var(--verde-tenue); }
+dialog.puertas-confirmar::backdrop { background: rgba(0, 0, 0, .7); }
 
 @media (max-width: 560px) {
     .puertas-escena { grid-template-columns: 1fr; }

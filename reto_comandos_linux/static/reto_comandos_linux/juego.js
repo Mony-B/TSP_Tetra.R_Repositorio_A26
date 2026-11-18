@@ -12,7 +12,7 @@
     const inputClave = document.getElementById("clave");
     const resultado = document.getElementById("resultado");
     const dialogo = document.getElementById("dialogo-salir");
-    const SEGUNDOS_REDIRECCION = 10;
+    const dialogoExito = document.getElementById("dialogo-exito");
 
     let promptTexto = promptInicial;
     let oculto = false;    // la siguiente línea es una contraseña (su): no se muestra
@@ -109,7 +109,9 @@
         }
     });
 
-    // Pasos 7-8: mensaje de victoria, bitcoins (solo la primera vez) y regreso.
+    // Pasos 7-8: ventana emergente de victoria, con los bitcoins (solo la
+    // primera vez); el alumno decide cuándo volver, sin redirección
+    // automática, igual que en los demás retos.
     function exito(r) {
         terminado = true;
         document.getElementById("icono-puerta").textContent = "🔓";
@@ -122,23 +124,13 @@
         const premio = r.ya_otorgado
             ? "La recompensa de este reto ya se te había otorgado antes."
             : `Obtuviste <strong>₿ ${r.bitcoins_otorgados}</strong>.`;
-        resultado.innerHTML = `
-            <div class="mensaje">
-                <p><strong>${escapar(r.mensaje)}</strong> Superaste el reto.</p>
-                <p>${premio}</p>
-                <p class="etiqueta">Regresando a los retos en <span id="cuenta">${SEGUNDOS_REDIRECCION}</span> s…</p>
-            </div>
-            <a class="boton" href="${ReCode.reto.volverUrl}">Volver a los retos</a>`;
-        let quedan = SEGUNDOS_REDIRECCION;
-        const reloj = setInterval(() => {
-            quedan--;
-            const cuenta = document.getElementById("cuenta");
-            if (cuenta) cuenta.textContent = quedan;
-            if (quedan <= 0) {
-                clearInterval(reloj);
-                window.location.href = ReCode.reto.volverUrl;
-            }
-        }, 1000);
+        document.getElementById("exito-mensaje").innerHTML = `<strong>${escapar(r.mensaje)}</strong> Superaste el reto.`;
+        document.getElementById("exito-premio").innerHTML = premio;
+        if (typeof dialogoExito.showModal === "function") {
+            dialogoExito.showModal();
+        } else {
+            dialogoExito.setAttribute("open", "");
+        }
     }
 
     // --- FE-1: salir / rendirse con confirmación ----------------------------

@@ -44,21 +44,25 @@
         </div>
     </div>
 
-    <!-- Éxito -->
-    <div class="matriz-resultado" id="resultado-exito" hidden>
+    <!-- Éxito: ventana emergente, sin redirección automática. -->
+    <dialog class="matriz-confirmar" id="dialogo-exito">
         <p class="matriz-mensaje" id="exito-mensaje">&#10004; Felicidades, lo completaste.</p>
         <p class="matriz-recompensa" id="exito-recompensa"></p>
         <a class="boton" id="btn-continuar" href="{{ volver_url }}">Continuar &#10145;</a>
-    </div>
+    </dialog>
 
-    <!-- Confirmación de abandono (FE-1) -->
-    <div class="matriz-confirmar" id="confirmar-salir" hidden role="alertdialog" aria-labelledby="confirmar-texto">
+    <!-- Confirmación de abandono (FE-1): ventana emergente, igual que en
+         los demás retos (reto_laberinto, reto_parabolica...), no un
+         mensaje dentro de la propia página. Va adentro de .matriz para
+         heredar sus variables de color (--verde, --rojo); showModal()
+         igual la saca por encima de todo lo demás. -->
+    <dialog class="matriz-confirmar" id="confirmar-salir">
         <p id="confirmar-texto">Se perderá el progreso del reto actual y no obtendrás bitcoins. ¿Seguro que quieres salir?</p>
         <div class="matriz-acciones">
             <a class="boton" href="{{ volver_url }}" id="btn-salir-si">Sí</a>
             <button type="button" class="boton boton-secundario" id="btn-salir-no">NO</button>
         </div>
-    </div>
+    </dialog>
 </section>
 {% endblock %}
 {% block script_juego %}<script src="{% static 'reto_ecuaciones/juego.js' %}"></script>{% endblock %}

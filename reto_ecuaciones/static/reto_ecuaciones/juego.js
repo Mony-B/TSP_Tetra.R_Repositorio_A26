@@ -139,24 +139,39 @@ function iniciarMatriz() {
         }
     });
 
+    // Ventana emergente de verdad (<dialog> con showModal), igual que en los
+    // demás retos; si el navegador no la soporta, cae a un confirm() nativo
+    // para salir, y a solo abrir el <dialog> sin "modal" para el de éxito.
     function mostrarExito(r) {
         Object.values(cajas).forEach(c => { c.readOnly = true; });
-        $("matriz-mision").hidden = true;
-        $("matriz-escena").hidden = true;
-        $("resultado-exito").hidden = false;
         $("exito-recompensa").textContent = r.bitcoins_otorgados
             ? `+${r.bitcoins_otorgados} ₿`
             : "La recompensa de este reto ya fue otorgada anteriormente.";
+        const dialogoExito = $("dialogo-exito");
+        if (typeof dialogoExito.showModal === "function") {
+            dialogoExito.showModal();
+        } else {
+            dialogoExito.setAttribute("open", "");
+        }
     }
 
     // --- Salir / Rendirse (FE-1): no se guarda nada -------------------------------
-    $("btn-salir").addEventListener("click", () => { $("confirmar-salir").hidden = false; });
-    $("btn-salir-no").addEventListener("click", () => { $("confirmar-salir").hidden = true; });
+    const dialogoSalir = $("confirmar-salir");
+    function pedirSalida(e) {
+        if (e) e.preventDefault();
+        if (typeof dialogoSalir.showModal === "function") {
+            dialogoSalir.showModal();
+        } else if (window.confirm("Se perderá el progreso del reto actual y no obtendrás bitcoins. ¿Seguro que quieres salir?")) {
+            window.location.href = raiz.dataset.volverUrl;
+        }
+    }
+    $("btn-salir").addEventListener("click", () => pedirSalida());
+    $("btn-salir-no").addEventListener("click", () => dialogoSalir.close());
     // La flecha de regresar de la plantilla también pide confirmación mientras se juega.
     const flecha = document.querySelector(".volver");
     if (flecha) flecha.addEventListener("click", (e) => {
         const tieneProgreso = Object.values(cajas).some(c => c.value.trim() !== "");
-        if (tieneProgreso) { e.preventDefault(); $("confirmar-salir").hidden = false; }
+        if (tieneProgreso) pedirSalida(e);
     });
 
     pintarVivas();

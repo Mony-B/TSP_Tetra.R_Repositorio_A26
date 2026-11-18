@@ -9,10 +9,9 @@
     const bandeja = document.getElementById("bandeja");
     const canvas = document.getElementById("grafica");
     const aviso = document.getElementById("aviso");
-    const resultado = document.getElementById("resultado");
     const dialogo = document.getElementById("dialogo-salir");
+    const dialogoExito = document.getElementById("dialogo-exito");
     const COLORES = ["#1e88e5", "#2e9e44", "#d93a3a", "#c98f00", "#8e44ad", "#00899b"];
-    const SEGUNDOS_REDIRECCION = 10;
     const UMBRAL_ARRASTRE = 6; // px; menos que esto se considera un toque
 
     const colocadas = new Set();   // ids de fichas ya bien clasificadas
@@ -266,23 +265,13 @@
         const premio = r.ya_otorgado
             ? "La recompensa de este reto ya se te había otorgado antes."
             : `Obtuviste <strong>₿ ${r.bitcoins_otorgados}</strong>.`;
-        resultado.innerHTML = `
-            <div class="mensaje">
-                <p><strong>${escapar(r.mensaje)}</strong> Clasificaste todas las fichas.</p>
-                <p>${premio}</p>
-                <p class="etiqueta">Regresando a los retos en <span id="cuenta">${SEGUNDOS_REDIRECCION}</span> s…</p>
-            </div>
-            <a class="boton" href="${ReCode.reto.volverUrl}">Volver a los retos</a>`;
-        let quedan = SEGUNDOS_REDIRECCION;
-        const reloj = setInterval(() => {
-            quedan--;
-            const cuenta = document.getElementById("cuenta");
-            if (cuenta) cuenta.textContent = quedan;
-            if (quedan <= 0) {
-                clearInterval(reloj);
-                window.location.href = ReCode.reto.volverUrl;
-            }
-        }, 1000);
+        document.getElementById("exito-mensaje").innerHTML = `<strong>${escapar(r.mensaje)}</strong> Clasificaste todas las fichas.`;
+        document.getElementById("exito-premio").innerHTML = premio;
+        if (typeof dialogoExito.showModal === "function") {
+            dialogoExito.showModal();
+        } else {
+            dialogoExito.setAttribute("open", "");
+        }
     }
 
     // --- Ayuda, reiniciar y FE-1 (salir / rendirse) ---------------------------------

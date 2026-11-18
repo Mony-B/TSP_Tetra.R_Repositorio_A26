@@ -10,10 +10,10 @@
     const resultado = document.getElementById("resultado");
     const btnReintentar = document.getElementById("btn-reintentar");
     const dialogo = document.getElementById("dialogo-salir");
+    const dialogoExito = document.getElementById("dialogo-exito");
 
     const RENGLONES = ["QWERTYUIOP", "ASDFGHJKL", "ZXCVBNM"];
     const PRIORIDAD = { gris: 1, amarillo: 2, verde: 3 };
-    const SEGUNDOS_REDIRECCION = 10;
 
     let fila = 0;          // intento actual (renglón de la cuadrícula)
     let escrito = "";      // letras del intento actual
@@ -150,24 +150,14 @@
         const premio = r.ya_otorgado
             ? "La recompensa de este reto ya se te había otorgado antes."
             : `Obtuviste <strong>₿ ${r.bitcoins_otorgados}</strong>.`;
-        resultado.innerHTML = `
-            <div class="mensaje">
-                <p><strong>${r.mensaje}</strong></p>
-                <p>${r.significado}</p>
-                <p>${premio}</p>
-                <p class="etiqueta">Regresando a los retos en <span id="cuenta">${SEGUNDOS_REDIRECCION}</span> s…</p>
-            </div>
-            <a class="boton" href="${ReCode.reto.volverUrl}">Volver a los retos</a>`;
-        let quedan = SEGUNDOS_REDIRECCION;
-        const reloj = setInterval(() => {
-            quedan--;
-            const cuenta = document.getElementById("cuenta");
-            if (cuenta) cuenta.textContent = quedan;
-            if (quedan <= 0) {
-                clearInterval(reloj);
-                window.location.href = ReCode.reto.volverUrl;
-            }
-        }, 1000);
+        document.getElementById("exito-mensaje").innerHTML = `<strong>${r.mensaje}</strong>`;
+        document.getElementById("exito-significado").innerHTML = r.significado;
+        document.getElementById("exito-premio").innerHTML = premio;
+        if (typeof dialogoExito.showModal === "function") {
+            dialogoExito.showModal();
+        } else {
+            dialogoExito.setAttribute("open", "");
+        }
     }
 
     // FA-1: intentos agotados -> Reintentar o Salir.

@@ -11,7 +11,7 @@
   const lista = document.getElementById('conceptos');
   const indicadorNivel = document.getElementById('nivel');
   const resultado = document.getElementById('resultado');
-  const victoria = document.getElementById('victoria');
+  const victoria = document.getElementById('dialogo-victoria');
   const textoVictoria = document.getElementById('victoria-texto');
   const botonSalir = document.getElementById('btn-salir');
   const dialogo = document.getElementById('dialogo-salir');
@@ -157,8 +157,12 @@
     textoVictoria.textContent = respuesta.bitcoins_otorgados
       ? `¡Felicidades! +${respuesta.bitcoins_otorgados} bitcoins`
       : '¡Felicidades! Ya habías recibido los bitcoins de este reto.';
-    victoria.hidden = false;
     botonSalir.hidden = true;
+    if (typeof victoria.showModal === 'function') {
+      victoria.showModal();
+    } else {
+      victoria.setAttribute('open', '');
+    }
   }
 
   /** Avisa que se superó el nivel y, tras una pausa, muestra el siguiente. */
