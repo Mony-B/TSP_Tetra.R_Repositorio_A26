@@ -27,9 +27,18 @@
 .matriz-mensaje.error { color: var(--rojo); }
 .matriz-recompensa { font-size: 1.6rem; margin: 6px 0 14px; }
 .matriz-acciones { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 12px; }
-.matriz-resultado, .matriz-confirmar {
+.matriz-resultado {
     border: 2px solid #1f4d1f; background: rgba(0, 20, 0, .5); padding: 20px 24px; margin-top: 16px;
 }
-.matriz-confirmar { border-color: var(--rojo); }
+
+/* Confirmación de salida (FE-1): ventana emergente de verdad (<dialog>
+   con showModal), igual que en los demás retos, no una caja dentro de
+   la página. */
+dialog.matriz-confirmar {
+    border: 2px solid var(--rojo); background: #000; color: var(--verde);
+    font: inherit; padding: 20px 24px; max-width: 420px;
+}
+dialog.matriz-confirmar::backdrop { background: rgba(0, 0, 0, .7); }
+dialog.matriz-confirmar p { margin: 0 0 16px; }
 .indice { display: flex; align-items: center; justify-content: center; color: var(--verde-tenue); font-size: .9rem; }
 .matriz-pistas li { font-size: 1rem; }
