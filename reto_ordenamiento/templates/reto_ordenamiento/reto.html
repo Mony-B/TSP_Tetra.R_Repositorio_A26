@@ -1,39 +1,9 @@
 {% extends "comun/reto_base.html" %}
 {% load static %}
-{% block estilos %}
-<style>
-  .mision { margin-bottom: 14px; }
-
-  .etiqueta-seccion { font-size: 0.8rem; color: var(--verde-medio); text-transform: uppercase; margin: 14px 0 6px; }
-
-  .pozo { display: flex; flex-wrap: wrap; gap: 8px; min-height: 48px; padding: 10px; border: 1px dashed var(--borde); margin-bottom: 4px; }
-  .pozo-vacio { color: var(--verde-medio); font-size: 0.85rem; align-self: center; }
-
-  .linea { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
-  .espacio { display: flex; align-items: stretch; gap: 10px; }
-  .espacio-num { flex: none; width: 30px; display: flex; align-items: center; justify-content: center; border: 1px solid var(--borde); font-size: 0.85rem; }
-  .espacio-cuerpo { flex: 1; min-height: 42px; display: flex; align-items: center; border: 1px dashed var(--borde); padding: 0 10px; }
-  .espacio-cuerpo .vacio { color: var(--verde-medio); font-size: 0.85rem; }
-  .espacio.lleno .espacio-cuerpo { border-style: solid; }
-  .espacio.falta .espacio-cuerpo, .espacio.falta .espacio-num { border-color: var(--rojo); color: var(--rojo); }
-  .espacio.correcto .espacio-cuerpo, .espacio.correcto .espacio-num { border-color: var(--verde); }
-
-  .paso-boton { background: var(--verde-oscuro); border: 1px solid var(--verde); color: var(--verde); padding: 8px 12px; font-family: inherit; cursor: pointer; text-align: left; }
-  .paso-boton:hover { background: #004400; color: #fff; }
-  .espacio-cuerpo .paso-boton { flex: 1; display: flex; justify-content: space-between; gap: 10px; border: none; background: none; }
-  .espacio-cuerpo .paso-boton .quitar { font-size: 0.75rem; color: var(--verde-medio); }
-
-  .acciones-ordenamiento { display: flex; gap: 10px; flex-wrap: wrap; justify-content: space-between; margin-top: 14px; }
-  .acciones-ordenamiento[hidden] { display: none; }
-  .boton.peligro { border-color: var(--rojo); color: var(--rojo); background: transparent; }
-
-  dialog.confirmar { background: #000; color: var(--verde); border: 1px solid var(--verde); font-family: inherit; max-width: 420px; }
-  dialog.confirmar::backdrop { background: rgba(0, 0, 0, 0.7); }
-</style>
-{% endblock %}
+{% block estilos %}<link rel="stylesheet" href="{% static 'reto_ordenamiento/ordenamiento.css' %}">{% endblock %}
 
 {% block juego %}
-<div id="ordenamiento">
+<div id="ordenamiento" class="ordenamiento">
   <div class="mensaje mision">{{ ejercicio.mision }}</div>
 
   <p class="etiqueta-seccion">Pasos desordenados</p>
@@ -43,21 +13,24 @@
   <ol class="linea" id="linea" aria-label="Línea de secuencia"></ol>
 
   <div class="acciones-ordenamiento" id="acciones-ordenamiento">
-    <button type="button" class="boton peligro" id="btn-salir">Salir / Rendirse</button>
-    <button type="button" class="boton" id="btn-verificar">Verificar</button>
+    <button type="button" class="boton boton-secundario" id="btn-salir">Salir / Rendirse</button>
+    <button type="button" class="boton" id="btn-verificar">&#10145; Verificar</button>
   </div>
 </div>
 
-<dialog class="confirmar" id="dialogo-salir">
+<!-- Confirmación de abandono (FE-1): ventana emergente, con los mismos ids
+     que usan los demás retos (btn-cancelar-salida / btn-confirmar-salida)
+     para que ReCode.dialogos la maneje igual en todos lados. -->
+<dialog class="ordenamiento-confirmar" id="confirmar-salir">
   <p>¿Seguro que quieres salir? Se perderá el progreso de este reto y no obtendrás bitcoins.</p>
   <div class="acciones-ordenamiento">
-    <button type="button" class="boton secundario" id="btn-cancelar-salida">Seguir jugando</button>
-    <button type="button" class="boton peligro" id="btn-confirmar-salida">Salir</button>
+    <button type="button" class="boton boton-secundario" id="btn-cancelar-salida">Seguir jugando</button>
+    <button type="button" class="boton" id="btn-confirmar-salida">Salir</button>
   </div>
 </dialog>
 
 <!-- Éxito: ventana emergente, sin redirección automática. -->
-<dialog class="confirmar" id="dialogo-exito">
+<dialog class="ordenamiento-confirmar" id="dialogo-exito">
     <p id="exito-mensaje"></p>
     <div class="acciones-ordenamiento">
         <a class="boton" href="{{ volver_url }}">Volver a los retos</a>

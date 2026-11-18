@@ -1,0 +1,43 @@
+/* Ordenar secuencia (CU-11).
+   No fijamos --verde/--rojo aquí: se heredan de .card (comun/css/reto.css),
+   que los deriva de --accent según la materia del reto (comun/colores.py:
+   ACENTOS_RETO["reto_ordenamiento"] = TEAL). --verde-tenue y los fondos se
+   derivan de var(--verde) con color-mix(), así que cambian solos si el
+   acento cambia. Antes el botón "Salir / Rendirse" y el de confirmar salida
+   llevaban un rojo "peligro" fijo, aparte del color del reto; ahora usan
+   los mismos .boton/.boton-secundario que el resto, en el color del reto. */
+.ordenamiento {
+    --verde-tenue: color-mix(in srgb, var(--verde) 65%, black);
+    --fondo-pozo: color-mix(in srgb, var(--verde) 6%, black);
+}
+
+.mision { margin-bottom: 14px; }
+
+.etiqueta-seccion { font-size: 0.8rem; color: var(--verde-tenue); text-transform: uppercase; margin: 14px 0 6px; }
+
+.pozo { display: flex; flex-wrap: wrap; gap: 8px; min-height: 48px; padding: 10px; border: 1px dashed var(--borde); background: var(--fondo-pozo); margin-bottom: 4px; }
+.pozo-vacio { color: var(--verde-tenue); font-size: 0.85rem; align-self: center; }
+
+.linea { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+.espacio { display: flex; align-items: stretch; gap: 10px; }
+.espacio-num { flex: none; width: 30px; display: flex; align-items: center; justify-content: center; border: 1px solid var(--borde); font-size: 0.85rem; }
+.espacio-cuerpo { flex: 1; min-height: 42px; display: flex; align-items: center; border: 1px dashed var(--borde); padding: 0 10px; }
+.espacio-cuerpo .vacio { color: var(--verde-tenue); font-size: 0.85rem; }
+.espacio.lleno .espacio-cuerpo { border-style: solid; }
+/* "falta" (FA-2, espacio sin llenar al verificar) sí se queda en rojo: es
+   retroalimentación de error, no un marco decorativo. */
+.espacio.falta .espacio-cuerpo, .espacio.falta .espacio-num { border-color: var(--rojo); color: var(--rojo); }
+.espacio.correcto .espacio-cuerpo, .espacio.correcto .espacio-num { border-color: var(--verde); }
+
+.paso-boton { background: var(--verde-oscuro); border: 1px solid var(--verde); color: var(--verde); padding: 8px 12px; font-family: inherit; cursor: pointer; text-align: left; }
+.paso-boton:hover { background: color-mix(in srgb, var(--verde) 25%, black); color: #fff; }
+.espacio-cuerpo .paso-boton { flex: 1; display: flex; justify-content: space-between; gap: 10px; border: none; background: none; }
+.espacio-cuerpo .paso-boton .quitar { font-size: 0.75rem; color: var(--verde-tenue); }
+
+.acciones-ordenamiento { display: flex; gap: 10px; flex-wrap: wrap; justify-content: space-between; margin-top: 14px; }
+.acciones-ordenamiento[hidden] { display: none; }
+
+/* Ventanas emergentes (<dialog> con showModal): confirmar salida y éxito,
+   igual que en los demás retos. */
+dialog.ordenamiento-confirmar { background: #000; color: var(--verde); border: 2px solid var(--verde-tenue); font-family: inherit; padding: 14px 18px; max-width: 420px; }
+dialog.ordenamiento-confirmar::backdrop { background: rgba(0, 0, 0, 0.7); }

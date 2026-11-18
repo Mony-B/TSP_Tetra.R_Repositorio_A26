@@ -8,7 +8,7 @@
   const linea = document.getElementById("linea");
   const resultado = document.getElementById("resultado");
   const acciones = document.getElementById("acciones-ordenamiento");
-  const dialogo = document.getElementById("dialogo-salir");
+  const dialogo = document.getElementById("confirmar-salir");
   const dialogoExito = document.getElementById("dialogo-exito");
 
   const textoDe = {};
