@@ -13,6 +13,7 @@ function iniciarMatriz() {
         return;
     }
     const revisarUrl = raiz.dataset.revisarUrl;
+    const volverUrl = raiz.dataset.volverUrl;
     const $ = id => document.getElementById(id);
     const cajas = {};                       // nombre de celda -> <input>
 
@@ -35,8 +36,6 @@ function iniciarMatriz() {
         rejilla.appendChild(indice("F\\C"));
         [0, 1, 2].forEach(j => rejilla.appendChild(indice(`[${j}]`)));
     }
-    const nombreEn = {};                     // "fila,col" -> nombre de la caja
-    datos.celdas.forEach(c => { nombreEn[`${c.fila},${c.col}`] = c.nombre; });
     encabezado($("matriz-referencia"));
     encabezado($("matriz-respuesta"));
 
@@ -148,15 +147,20 @@ function iniciarMatriz() {
     }
 
     // --- Salir / Rendirse (FE-1): no se guarda nada -------------------------------
+    // Mismos ids (btn-salir / btn-cancelar-salida / btn-confirmar-salida) que el
+    // resto de los retos, para que se comporte exactamente igual en todos lados.
     const dialogoSalir = $("confirmar-salir");
     const MENSAJE_SALIR = "Se perderá el progreso del reto actual y no obtendrás bitcoins. ¿Seguro que quieres salir?";
     function pedirSalida(e) {
-        ReCode.dialogos.pedirSalida(dialogoSalir, MENSAJE_SALIR, raiz.dataset.volverUrl, e);
+        ReCode.dialogos.pedirSalida(dialogoSalir, MENSAJE_SALIR, volverUrl, e);
     }
     $("btn-salir").addEventListener("click", () => pedirSalida());
-    $("btn-salir-no").addEventListener("click", () => ReCode.dialogos.cerrar(dialogoSalir));
+    $("btn-cancelar-salida").addEventListener("click", () => ReCode.dialogos.cerrar(dialogoSalir));
+    $("btn-confirmar-salida").addEventListener("click", () => {
+        window.location.href = volverUrl;
+    });
     // La flecha de regresar de la plantilla también pide confirmación mientras se juega.
-    ReCode.dialogos.conectarFlechaSalir(dialogoSalir, MENSAJE_SALIR, raiz.dataset.volverUrl,
+    ReCode.dialogos.conectarFlechaSalir(dialogoSalir, MENSAJE_SALIR, volverUrl,
         () => Object.values(cajas).some(c => c.value.trim() !== ""));
 
     pintarVivas();
