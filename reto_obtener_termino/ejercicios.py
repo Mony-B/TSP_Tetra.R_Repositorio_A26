@@ -16,9 +16,9 @@ ejercicio con nuevo_termino() y apúntalo en mapa/temas.py.
 """
 import unicodedata
 
-# Bitcoins según el largo del término (4 letras = 30, 5 = 40, 6 = 50, ...).
-BITCOINS_BASE = 30
-BITCOINS_POR_LETRA_EXTRA = 10
+# Todos los retos dan lo mismo (30 bitcoins): el examen da más que
+# cualquier reto individual, así que aquí no se escala por dificultad.
+BITCOINS_POR_RETO = 30
 
 VERDE = "verde"
 AMARILLO = "amarillo"
@@ -26,7 +26,7 @@ GRIS = "gris"
 
 
 def bitcoins_por_largo(largo):
-    return max(BITCOINS_BASE, BITCOINS_BASE + (largo - 4) * BITCOINS_POR_LETRA_EXTRA)
+    return BITCOINS_POR_RETO
 
 
 def nuevo_termino(titulo, termino, intentos, significado, pista=""):

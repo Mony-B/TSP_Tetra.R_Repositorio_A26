@@ -28,7 +28,7 @@ EJERCICIOS = {
             "Restaura los valores del bloque de memoria de 3x3 usando las pistas del sistema. "
             "Recuerda: en programación, los índices siempre comienzan en 0."
         ),
-        "bitcoins": 50,   # se dan una sola vez, la primera vez que se completa el reto
+        "bitcoins": 30,   # se dan una sola vez, la primera vez que se completa el reto
         # Los textos son nombres de caja por completar; los números ya vienen resueltos.
         # (Solución: [[10, 4, 16], [8, 12, 6], [14, 20, 2]])
         "matriz": [

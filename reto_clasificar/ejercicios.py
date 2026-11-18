@@ -66,7 +66,7 @@ EJERCICIOS = {
         "desigualdades": [{"op": ">=", "f": _lineal}],
         "puntos": [(0, 0), (1, 1), (-2, -3), (2, 1), (3, 2), (-1, -4)],
         "ayuda": "Sustituye x e y en la desigualdad. Si la línea es sólida, el punto sobre ella también cuenta.",
-        "bitcoins": 50,
+        "bitcoins": 30,
     },
     "cuadraticas": {
         "kind": "grafica",
@@ -78,7 +78,7 @@ EJERCICIOS = {
         "desigualdades": [{"op": ">", "f": _parabola}],
         "puntos": [(0, 0), (3, 5), (1, -1), (2, -5), (0, -5), (-2, 4)],
         "ayuda": "Calcula x² − 4 con el valor de x. Con la línea punteada, el punto sobre la curva NO cuenta.",
-        "bitcoins": 75,
+        "bitcoins": 30,
     },
     "racionales": {
         "kind": "grafica",
@@ -90,7 +90,7 @@ EJERCICIOS = {
         "desigualdades": [{"op": "<=", "f": _hiperbola}],
         "puntos": [(2, 1), (3, 0), (0, -1), (0, -3), (2, 3), (4, 1)],
         "ayuda": "Calcula 2 / (x − 1) con el valor de x y compara con y. Cuidado con el signo cuando x < 1.",
-        "bitcoins": 100,
+        "bitcoins": 30,
     },
     "compuestas": {
         "kind": "grafica",
@@ -102,7 +102,7 @@ EJERCICIOS = {
         "desigualdades": [{"op": ">", "f": _recta}, {"op": "<=", "f": _parabola_invertida}],
         "puntos": [(0, 0), (1, 1), (-1, 3), (2, 0), (0, 5), (3, -1)],
         "ayuda": "Revisa cada desigualdad por separado; si falla una, el punto no es solución.",
-        "bitcoins": 125,
+        "bitcoins": 30,
     },
     # Primer ejercicio "genérico" del catálogo real (sin gráfica): prueba de
     # que la mecánica sirve para otra materia, no solo Cálculo (ver
@@ -127,7 +127,7 @@ EJERCICIOS = {
             {"etiqueta": "break", "categoria": "ciclo"},
         ],
         "ayuda": "if/elif/else deciden qué bloque se ejecuta según una condición. while/for repiten un bloque; break también pertenece a un ciclo, porque lo interrumpe.",
-        "bitcoins": 50,
+        "bitcoins": 30,
     },
 }
 

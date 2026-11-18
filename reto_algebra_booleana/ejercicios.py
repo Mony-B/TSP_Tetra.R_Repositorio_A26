@@ -13,7 +13,7 @@ EJERCICIOS = {
     "proposicional": {
         "titulo": "Puertas lógicas",
         "instrucciones": "Logra que el foco prenda interactuando con los interruptores.",
-        "bitcoins": 50,   # se dan una sola vez, al completar las 3 puertas
+        "bitcoins": 30,   # se dan una sola vez, al completar las 3 puertas
         "pasos": [
             {
                 "leyenda": "p ∨ ¬q",
