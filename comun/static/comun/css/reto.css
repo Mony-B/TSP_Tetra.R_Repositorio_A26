@@ -61,7 +61,7 @@ body.pantalla-reto {
     padding: 40px;
 }
 .card {
-    width: 100%; max-width: 920px;
+    width: 100%; max-width: 1200px;
     background: var(--surface);
     border: 1px solid var(--line);
     border-radius: 14px;
