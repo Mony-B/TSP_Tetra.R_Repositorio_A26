@@ -29,7 +29,11 @@
 .celda-mala { border-color: var(--rojo); box-shadow: 0 0 8px var(--rojo); }
 
 .matriz-pistas { margin: 0; padding-left: 28px; line-height: 1.9; font-size: 1.1rem; }
-.pista-mala { color: var(--rojo); text-decoration: underline wavy; }
+.matriz-pistas li { padding: 2px 8px; border-radius: 6px; transition: background .15s, color .15s; }
+.pista-mala {
+    color: var(--rojo);
+    background: color-mix(in srgb, var(--rojo) 12%, transparent);
+}
 
 .matriz-mensaje { margin: 12px 0; font-size: 1.1rem; }
 .matriz-mensaje.error { color: var(--rojo); }
