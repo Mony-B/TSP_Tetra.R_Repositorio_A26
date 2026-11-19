@@ -18,6 +18,7 @@ from django.utils.http import url_has_allowed_host_and_scheme
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.views.decorators.http import require_POST
 
+from comun.colores import acento_de_materia
 from progreso import servicios
 
 from .pistas import CATALOGO, PISTAS
@@ -49,11 +50,15 @@ def catalogo(request):
     materias = []
     for materia_slug, materia in CATALOGO.items():
         subtemas = []
+        total_materia = 0
+        obtenidas_materia = 0
         for subtema_slug, subtema in materia["subtemas"].items():
             pistas = []
             for p in subtema["pistas"]:
                 pid = f"{materia_slug}:{subtema_slug}:{p['slug']}"
                 ya_obtenida = pid in obtenidas
+                total_materia += 1
+                obtenidas_materia += 1 if ya_obtenida else 0
                 pistas.append({
                     "id": pid,
                     "termino": p["termino"],
@@ -61,7 +66,14 @@ def catalogo(request):
                     "definicion": p["definicion"] if ya_obtenida else "",
                 })
             subtemas.append({"nombre": subtema["nombre"], "pistas": pistas})
-        materias.append({"nombre": materia["nombre"], "subtemas": subtemas})
+        materias.append({
+            "slug": materia_slug,
+            "nombre": materia["nombre"],
+            "subtemas": subtemas,
+            "acento": acento_de_materia(materia_slug),
+            "total": total_materia,
+            "obtenidas": obtenidas_materia,
+        })
 
     return render(request, "red_corrupta/catalogo.html", {
         "materias": materias,

@@ -49,6 +49,18 @@
 
     document.querySelectorAll(".pista").forEach((b) => b.addEventListener("click", () => abrirPanel(b)));
 
+    // --- Pestañas por materia: catálogo completo, pero una materia a la vez
+    // (CU03 no las limita entre sí, acá solo evita una sola página kilométrica
+    // con las 5 a la vez; el catálogo completo sigue siendo el mismo).
+    document.querySelectorAll("#materia-tabs .tab").forEach((tab) => {
+        tab.addEventListener("click", () => {
+            if (tab.classList.contains("activa")) return;
+            const slug = tab.dataset.materia;
+            document.querySelectorAll("#materia-tabs .tab").forEach((t) => t.classList.toggle("activa", t === tab));
+            document.querySelectorAll(".materia").forEach((sec) => { sec.hidden = sec.dataset.materia !== slug; });
+        });
+    });
+
     function actualizarBitcoins(total) {
         const el = document.getElementById("bitcoins-alumno");
         if (el) el.textContent = total;

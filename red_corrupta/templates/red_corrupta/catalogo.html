@@ -33,9 +33,19 @@ recode.css para los componentes base (botones, tarjetas).
             </p>
         </div>
 
+        <nav class="materia-tabs" id="materia-tabs">
+            {% for materia in materias %}
+            <button type="button" class="tab{% if forloop.first %} activa{% endif %}"
+                    data-materia="{{ materia.slug }}" style="--card-accent: {{ materia.acento }};">
+                {{ materia.nombre }}
+                <span class="tab-progreso">{{ materia.obtenidas }}/{{ materia.total }}</span>
+            </button>
+            {% endfor %}
+        </nav>
+
         {% for materia in materias %}
-        <section class="materia">
-            <h2>{{ materia.nombre }}</h2>
+        <section class="materia" data-materia="{{ materia.slug }}"{% if not forloop.first %} hidden{% endif %}
+                  style="--card-accent: {{ materia.acento }};">
             {% for subtema in materia.subtemas %}
             <div class="subtema">
                 <h3>{{ subtema.nombre }}</h3>
