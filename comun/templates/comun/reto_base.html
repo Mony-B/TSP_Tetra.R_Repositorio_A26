@@ -26,10 +26,18 @@ No extiende comun/base.html porque usa su propio layout de pantalla completa.
     {% if materia.slug %}{% url 'mapa:materia' materia.slug as url_materia %}{% endif %}
     {% firstof volver_url url_materia url_mapa as topbar_url_volver %}
 
-    {% include "comun/_topbar.html" with topbar_marca="RE:CODE — RETO" topbar_titulo=ejercicio.titulo topbar_volver_url=topbar_url_volver topbar_volver_tip="Regresar a los retos" topbar_resuelto=ya_resuelto topbar_pedir_pista=True %}
+    {% include "comun/_topbar.html" with topbar_marca="RE:CODE — RETO" topbar_titulo=ejercicio.titulo topbar_volver_url=topbar_url_volver topbar_volver_tip="Regresar a los retos" topbar_resuelto=ya_resuelto %}
 
     <main class="body">
         <div class="card">
+            <!-- Pedir pista (CU03): en la esquina superior derecha de la
+                 tarjeta del reto, no en la barra superior. Coloreado con
+                 --accent (el mismo acento de la materia que ya trae el
+                 body) para que resalte sobre la tarjeta. -->
+            <a class="boton-pista"
+               href="{% url 'red_corrupta:catalogo' %}?origen={{ request.path|urlencode }}&origen_label={{ nombre_reto|urlencode }}"
+               title="Consultar una pista de cualquier materia, no solo de este reto">🔓 Pista</a>
+
             <p class="qnum">{{ nombre_reto|upper }}</p>
             <h1 class="qtext">{{ ejercicio.titulo }}</h1>
             {% if ejercicio.instrucciones %}<p class="instrucciones">{{ ejercicio.instrucciones }}</p>{% endif %}
