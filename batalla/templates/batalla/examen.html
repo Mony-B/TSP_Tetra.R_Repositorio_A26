@@ -1,41 +1,88 @@
-{% extends "comun/base.html" %}
-{% block titulo %}{{ examen.agente }} - Re:Code{% endblock %}
+{% load static %}<!DOCTYPE html>
+{% comment %}
+Examen final de materia (CU04) y, mientras CU15 no esté desarrollado, la
+batalla final de ejemplo. Reutiliza el mismo lenguaje visual que los retos
+(comun/reto_base.html): .card oscura, --accent con el color de la materia,
+_topbar.html compartida. No extiende reto_base.html porque su flujo es
+distinto (un solo formulario con 15 preguntas y un envío, no pasos
+revisados uno a uno contra el servidor).
+{% endcomment %}
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ examen.agente }} - Re:Code</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'comun/css/recode.css' %}">
+    <link rel="stylesheet" href="{% static 'comun/css/topbar.css' %}">
+    <link rel="stylesheet" href="{% static 'comun/css/reto.css' %}">
+    <link rel="stylesheet" href="{% static 'batalla/css/examen.css' %}">
+</head>
+<body class="pantalla-reto" style="--accent: {{ color_acento }};">
+    {% if es_final %}{% url 'mapa:inicio' as volver_url %}{% else %}{% url 'mapa:materia' slug as volver_url %}{% endif %}
+    {% include "comun/_topbar.html" with topbar_marca="RE:CODE — EXAMEN" topbar_titulo=examen.agente topbar_volver_url=volver_url topbar_volver_tip="Regresar a los retos" %}
 
-{% block contenido %}
-<h1>{% if es_final %}⚠ {% endif %}{{ examen.agente }}</h1>
-<h2>{% if materia %}{{ materia.nombre }} · {% endif %}Tiempo: <span id="reloj"></span></h2>
+    <main class="body">
+        <div class="card">
+            <p class="qnum">{% if materia %}{{ materia.nombre|upper }} · {% endif %}{% if es_final %}BATALLA FINAL{% else %}EXAMEN FINAL{% endif %}</p>
+            <h1 class="qtext">{{ examen.agente }}</h1>
 
-<form method="post" id="form-examen">
-    {% csrf_token %}
-    {% for p in preguntas %}
-    <fieldset class="mensaje">
-        <legend>{{ forloop.counter }}. {{ p.texto }}</legend>
-        {% for opcion in p.opciones %}
-        <label><input type="radio" name="pregunta_{{ p.indice }}" value="{{ opcion }}"> {{ opcion }}</label><br>
-        {% endfor %}
-    </fieldset>
-    {% endfor %}
-    <button type="submit">Enviar respuestas</button>
-</form>
+            <div class="examen-cabecera">
+                <div class="examen-reloj" id="reloj" data-limite="{{ examen.tiempo_limite }}">0:00</div>
+                <div class="examen-info">Aprueba con {{ examen.aciertos_minimos }} de {{ preguntas|length }} correctas</div>
+            </div>
 
-<a href="{% if es_final %}{% url 'mapa:inicio' %}{% else %}{% url 'mapa:materia' slug %}{% endif %}" class="btn-regresar" title="Regresar">←</a>
-{% endblock %}
+            <form method="post" id="form-examen">
+                {% csrf_token %}
+                {% for p in preguntas %}
+                <fieldset class="pregunta">
+                    <legend>{{ forloop.counter }}. {{ p.texto }}</legend>
+                    {% for opcion in p.opciones %}
+                    <label class="opt">
+                        <input type="radio" name="pregunta_{{ p.indice }}" value="{{ opcion }}">
+                        <span class="dot"></span>{{ opcion }}
+                    </label>
+                    {% endfor %}
+                </fieldset>
+                {% endfor %}
+                <div class="examen-acciones">
+                    <button type="button" class="boton peligro" id="btn-abandonar">Abandonar examen</button>
+                    <button type="submit" class="boton">Enviar respuestas</button>
+                </div>
+            </form>
+        </div>
+    </main>
 
-{% block scripts %}
-<script>
-    // Temporizador: al llegar a 0 se envía lo que haya contestado.
-    let restante = {{ examen.tiempo_limite }};
-    const reloj = document.getElementById("reloj");
-    const pintar = () => reloj.textContent =
-        `${Math.floor(restante / 60)}:${String(restante % 60).padStart(2, "0")}`;
-    pintar();
-    const intervalo = setInterval(() => {
-        restante--;
-        pintar();
-        if (restante <= 0) {
-            clearInterval(intervalo);
-            document.getElementById("form-examen").submit();
-        }
-    }, 1000);
-</script>
-{% endblock %}
+    <!-- FE-1: abandono voluntario, con confirmación (R75/requisito especial 6). -->
+    <dialog class="confirmar" id="dialogo-abandonar">
+        <p>Se perderá el progreso de este examen y no obtendrás bitcoins. ¿Seguro que quieres abandonarlo?</p>
+        <div class="dialogo-acciones">
+            <button type="button" class="boton secundario" id="btn-cancelar-abandono">Seguir con el examen</button>
+            <button type="button" class="boton peligro" id="btn-confirmar-abandono">Abandonar</button>
+        </div>
+    </dialog>
+
+    <!-- FA-1: tiempo agotado (R47/requisito especial 2). Nunca se manda el
+         formulario: no se guarda nada ni se otorgan bitcoins. -->
+    <div class="jumpscare" id="jumpscare" hidden>
+        <div class="jumpscare-flash"></div>
+        <div class="jumpscare-contenido">
+            <p class="jumpscare-aviso">⚠ TIEMPO AGOTADO ⚠</p>
+            <p class="jumpscare-sub">{{ examen.agente }} cortó la conexión. No se guardó tu progreso ni ganaste bitcoins.</p>
+            <div class="dialogo-acciones">
+                <a class="boton secundario" href="{{ volver_url }}">Volver a los retos</a>
+                <button type="button" class="boton" id="btn-reintentar">Reintentar</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="{% static 'comun/js/recode.js' %}"></script>
+    <script src="{% static 'comun/js/reto_dialogos.js' %}"></script>
+    <script>
+        window.Examen = { volverUrl: "{{ volver_url }}" };
+    </script>
+    <script src="{% static 'batalla/js/examen.js' %}"></script>
+</body>
+</html>

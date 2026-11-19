@@ -2,6 +2,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import Http404
 from django.shortcuts import redirect, render
 
+from comun.colores import ROJO, acento_de_materia
 from mapa.temas import obtener_materia
 from progreso import servicios
 
@@ -20,11 +21,14 @@ def examen(request, slug):
         return redirect("mapa:inicio")
 
     materia = obtener_materia(slug)
+    # La batalla final no tiene materia (es contra las 5 a la vez): usa el
+    # mismo rojo del mapa del campus en vez del acento de alguna de ellas.
     contexto = {
         "slug": slug,
         "examen": datos,
         "materia": materia,
         "es_final": slug == "final",
+        "color_acento": acento_de_materia(slug) if materia else ROJO,
     }
 
     if request.method == "POST":

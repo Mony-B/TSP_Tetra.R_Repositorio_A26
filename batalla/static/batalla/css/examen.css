@@ -1,0 +1,103 @@
+/* Examen final de materia (CU04) y, en lo que CU15 se desarrolla, la
+   batalla final de ejemplo: reutiliza .card/.opt/.boton/dialog.confirmar
+   de comun/static/comun/css/reto.css (mismo --accent de la materia, ver
+   el body en batalla/templates/batalla/examen.html), esta hoja solo
+   agrega lo propio del examen: reloj, preguntas y el jumpscare (R47). */
+
+.examen-cabecera {
+    display: flex; align-items: center; justify-content: space-between;
+    flex-wrap: wrap; gap: 10px;
+    margin: 0 0 28px; padding-bottom: 16px;
+    border-bottom: 1px solid var(--borde, var(--line));
+}
+.examen-reloj {
+    font-family: "Chakra Petch", monospace; font-weight: 700;
+    font-size: 26px; letter-spacing: .04em; color: var(--accent);
+    font-variant-numeric: tabular-nums;
+}
+.examen-reloj.urgente { color: var(--rojo, #ff5a5f); animation: examen-parpadeo 1s steps(2, start) infinite; }
+.examen-info { font-size: 13px; color: var(--muted); }
+
+.pregunta {
+    border: 0; padding: 0; margin: 0 0 26px;
+}
+.pregunta legend {
+    font-family: "Chakra Petch", "Share Tech Mono", monospace;
+    font-size: 15px; font-weight: 700; line-height: 1.4;
+    color: var(--fg); margin: 0 0 12px; padding: 0;
+}
+.pregunta .opt { margin-bottom: 10px; }
+.pregunta .opt input[type="radio"] {
+    position: absolute; opacity: 0; width: 0; height: 0;
+}
+
+.examen-acciones {
+    display: flex; justify-content: space-between; align-items: center;
+    flex-wrap: wrap; gap: 12px;
+    margin-top: 10px; padding-top: 24px; border-top: 1px solid var(--borde, var(--line));
+}
+
+/* --- Resultado del examen ------------------------------------------- */
+.resultado-examen .qtext { margin-bottom: 22px; }
+.resultado-mensaje {
+    padding: 16px 20px; border-radius: 10px; margin: 0 0 28px;
+    line-height: 1.6; font-size: 15px;
+}
+.resultado-mensaje.exito {
+    background: color-mix(in srgb, var(--hecho) 12%, transparent);
+    border-left: 2px solid var(--hecho); color: var(--fg);
+}
+.resultado-mensaje.falla {
+    background: color-mix(in srgb, var(--rojo, #ff5a5f) 12%, transparent);
+    border-left: 2px solid var(--rojo, #ff5a5f); color: var(--fg);
+}
+.resultado-acciones { justify-content: flex-start; border-top: 0; padding-top: 0; margin-top: 0; }
+.resultado-acciones .boton { flex: none; }
+
+/* --- Jumpscare (R47): tiempo agotado -------------------------------- */
+.jumpscare {
+    position: fixed; inset: 0; z-index: 50;
+    display: flex; align-items: center; justify-content: center;
+    background: #000;
+}
+.jumpscare-flash {
+    position: absolute; inset: 0;
+    background: #ff0a2e;
+    animation: jumpscare-destello .45s steps(1, end) 4;
+}
+.jumpscare-contenido {
+    position: relative; z-index: 1;
+    max-width: 440px; width: calc(100% - 48px);
+    text-align: center;
+    animation: jumpscare-sacudida .35s ease-out 2;
+}
+.jumpscare-aviso {
+    font-family: "Chakra Petch", monospace; font-weight: 700;
+    font-size: 30px; letter-spacing: .06em; color: #fff;
+    text-shadow: 0 0 18px #ff0a2e, 0 0 40px #ff0a2e;
+    margin: 0 0 14px;
+}
+.jumpscare-sub { color: #e8c8cc; font-size: 14px; line-height: 1.6; margin: 0 0 26px; }
+.jumpscare .dialogo-acciones { justify-content: center; }
+
+@keyframes jumpscare-destello {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+}
+@keyframes jumpscare-sacudida {
+    0% { transform: translate(0, 0); }
+    25% { transform: translate(-8px, 4px); }
+    50% { transform: translate(8px, -4px); }
+    75% { transform: translate(-6px, -2px); }
+    100% { transform: translate(0, 0); }
+}
+@keyframes examen-parpadeo { 50% { opacity: .35; } }
+
+@media (prefers-reduced-motion: reduce) {
+    .jumpscare-flash, .jumpscare-contenido, .examen-reloj.urgente { animation: none !important; }
+}
+
+@media (max-width: 600px) {
+    .examen-reloj { font-size: 21px; }
+    .jumpscare-aviso { font-size: 23px; }
+}
