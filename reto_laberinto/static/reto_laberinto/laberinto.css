@@ -1,0 +1,29 @@
+/* Laberinto de sombras (CU-14): escenario de canvas con niebla, mensajes
+   flotantes sobre el lienzo y el d-pad de movimiento. El diálogo de salida
+   y el de victoria (al escapar) son los de comun/reto_base.html. */
+
+.progreso-laberinto { font-size: 0.8rem; color: var(--verde-medio); text-transform: uppercase; margin-bottom: 6px; }
+.pregunta-laberinto { font-size: 1.05rem; margin: 0 0 10px; }
+
+.escenario { position: relative; width: 100%; max-width: 700px; margin: 0 auto 10px; border: 1px solid var(--borde); background: #020a06; }
+.escenario canvas { display: block; width: 100%; height: auto; image-rendering: pixelated; }
+
+.mensaje-flotante {
+    position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
+    max-width: 85%; padding: 10px 16px; border: 1px solid var(--verde);
+    background: rgba(0, 0, 0, 0.92); color: var(--verde); text-align: center;
+    line-height: 1.4; opacity: 0; transition: opacity 0.15s; pointer-events: none;
+}
+.mensaje-flotante.mostrar { opacity: 1; }
+
+.controles-laberinto { display: flex; gap: 20px; align-items: center; justify-content: center; flex-wrap: wrap; margin: 10px 0; }
+.dpad { display: grid; grid-template-columns: repeat(3, 44px); grid-template-rows: repeat(2, 40px); gap: 4px; }
+.dpad button { font-size: 1.1rem; }
+.dpad .arriba { grid-column: 2; }
+.dpad .izquierda { grid-column: 1; grid-row: 2; }
+.dpad .abajo { grid-column: 2; grid-row: 2; }
+.dpad .derecha { grid-column: 3; grid-row: 2; }
+.ayuda-laberinto { font-size: 0.8rem; color: var(--verde-medio); max-width: 260px; }
+
+.acciones-laberinto { display: flex; gap: 10px; flex-wrap: wrap; justify-content: space-between; margin-top: 10px; }
+.acciones-laberinto[hidden] { display: none; }

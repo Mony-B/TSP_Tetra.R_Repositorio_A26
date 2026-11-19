@@ -15,6 +15,7 @@
     const toast = document.getElementById("toast");
     const acciones = document.getElementById("acciones-laberinto");
     const dialogo = document.getElementById("dialogo-salir");
+    const dialogoExito = document.getElementById("dialogo-exito");
 
     // Laberinto más pequeño y con más atajos que el prototipo original
     // (21×17, 12 enlaces extra): ese tamaño resultaba abrumador para
@@ -195,23 +196,14 @@
             ? "La recompensa de este reto ya se te había otorgado antes."
             : `Obtuviste <strong>₿ ${r.bitcoins_otorgados}</strong>.`;
         acciones.hidden = true;
-        document.getElementById("premio-victoria").innerHTML = premio;
-        document.getElementById("superposicion-victoria").hidden = false;
+        document.getElementById("exito-mensaje").innerHTML = "<strong>¡Has escapado del laberinto!</strong>";
+        document.getElementById("exito-premio").innerHTML = premio;
+        ReCode.dialogos.abrir(dialogoExito);
     }
 
-    // --- FE-1: salir / rendirse con confirmación ----------------------------
-    const MENSAJE_SALIR = "Se perderá el progreso de este reto y no obtendrás bitcoins. ¿Salir?";
-
-    function pedirSalida(e) {
-        if (finished) return;
-        ReCode.dialogos.pedirSalida(dialogo, MENSAJE_SALIR, ReCode.reto.volverUrl, e);
-    }
-
-    document.getElementById("btn-salir").addEventListener("click", pedirSalida);
-    ReCode.dialogos.conectarFlechaSalir(dialogo, MENSAJE_SALIR, ReCode.reto.volverUrl, () => visited.size > 1 && !finished);
-    document.getElementById("btn-cancelar-salida").addEventListener("click", () => ReCode.dialogos.cerrar(dialogo));
-    document.getElementById("btn-confirmar-salida").addEventListener("click", () => {
-        window.location.href = ReCode.reto.volverUrl;
+    ReCode.dialogos.inicializarSalir({
+        hayProgreso: () => visited.size > 1,
+        puedeSalir: () => !finished,
     });
 
     // --- Controles -----------------------------------------------------------
