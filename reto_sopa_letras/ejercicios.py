@@ -276,6 +276,58 @@ EJERCICIOS = {
             },
         ],
     },
+    # Álgebra · Operaciones con polinomios y teoremas fundamentales (Módulo 1).
+    "polinomios-teoremas": {
+        "titulo": "Vocabulario de polinomios",
+        "instrucciones": (
+            "Lee cada definición y encuentra el concepto en la sopa: arrastra "
+            "sobre las letras o toca la primera y la última. Superas el reto "
+            "cuando completas los dos niveles."
+        ),
+        "bitcoins": 30,
+        "niveles": [
+            {
+                "tamano": 9,
+                "semilla": "polinomios-1",
+                "pasos": [
+                    {
+                        "palabra": "GRADO",
+                        "definicion": "El exponente más alto de la variable en un polinomio.",
+                    },
+                    {
+                        "palabra": "FACTOR",
+                        "definicion": "Expresión que divide exactamente a un polinomio, sin dejar residuo.",
+                    },
+                    {
+                        "palabra": "RAIZ",
+                        "definicion": "Valor de x que hace que el polinomio valga cero.",
+                    },
+                    {
+                        "palabra": "RESIDUO",
+                        "definicion": "Lo que sobra al dividir un polinomio entre otro; si es cero, el divisor es factor.",
+                    },
+                ],
+            },
+            {
+                "tamano": 12,
+                "semilla": "polinomios-2",
+                "pasos": [
+                    {
+                        "palabra": "COEFICIENTE",
+                        "definicion": "Número que multiplica a la variable en cada término del polinomio.",
+                    },
+                    {
+                        "palabra": "SINTETICA",
+                        "definicion": "Método abreviado para dividir un polinomio entre (x − c).",
+                    },
+                    {
+                        "palabra": "POLINOMIO",
+                        "definicion": "Expresión algebraica formada por la suma de varios términos con exponentes enteros no negativos.",
+                    },
+                ],
+            },
+        ],
+    },
 }
 
 # Derecha, abajo y diagonal hacia abajo a la derecha.

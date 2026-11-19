@@ -47,6 +47,32 @@ EJERCICIOS = {
         # Un solo paso: se verifica toda la matriz a la vez.
         "pasos": [{"nombre": "matriz"}],
     },
+    # Álgebra · Álgebra matricial y operaciones con matrices (Módulo 4 del temario).
+    "operaciones-matrices": {
+        "titulo": "Resolver una matriz de operaciones",
+        "mision": (
+            "El sistema de control perdió la configuración de una matriz que se "
+            "usa para sumar y multiplicar con otras del laboratorio. Restaura los "
+            "valores del bloque de memoria de 3x3 usando las pistas del sistema. "
+            "Recuerda: en programación, los índices siempre comienzan en 0."
+        ),
+        "bitcoins": 30,
+        # (Solución: [[6, 3, 9], [12, 5, 7], [8, 2, 4]])
+        "matriz": [
+            [6, "A", "B"],
+            ["C", 5, "D"],
+            ["E", "F", 4],
+        ],
+        "pistas": [
+            "Matriz[0][1] + Matriz[0][0] == 9",
+            "Matriz[0][2] == Matriz[0][1] * 3",
+            "Matriz[1][0] == Matriz[0][2] + Matriz[1][1] - 2",
+            "Matriz[1][2] + Matriz[2][2] == 11",
+            "Matriz[2][0] == Matriz[1][0] - Matriz[1][1] + 1",
+            "Matriz[2][1] == Matriz[0][0] - Matriz[1][1] + 1",
+        ],
+        "pasos": [{"nombre": "matriz"}],
+    },
 }
 
 

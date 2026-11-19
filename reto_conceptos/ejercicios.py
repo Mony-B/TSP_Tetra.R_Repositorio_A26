@@ -141,6 +141,58 @@ EJERCICIOS = {
             ],
         ],
     },
+    # Álgebra · Números reales y sistemas de ecuaciones (Módulo 0 del temario).
+    "propiedades-reales": {
+        "titulo": "Relacionar conceptos: números reales",
+        "bitcoins": 30,
+        "semilla": "propiedades-reales",
+        "rondas": [
+            [
+                {"concepto": "Cerradura", "palabra": "el resultado es del mismo tipo", "definicion": "Al sumar o multiplicar dos números reales, el resultado también es un número real."},
+                {"concepto": "Conmutativa", "palabra": "el orden no importa", "definicion": "a + b = b + a, y lo mismo para la multiplicación."},
+                {"concepto": "Asociativa", "palabra": "se puede agrupar distinto", "definicion": "(a + b) + c = a + (b + c), sin importar cómo se agrupen los términos."},
+            ],
+            [
+                {"concepto": "Distributiva", "palabra": "reparte la multiplicación", "definicion": "a(b + c) = ab + ac."},
+                {"concepto": "Neutro aditivo", "palabra": "sumar cero", "definicion": "Sumar 0 a cualquier número real no lo cambia."},
+                {"concepto": "Neutro multiplicativo", "palabra": "multiplicar por uno", "definicion": "Multiplicar por 1 a cualquier número real no lo cambia."},
+                {"concepto": "Elemento inverso", "palabra": "deshace la operación", "definicion": "Todo número real tiene un opuesto (para sumar) o un recíproco (para multiplicar) que regresa al neutro."},
+            ],
+            [
+                {"concepto": "Número natural", "palabra": "ℕ", "definicion": "Los números que se usan para contar: 0, 1, 2, 3..."},
+                {"concepto": "Número entero", "palabra": "ℤ", "definicion": "Naturales y sus negativos, sin fracciones ni decimales."},
+                {"concepto": "Número racional", "palabra": "ℚ", "definicion": "Se puede escribir como una fracción a/b, con b distinto de cero."},
+                {"concepto": "Número irracional", "palabra": "𝕀", "definicion": "Su representación decimal no termina ni se repite."},
+                {"concepto": "Número real", "palabra": "ℝ", "definicion": "Conjunto que incluye a todos los racionales e irracionales juntos."},
+            ],
+        ],
+    },
+    # Álgebra · Ecuaciones algebraicas y naturaleza de las raíces (Módulo 2).
+    "naturaleza-raices": {
+        "titulo": "Relacionar conceptos: raíces de polinomios",
+        "bitcoins": 30,
+        "semilla": "naturaleza-raices",
+        "rondas": [
+            [
+                {"concepto": "Raíz de un polinomio", "palabra": "cero del polinomio", "definicion": "Valor de x donde el polinomio P(x) vale exactamente 0."},
+                {"concepto": "Multiplicidad", "palabra": "cuántas veces se repite", "definicion": "Número de veces que una misma raíz aparece como factor del polinomio."},
+                {"concepto": "Ceros racionales", "palabra": "p/q", "definicion": "Posibles raíces racionales: divisores del término independiente entre divisores del coeficiente principal."},
+            ],
+            [
+                {"concepto": "Raíz racional", "palabra": "se puede escribir como fracción", "definicion": "Raíz que es un número racional, como 2/3."},
+                {"concepto": "Raíz irracional", "palabra": "no es fracción exacta", "definicion": "Raíz cuyo decimal no termina ni se repite, como √5."},
+                {"concepto": "Raíces irracionales conjugadas", "palabra": "a + √b y a − √b", "definicion": "Si un polinomio con coeficientes racionales tiene una raíz irracional, su conjugada también es raíz."},
+                {"concepto": "Teorema del factor", "palabra": "(x − c) divide a P(x)", "definicion": "c es raíz de P(x) si y solo si (x − c) es un factor del polinomio."},
+            ],
+            [
+                {"concepto": "Raíz compleja", "palabra": "a + bi", "definicion": "Raíz que incluye la unidad imaginaria i, donde i² = −1."},
+                {"concepto": "Raíces complejas conjugadas", "palabra": "a + bi y a − bi", "definicion": "Si un polinomio con coeficientes reales tiene una raíz compleja, su conjugada también es raíz."},
+                {"concepto": "Teorema del residuo", "palabra": "P(c) es el residuo", "definicion": "Al dividir P(x) entre (x − c), el residuo es igual a P(c)."},
+                {"concepto": "Coeficiente principal", "palabra": "el de mayor grado", "definicion": "El número que multiplica al término de mayor exponente del polinomio."},
+                {"concepto": "Término independiente", "palabra": "sin variable", "definicion": "El término del polinomio que no tiene ninguna variable."},
+            ],
+        ],
+    },
     # Linux · Lectura de archivos y bitácoras (Módulo 3a del temario).
     "lectura-bitacoras": {
         "titulo": "Relacionar conceptos: lectura de archivos",

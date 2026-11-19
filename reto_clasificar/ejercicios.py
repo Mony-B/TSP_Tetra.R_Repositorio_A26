@@ -145,6 +145,70 @@ EJERCICIOS = {
         "ayuda": "if/elif/else deciden qué bloque se ejecuta según una condición. while/for repiten un bloque; break también pertenece a un ciclo, porque lo interrumpe.",
         "bitcoins": 30,
     },
+    # Álgebra · Números reales y sistemas de ecuaciones (Módulo 0 del temario).
+    "conjuntos-numericos": {
+        "kind": "generico",
+        "nivel": 1,
+        "subtema": "Números reales y sistemas de ecuaciones",
+        "titulo": "Clasifica el número",
+        "instrucciones": "Arrastra cada número a la caja de su conjunto.",
+        "enunciado": ["Clasifica cada número según el conjunto numérico más específico al que pertenece."],
+        "categorias": [
+            {"id": "naturales", "nombre": "Naturales (ℕ)", "detalle": "(0, 1, 2, 3...)"},
+            {"id": "enteros", "nombre": "Enteros (ℤ)", "detalle": "(incluye negativos)"},
+            {"id": "racionales", "nombre": "Racionales (ℚ)", "detalle": "(fracciones exactas)"},
+            {"id": "irracionales", "nombre": "Irracionales (𝕀)", "detalle": "(no se pueden escribir como fracción)"},
+        ],
+        "fichas": [
+            {"etiqueta": "7", "categoria": "naturales"},
+            {"etiqueta": "0", "categoria": "naturales"},
+            {"etiqueta": "-5", "categoria": "enteros"},
+            {"etiqueta": "-12", "categoria": "enteros"},
+            {"etiqueta": "3/4", "categoria": "racionales"},
+            {"etiqueta": "0.5", "categoria": "racionales"},
+            {"etiqueta": "√2", "categoria": "irracionales"},
+            {"etiqueta": "π", "categoria": "irracionales"},
+        ],
+        "ayuda": (
+            "Naturales: 0, 1, 2, 3... Enteros: incluyen los negativos. "
+            "Racionales: se pueden escribir como fracción exacta (a/b). "
+            "Irracionales: su decimal no termina ni se repite, como √2 o π."
+        ),
+        "bitcoins": 30,
+    },
+    # Álgebra · Álgebra matricial y operaciones con matrices (Módulo 4 del temario).
+    "tipos-de-matrices": {
+        "kind": "generico",
+        "nivel": 1,
+        "subtema": "Álgebra matricial y operaciones con matrices",
+        "titulo": "Clasifica la matriz",
+        "instrucciones": "Arrastra cada matriz a la caja de su tipo.",
+        "enunciado": ["Clasifica cada matriz según su tipo."],
+        "categorias": [
+            {"id": "cuadrada", "nombre": "Cuadrada", "detalle": "(mismo número de filas y columnas)"},
+            {"id": "fila", "nombre": "Fila", "detalle": "(un solo renglón)"},
+            {"id": "rectangular", "nombre": "Rectangular", "detalle": "(distinto número de filas y columnas)"},
+            {"id": "simetrica", "nombre": "Simétrica", "detalle": "(igual a su transpuesta)"},
+            {"id": "identidad", "nombre": "Identidad", "detalle": "(unos en la diagonal, ceros en el resto)"},
+        ],
+        "fichas": [
+            {"etiqueta": "Matriz de 3×3 con números distintos por todos lados", "categoria": "cuadrada"},
+            {"etiqueta": "Matriz de 2×2 con números distintos", "categoria": "cuadrada"},
+            {"etiqueta": "Matriz de 1×4 (un solo renglón)", "categoria": "fila"},
+            {"etiqueta": "Matriz de 2×5 (más columnas que filas)", "categoria": "rectangular"},
+            {"etiqueta": "Matriz de 4×2 (más filas que columnas)", "categoria": "rectangular"},
+            {"etiqueta": "Matriz cuadrada donde A[i][j] = A[j][i] para toda i, j", "categoria": "simetrica"},
+            {"etiqueta": "Matriz de 3×3 que es igual a su propia transpuesta", "categoria": "simetrica"},
+            {"etiqueta": "Matriz cuadrada con 1 en toda la diagonal principal y 0 en el resto", "categoria": "identidad"},
+        ],
+        "ayuda": (
+            "Cuadrada: mismo número de filas y columnas. Fila: un solo renglón. "
+            "Rectangular: filas y columnas distintas. Simétrica: A[i][j] = A[j][i] "
+            "siempre (igual a su transpuesta). Identidad: 1 en la diagonal "
+            "principal, 0 en todo lo demás."
+        ),
+        "bitcoins": 30,
+    },
     # Lógica · Teoría de conjuntos y representación (Módulo 1 del temario).
     "tipos-de-conjuntos": {
         "kind": "generico",

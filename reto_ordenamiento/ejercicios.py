@@ -119,6 +119,24 @@ EJERCICIOS = {
         ],
         "orden_mostrado": [3, 0, 5, 2, 4, 1],
     },
+    # Álgebra · Operaciones con polinomios y teoremas fundamentales (Módulo 1).
+    "division-sintetica": {
+        "titulo": "Algoritmo: división sintética",
+        "bitcoins": 30,
+        "mision": (
+            "Reconstruye los pasos para dividir un polinomio entre (x − c) "
+            "usando división sintética."
+        ),
+        "pasos": [
+            "Inicio",
+            "Escribir solo los coeficientes del polinomio, completando con 0 los términos que falten",
+            "Bajar el primer coeficiente tal cual",
+            "Multiplicar ese valor por c y sumarlo al siguiente coeficiente",
+            "Repetir la multiplicación y suma hasta llegar al último coeficiente",
+            "Fin (el último valor obtenido es el residuo, según el teorema del residuo)",
+        ],
+        "orden_mostrado": [3, 0, 5, 1, 4, 2],
+    },
 }
 
 

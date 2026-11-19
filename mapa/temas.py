@@ -102,7 +102,25 @@ MATERIAS = [
         "slug": "algebra",
         "nombre": "Álgebra",
         "subtemas": [
-            {"nombre": "Ecuaciones", "retos": [("reto_ecuaciones", "lineales")]},
+            {"nombre": "Números reales y sistemas de ecuaciones", "retos": [
+                ("reto_ecuaciones", "lineales"),
+                ("reto_clasificar", "conjuntos-numericos"),
+                ("reto_conceptos", "propiedades-reales"),
+            ]},
+            {"nombre": "Polinomios y teoremas fundamentales", "retos": [
+                ("reto_ordenamiento", "division-sintetica"),
+                ("reto_sopa_letras", "polinomios-teoremas"),
+            ]},
+            {"nombre": "Naturaleza de las raíces", "retos": [
+                ("reto_conceptos", "naturaleza-raices"),
+            ]},
+            {"nombre": "Análisis y acotación de raíces", "retos": [
+                ("reto_laberinto", "descartes-acotacion"),
+            ]},
+            {"nombre": "Álgebra matricial y operaciones con matrices", "retos": [
+                ("reto_clasificar", "tipos-de-matrices"),
+                ("reto_ecuaciones", "operaciones-matrices"),
+            ]},
         ],
     },
 ]

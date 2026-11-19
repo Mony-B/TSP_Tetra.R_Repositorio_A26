@@ -116,6 +116,28 @@ EJERCICIOS = {
             },
         ],
     },
+    # Álgebra · Análisis y acotación de raíces (Módulo 3 del temario).
+    "descartes-acotacion": {
+        "titulo": "Laberinto de sombras: raíces",
+        "bitcoins": 30,
+        "preguntas": [
+            {
+                "texto": "Sector 1 de 3: Si P(x) tiene 3 cambios de signo entre sus coeficientes, ¿cuántas raíces reales positivas puede tener como máximo?",
+                "opciones": ["1", "3", "5"],
+                "respuesta": "3",
+            },
+            {
+                "texto": "Sector 2 de 3: ¿Qué se evalúa para contar las posibles raíces reales negativas de P(x)?",
+                "opciones": ["P(x)", "P(-x)", "P(0)"],
+                "respuesta": "P(-x)",
+            },
+            {
+                "texto": "Sector 3 de 3: Si al dividir P(x) entre (x − c) con división sintética toda la fila final sale positiva (o cero), ¿qué es c?",
+                "opciones": ["Una cota inferior", "Una cota superior", "No se puede saber"],
+                "respuesta": "Una cota superior",
+            },
+        ],
+    },
 }
 
 
