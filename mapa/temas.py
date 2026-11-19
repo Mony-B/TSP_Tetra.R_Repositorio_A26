@@ -31,6 +31,7 @@ MATERIAS = [
             {"nombre": "Álgebra de proposiciones y demostración", "retos": [
                 ("reto_sopa_letras", "algoritmos"),
                 ("reto_ordenamiento", "demostracion-induccion"),
+                ("reto_algebra_booleana", "leyes-de-morgan"),
             ]},
             {"nombre": "Algoritmos básicos (refuerzo)", "retos": [
                 ("reto_ordenamiento", "par-impar"),
