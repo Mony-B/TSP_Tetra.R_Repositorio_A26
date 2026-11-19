@@ -241,15 +241,19 @@
 
     // --- FE-1: salir / rendirse con confirmación ----------------------------
     // Diálogo y mensaje de salida compartidos con los demás retos
-    // (comun/reto_base.html + comun/js/reto_dialogos.js). "Salir / Rendirse"
-    // dentro de la ventana de agotado reusa el mismo flujo (FA-1.4.5).
-    const btnSalir = document.getElementById("btn-salir");
+    // (comun/reto_base.html + comun/js/reto_dialogos.js).
     ReCode.dialogos.inicializarSalir({
         hayProgreso: () => intentosUsados > 0,
         puedeSalir: () => !terminado,
         mensaje: "Se perderá el progreso de este intento y no obtendrás bitcoins. ¿Seguro que quieres salir?",
     });
-    document.getElementById("btn-salir-agotado").addEventListener("click", () => btnSalir.click());
+
+    // "Salir / Rendirse" dentro de la ventana de agotado (FA-1.4.5) no pide
+    // esa misma confirmación: ya no hay progreso que perder ni bitcoins que
+    // obtener en este intento, así que el aviso no aplica y solo navega.
+    document.getElementById("btn-salir-agotado").addEventListener("click", () => {
+        window.location.href = ReCode.reto.volverUrl;
+    });
 
     btnDisparar.addEventListener("click", disparar);
     btnReintentar.addEventListener("click", reintentar);

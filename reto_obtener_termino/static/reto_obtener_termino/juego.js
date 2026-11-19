@@ -9,7 +9,6 @@
     const teclado = document.getElementById("teclado");
     const resultado = document.getElementById("resultado");
     const btnReintentar = document.getElementById("btn-reintentar");
-    const btnSalir = document.getElementById("btn-salir");
     const dialogo = document.getElementById("dialogo-salir");
     const dialogoExito = document.getElementById("dialogo-exito");
     const dialogoAgotado = document.getElementById("dialogo-agotado");
@@ -187,12 +186,17 @@
 
     // --- FE-1: salir / rendirse con confirmación ----------------------------
     // Diálogo y mensaje de salida compartidos con los demás retos
-    // (comun/reto_base.html + comun/js/reto_dialogos.js). "Salir / Rendirse"
-    // dentro de la ventana de agotado reusa el mismo flujo (FA-1.4.5).
+    // (comun/reto_base.html + comun/js/reto_dialogos.js).
     ReCode.dialogos.inicializarSalir({
         hayProgreso: () => fila > 0 && !bloqueado,
     });
-    document.getElementById("btn-salir-agotado").addEventListener("click", () => btnSalir.click());
+
+    // "Salir / Rendirse" dentro de la ventana de agotado (FA-1.4.5) no pide
+    // esa misma confirmación: ya no hay progreso que perder ni bitcoins que
+    // obtener en este intento, así que el aviso no aplica y solo navega.
+    document.getElementById("btn-salir-agotado").addEventListener("click", () => {
+        window.location.href = ReCode.reto.volverUrl;
+    });
 
     btnReintentar.addEventListener("click", reintentar);
 
