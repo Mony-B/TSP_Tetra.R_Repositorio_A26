@@ -99,6 +99,7 @@
     justify-content: space-between;
     margin-top: 10px;
 }
+.acciones-conceptos[hidden] { display: none; }
 
 @media (max-width: 600px) {
     .carretes { flex-direction: column; }
