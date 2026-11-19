@@ -21,6 +21,13 @@ MATERIAS = [
             {"nombre": "Algoritmos", "retos": [
                 ("reto_sopa_letras", "algoritmos"),
                 ("reto_ordenamiento", "par-impar"),
+                # TEMPORAL: mismo laberinto de Linux, duplicado aquí nada
+                # más para ver en vivo que su color sigue a la materia
+                # (logica va antes que linux en MATERIAS, así que
+                # materia_de_reto() devuelve esta y el laberinto se ve
+                # violeta en vez de cian). Quitar esta línea al terminar
+                # de probar.
+                ("reto_laberinto", "busqueda-avanzada"),
             ]},
             {"nombre": "Lógica proposicional", "retos": [("reto_algebra_booleana", "proposicional")]},
             {"nombre": "Conjuntos", "retos": [("reto_obtener_termino", "conjuntos")]},
