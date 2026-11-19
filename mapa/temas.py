@@ -36,6 +36,7 @@ MATERIAS = [
             ]},
             {"nombre": "Datos y sentencias básicas", "retos": [
                 ("reto_obtener_termino", "conceptos-basicos-1"),
+                ("reto_ordenamiento", "suma-dos-numeros"),
             ]},
             {"nombre": "Sentencias condicionales", "retos": [
                 ("reto_clasificar", "condicionales-ciclos"),

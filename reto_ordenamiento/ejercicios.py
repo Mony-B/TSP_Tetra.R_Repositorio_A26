@@ -45,6 +45,25 @@ EJERCICIOS = {
         ],
         "orden_mostrado": [3, 0, 5, 1, 4, 2],
     },
+    # Introprog · Datos y sentencias básicas (refuerzo, Módulo 1 del temario).
+    "suma-dos-numeros": {
+        "titulo": "Algoritmo: sumar dos números",
+        "bitcoins": 30,
+        "mision": (
+            "Reconstruye el programa en Python que pide dos números al "
+            "usuario y muestra su suma, acomodando sus pasos en el orden "
+            "correcto."
+        ),
+        "pasos": [
+            "Inicio",
+            "Leer el primer número con input() y convertirlo a entero con int()",
+            "Leer el segundo número con input() y convertirlo a entero con int()",
+            "Calcular suma ← primer número + segundo número",
+            "Mostrar el resultado con print()",
+            "Fin",
+        ],
+        "orden_mostrado": [2, 5, 0, 4, 1, 3],
+    },
 }
 
 
