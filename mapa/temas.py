@@ -52,6 +52,8 @@ MATERIAS = [
             {"nombre": "Búsqueda avanzada", "retos": [("reto_sopa_letras", "busqueda-avanzada")]},
             {"nombre": "Permisos y propiedad", "retos": [("reto_comandos_linux", "permisos")]},
             {"nombre": "Procesos", "retos": [("reto_obtener_termino", "procesos")]},
+            {"nombre": "Búsqueda avanzada (refuerzo)", "retos": [("reto_ordenamiento", "busqueda-eficiente")]},
+            {"nombre": "Permisos y propiedad (refuerzo)", "retos": [("reto_comandos_linux", "permisos-avanzado")]},
         ],
     },
         {

@@ -27,6 +27,24 @@ EJERCICIOS = {
         ],
         "orden_mostrado": [3, 5, 1, 4, 0, 2],
     },
+    # Linux · Búsqueda avanzada (refuerzo): algoritmo de find + grep.
+    "busqueda-eficiente": {
+        "titulo": "Algoritmo: buscar sin leer todo",
+        "bitcoins": 30,
+        "mision": (
+            "Reconstruye el algoritmo que te permite encontrar un texto entre "
+            "muchos archivos sin tener que abrirlos todos uno por uno."
+        ),
+        "pasos": [
+            "Inicio",
+            "Elige en qué carpeta vas a empezar la búsqueda",
+            "Usa find para localizar los archivos que podrían contener el texto",
+            "Usa grep para filtrar solo las líneas que tienen el texto buscado",
+            "Lee únicamente los resultados que grep ya filtró",
+            "Fin",
+        ],
+        "orden_mostrado": [3, 0, 5, 1, 4, 2],
+    },
 }
 
 

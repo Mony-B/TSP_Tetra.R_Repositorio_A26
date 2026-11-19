@@ -183,6 +183,40 @@ NIVELES = {
         "solucion": ["su admin", "adm1n_2026", "chown admin secreto.txt",
                      "chmod 600 secreto.txt", "cat secreto.txt"],
     },
+    # Subtema 5b · Permisos y propiedad (refuerzo): dos candados encadenados.
+    "permisos-avanzado": {
+        "nivel": 6,
+        "subtema": "Permisos y propiedad (refuerzo)",
+        "titulo": "La doble cerradura",
+        "instrucciones": (
+            "Dos candados separan la contraseña final. Resuélvelos uno tras "
+            "otro: cada uno es un archivo con el dueño o los permisos mal "
+            "puestos."
+        ),
+        "bitcoins": 30,
+        "clave": "d0bl3_c4nd4d0",
+        "usuario": "alumno",
+        "comandos": ["help", "clear", "ls", "cd", "cat", "whoami", "chmod", "su", "chown"],
+        "sistema": {
+            "readme.txt": (
+                "El admin puede arreglar dueños y permisos, pero nunca inicia sesión "
+                "directamente: vuélvete admin con 'su admin' (clave: adm1n_f1n4l).\n"
+                "Primer candado: pista.txt. Segundo candado: el archivo que pista.txt te señale."
+            ),
+            "pista.txt": "El bunker con la contraseña final está escondido en una carpeta llamada 'bunker'.",
+            "bunker": {
+                "secreto.txt": "PASSWORD: d0bl3_c4nd4d0",
+            },
+        },
+        "usuarios": {"alumno": None, "admin": "adm1n_f1n4l"},
+        "administradores": ["admin"],
+        "permisos": {
+            "pista.txt": {"dueno": "operador", "modo": "640"},
+            "bunker/secreto.txt": {"dueno": "root", "modo": "000"},
+        },
+        "solucion": ["su admin", "adm1n_f1n4l", "chmod 644 pista.txt", "cat pista.txt",
+                     "cd bunker", "chmod 644 secreto.txt", "cat secreto.txt"],
+    },
 }
 
 EJERCICIOS = NIVELES
