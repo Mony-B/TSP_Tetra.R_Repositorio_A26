@@ -129,6 +129,39 @@ EJERCICIOS = {
         "ayuda": "if/elif/else deciden qué bloque se ejecuta según una condición. while/for repiten un bloque; break también pertenece a un ciclo, porque lo interrumpe.",
         "bitcoins": 30,
     },
+    # Lógica · Teoría de conjuntos y representación (Módulo 1 del temario).
+    "tipos-de-conjuntos": {
+        "kind": "generico",
+        "nivel": 1,
+        "subtema": "Teoría de conjuntos y representación",
+        "titulo": "Clasifica el conjunto",
+        "instrucciones": "Arrastra cada conjunto a la caja de su tipo.",
+        "enunciado": ["Clasifica cada conjunto según su tipo."],
+        "categorias": [
+            {"id": "vacio", "nombre": "Vacío", "detalle": "(sin elementos)"},
+            {"id": "unitario", "nombre": "Unitario", "detalle": "(un elemento)"},
+            {"id": "binario", "nombre": "Binario", "detalle": "(dos elementos)"},
+            {"id": "finito", "nombre": "Finito", "detalle": "(se pueden contar todos)"},
+            {"id": "infinito", "nombre": "Infinito", "detalle": "(no tiene fin)"},
+            {"id": "universal", "nombre": "Universal", "detalle": "(todo el dominio del problema)"},
+        ],
+        "fichas": [
+            {"etiqueta": "{ }", "categoria": "vacio"},
+            {"etiqueta": "∅", "categoria": "vacio"},
+            {"etiqueta": "{Ciudad de México}", "categoria": "unitario"},
+            {"etiqueta": "{rojo, azul}", "categoria": "binario"},
+            {"etiqueta": "{1, 2, 3, 4, 5}", "categoria": "finito"},
+            {"etiqueta": "{lunes, martes, miércoles, jueves, viernes, sábado, domingo}", "categoria": "finito"},
+            {"etiqueta": "{0, 1, 2, 3, ...} (los naturales)", "categoria": "infinito"},
+            {"etiqueta": "U = {todas las letras del abecedario} (en un ejercicio sobre letras)", "categoria": "universal"},
+        ],
+        "ayuda": (
+            "Vacío: sin elementos. Unitario: un elemento. Binario: dos "
+            "elementos. Finito: se pueden contar todos. Infinito: no tiene "
+            "fin. Universal: contiene todo el dominio del problema."
+        ),
+        "bitcoins": 30,
+    },
 }
 
 

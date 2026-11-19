@@ -64,6 +64,24 @@ EJERCICIOS = {
         ],
         "orden_mostrado": [2, 5, 0, 4, 1, 3],
     },
+    # Lógica · Álgebra de proposiciones, formas normales y demostración (Módulo 4).
+    "demostracion-induccion": {
+        "titulo": "Algoritmo: demostración por inducción",
+        "bitcoins": 30,
+        "mision": (
+            "Reconstruye los pasos para demostrar por inducción matemática "
+            "que una propiedad se cumple para todos los números naturales."
+        ),
+        "pasos": [
+            "Inicio",
+            "Caso base: comprobar que la propiedad se cumple para el primer valor (n = 1 o n = 0)",
+            "Hipótesis inductiva: suponer que la propiedad se cumple para un valor n = k",
+            "Paso inductivo: demostrar que, si se cumple para k, también se cumple para k + 1",
+            "Conclusión: la propiedad se cumple para todo número natural",
+            "Fin",
+        ],
+        "orden_mostrado": [4, 1, 5, 2, 0, 3],
+    },
 }
 
 

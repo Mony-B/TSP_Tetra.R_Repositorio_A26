@@ -72,6 +72,28 @@ EJERCICIOS = {
             },
         ],
     },
+    # Lógica · Relaciones, operaciones y Venn (Módulo 2 del temario).
+    "relaciones-conjuntos": {
+        "titulo": "Laberinto de sombras: conjuntos",
+        "bitcoins": 30,
+        "preguntas": [
+            {
+                "texto": "Sector 1 de 3: Si A = {1, 2, 3}, ¿2 pertenece a A?",
+                "opciones": ["Sí, 2 ∈ A", "No, 2 ∉ A", "No se puede saber"],
+                "respuesta": "Sí, 2 ∈ A",
+            },
+            {
+                "texto": "Sector 2 de 3: Si A = {1, 2} y B = {1, 2, 3}, ¿A es subconjunto de B?",
+                "opciones": ["Sí", "No", "Solo si son iguales"],
+                "respuesta": "Sí",
+            },
+            {
+                "texto": "Sector 3 de 3: Si A = {1, 2, 3} y B = {2, 3, 4}, ¿qué es A ∩ B?",
+                "opciones": ["{1, 2, 3, 4}", "{2, 3}", "{1, 4}"],
+                "respuesta": "{2, 3}",
+            },
+        ],
+    },
 }
 
 

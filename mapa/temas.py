@@ -18,13 +18,26 @@ MATERIAS = [
         "slug": "logica",
         "nombre": "Lógica y Algoritmos",
         "subtemas": [
-            {"nombre": "Algoritmos", "retos": [
+            {"nombre": "Teoría de conjuntos y representación", "retos": [
+                ("reto_clasificar", "tipos-de-conjuntos"),
+            ]},
+            {"nombre": "Relaciones, operaciones y Venn", "retos": [
+                ("reto_obtener_termino", "conjuntos"),
+                ("reto_laberinto", "relaciones-conjuntos"),
+            ]},
+            {"nombre": "Lógica proposicional y tablas de verdad", "retos": [
+                ("reto_algebra_booleana", "proposicional"),
+            ]},
+            {"nombre": "Álgebra de proposiciones y demostración", "retos": [
                 ("reto_sopa_letras", "algoritmos"),
+                ("reto_ordenamiento", "demostracion-induccion"),
+            ]},
+            {"nombre": "Algoritmos básicos (refuerzo)", "retos": [
                 ("reto_ordenamiento", "par-impar"),
             ]},
-            {"nombre": "Lógica proposicional", "retos": [("reto_algebra_booleana", "proposicional")]},
-            {"nombre": "Conjuntos", "retos": [("reto_obtener_termino", "conjuntos")]},
-            {"nombre": "Lógica de programación", "retos": [("reto_conceptos", "logica-programacion")]},
+            {"nombre": "Lógica de programación (refuerzo)", "retos": [
+                ("reto_conceptos", "logica-programacion"),
+            ]},
         ],
     },
     {
