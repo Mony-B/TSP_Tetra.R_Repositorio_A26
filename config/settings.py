@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'mapa',         # mapa de materias y subtemas
     'novela',       # novela visual (Monogatari)
     'batalla',      # exámenes por materia y batalla final
+    'red_corrupta', # catálogo de pistas y Snake (CU03)
 
     # Retos: cada uno revisa sus respuestas en el servidor
     'reto_algebra_booleana',  # CU-05

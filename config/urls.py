@@ -14,6 +14,7 @@ urlpatterns = [
     path('progreso/', include('progreso.urls')),
     path('novela/', include('novela.urls')),
     path('batalla/', include('batalla.urls')),
+    path('red-corrupta/', include('red_corrupta.urls')),
     path('retos/algebra-booleana/', include('reto_algebra_booleana.urls')),
     path('retos/comandos-linux/', include('reto_comandos_linux.urls')),
     path('retos/ecuaciones/', include('reto_ecuaciones.urls')),

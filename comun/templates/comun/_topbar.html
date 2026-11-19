@@ -12,6 +12,12 @@ Variables que recibe (todas por "with" al incluirla):
   topbar_volver_url   A dónde regresa la flecha.
   topbar_volver_tip    (opcional) title="" de la flecha, para accesibilidad.
   topbar_resuelto     (opcional) True para mostrar "✓ resuelto" junto al título.
+  topbar_pedir_pista  (opcional) True para mostrar el acceso a la red corrupta
+                       (CU03): solo lo manda comun/reto_base.html, nunca
+                       mapa/materia.html. Usa request.path (de ahí) y
+                       nombre_reto (que todo reto pone en su contexto) para
+                       que, al volver, la red corrupta regrese exactamente
+                       a este reto.
 
 Los bitcoins salen de progreso_alumno (ya lo pone
 progreso.context_processors.progreso_alumno en todas las pantallas), así
@@ -25,7 +31,14 @@ que no hay que mandarlos aparte.
             <div class="subject">{{ topbar_titulo }}{% if topbar_resuelto %} <span class="hecho">✓ resuelto</span>{% endif %}</div>
         </div>
     </div>
-    {% if user.is_authenticated %}
-    <div class="wallet"><span class="coin"></span> <span id="bitcoins-alumno">{{ progreso_alumno.bitcoins }}</span> bitcoins</div>
-    {% endif %}
+    <div class="topbar-der">
+        {% if topbar_pedir_pista %}
+        <a class="pedir-pista"
+           href="{% url 'red_corrupta:catalogo' %}?origen={{ request.path|urlencode }}&origen_label={{ nombre_reto|urlencode }}"
+           title="Consultar una pista de cualquier materia, no solo de este reto">🔓 Pedir pista</a>
+        {% endif %}
+        {% if user.is_authenticated %}
+        <div class="wallet"><span class="coin"></span> <span id="bitcoins-alumno">{{ progreso_alumno.bitcoins }}</span> bitcoins</div>
+        {% endif %}
+    </div>
 </header>

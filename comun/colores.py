@@ -22,6 +22,7 @@ CIAN_TERMINAL = "#48C4D8"
 VIOLETA_NEON = "#B18AF5"
 NARANJA_AMBAR = "#F2A66B"
 ROJO = "#ff3b44"
+MAGENTA = "#ff2fb0"  # red corrupta (CU03): no es un reto de materia, color propio
 
 ACENTO_POR_DEFECTO = AZUL_ELECTRICO
 
@@ -32,6 +33,11 @@ ACENTOS_MATERIA = {
     "logica": VIOLETA_NEON,
     "calculo": NARANJA_AMBAR,
 }
+
+# Acento propio de la red corrupta (CU03): no es una materia, así que no
+# vive en ACENTOS_MATERIA; comun.context_processors.color_reto la reconoce
+# por su app_name y manda este valor en vez de resolver una materia.
+ACENTO_RED_CORRUPTA = MAGENTA
 
 
 def acento_de_materia(slug):
