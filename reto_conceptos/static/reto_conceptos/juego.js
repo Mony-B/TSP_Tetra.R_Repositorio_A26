@@ -18,11 +18,13 @@
         return [r.conceptos, r.palabras, r.definiciones];
     }
 
+    function pintarValor(carrete) {
+        const col = columnas()[carrete];
+        document.getElementById(`valor-${carrete}`).innerHTML = `<span>${ReCode.dialogos.escaparHTML(col[idx[carrete]])}</span>`;
+    }
+
     function pintarCarretes() {
-        const cols = columnas();
-        cols.forEach((col, i) => {
-            document.getElementById(`valor-${i}`).innerHTML = `<span>${ReCode.dialogos.escaparHTML(col[idx[i]])}</span>`;
-        });
+        [0, 1, 2].forEach(pintarValor);
         document.getElementById("ronda-num").textContent = ronda + 1;
         pintarPistas();
     }
@@ -52,7 +54,7 @@
         if (bloqueado) return;
         const col = columnas()[carrete];
         idx[carrete] = (idx[carrete] + dir + col.length) % col.length;
-        pintarCarretes();
+        pintarValor(carrete);
         animarCarrete(carrete);
     }
 
