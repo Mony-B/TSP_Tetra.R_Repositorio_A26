@@ -50,6 +50,28 @@ EJERCICIOS = {
             },
         ],
     },
+    # Introprog · Sentencias repetitivas y arreglos (Módulo 3 del temario).
+    "ciclos-arreglos": {
+        "titulo": "Laberinto de sombras: ciclos",
+        "bitcoins": 30,
+        "preguntas": [
+            {
+                "texto": "Sector 1 de 3: ¿Cuántas veces se ejecuta for i in range(5):?",
+                "opciones": ["4", "5", "6"],
+                "respuesta": "5",
+            },
+            {
+                "texto": "Sector 2 de 3: ¿Cuál es el índice del primer elemento de una lista en Python?",
+                "opciones": ["1", "0", "-1"],
+                "respuesta": "0",
+            },
+            {
+                "texto": "Sector 3 de 3: Si no sabes de antemano cuántas veces se repetirá algo, solo hasta que se cumpla una condición, ¿qué ciclo usarías?",
+                "opciones": ["for", "while", "range"],
+                "respuesta": "while",
+            },
+        ],
+    },
 }
 
 

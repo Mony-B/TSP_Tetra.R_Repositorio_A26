@@ -172,6 +172,62 @@ EJERCICIOS = {
             },
         ],
     },
+    # Introprog · Subrutinas y programación modular (Módulo 4 del temario).
+    "subrutinas": {
+        "titulo": "Vocabulario de subrutinas",
+        "instrucciones": (
+            "Lee cada definición y encuentra el concepto en la sopa: arrastra "
+            "sobre las letras o toca la primera y la última. Superas el reto "
+            "cuando completas los dos niveles."
+        ),
+        "bitcoins": 30,
+        "niveles": [
+            {
+                "tamano": 10,
+                "semilla": "subrutinas-1",
+                "pasos": [
+                    {
+                        "palabra": "FUNCION",
+                        "definicion": "Subrutina que procesa datos y devuelve un resultado explícito con return.",
+                    },
+                    {
+                        "palabra": "RETORNO",
+                        "definicion": "Palabra clave que envía un valor de regreso desde una función.",
+                    },
+                    {
+                        "palabra": "ALCANCE",
+                        "definicion": "Qué tan visible es una variable dentro o fuera de una subrutina (scope).",
+                    },
+                    {
+                        "palabra": "ARGUMENTO",
+                        "definicion": "Valor que se envía a una función o procedimiento al invocarlo.",
+                    },
+                ],
+            },
+            {
+                "tamano": 14,
+                "semilla": "subrutinas-2",
+                "pasos": [
+                    {
+                        "palabra": "PARAMETRO",
+                        "definicion": "Nombre que recibe un valor dentro de la definición de una función.",
+                    },
+                    {
+                        "palabra": "PROCEDIMIENTO",
+                        "definicion": "Subrutina que ejecuta una tarea sin devolver un valor útil (retorna None).",
+                    },
+                    {
+                        "palabra": "MODULAR",
+                        "definicion": "Organizar el código en partes reutilizables e independientes.",
+                    },
+                    {
+                        "palabra": "SUBRUTINA",
+                        "definicion": "Bloque de código con nombre propio que se puede reutilizar y llamar varias veces.",
+                    },
+                ],
+            },
+        ],
+    },
 }
 
 # Derecha, abajo y diagonal hacia abajo a la derecha.

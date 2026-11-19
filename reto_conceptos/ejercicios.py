@@ -37,6 +37,58 @@ EJERCICIOS = {
             ],
         ],
     },
+    # Introprog · Fundamentos de computación y herramientas (Módulo 0 del temario).
+    "fundamentos-computacion": {
+        "titulo": "Relacionar conceptos: fundamentos",
+        "bitcoins": 30,
+        "semilla": "fundamentos-computacion",
+        "rondas": [
+            [
+                {"concepto": "Paradigma imperativo", "palabra": "paso a paso", "definicion": "Instrucciones que van modificando el estado del programa en orden."},
+                {"concepto": "Paradigma declarativo", "palabra": "qué, no cómo", "definicion": "Se especifica el resultado que se busca sin detallar los pasos para lograrlo."},
+                {"concepto": "Programación orientada a objetos", "palabra": "POO", "definicion": "Organiza el código alrededor de objetos que combinan datos y comportamiento."},
+            ],
+            [
+                {"concepto": "Editor de texto", "palabra": "escribir código", "definicion": "Programa donde se escribe el código fuente, sin ejecutarlo ni revisarlo."},
+                {"concepto": "IDE", "palabra": "entorno integrado", "definicion": "Editor, depurador y herramientas juntos en un solo programa."},
+                {"concepto": "Compilador", "palabra": "traduce todo junto", "definicion": "Convierte el código fuente completo en un programa ejecutable antes de correrlo."},
+                {"concepto": "Intérprete", "palabra": "ejecuta línea por línea", "definicion": "Lee y ejecuta el código una instrucción a la vez, sin generar un ejecutable aparte."},
+            ],
+            [
+                {"concepto": "Paradigma funcional", "palabra": "funciones puras", "definicion": "Basado en evaluar funciones matemáticas puras y datos que no cambian."},
+                {"concepto": "Paradigma reactivo", "palabra": "flujos de datos", "definicion": "Orientado a flujos de datos asíncronos y propagación automática de cambios."},
+                {"concepto": "Paradigma lógico", "palabra": "reglas y hechos", "definicion": "Basado en reglas formales, hechos e inferencia lógica."},
+                {"concepto": "Algoritmo", "palabra": "serie de pasos", "definicion": "Conjunto finito y preciso de pasos para resolver un problema."},
+                {"concepto": "Pseudocódigo", "palabra": "casi lenguaje humano", "definicion": "Forma de escribir un algoritmo con palabras parecidas al lenguaje natural, sin sintaxis estricta."},
+            ],
+        ],
+    },
+    # Introprog · Introducción a POO (Módulo 5 del temario).
+    "poo-pilares": {
+        "titulo": "Relacionar conceptos: POO",
+        "bitcoins": 30,
+        "semilla": "poo-pilares",
+        "rondas": [
+            [
+                {"concepto": "Clase", "palabra": "molde", "definicion": "Definición o plantilla a partir de la cual se crean objetos."},
+                {"concepto": "Objeto", "palabra": "instancia", "definicion": "Ejemplar concreto creado a partir de una clase, con sus propios datos."},
+                {"concepto": "Atributo", "palabra": "dato del objeto", "definicion": "Característica o dato que guarda un objeto."},
+            ],
+            [
+                {"concepto": "Método", "palabra": "comportamiento", "definicion": "Función definida dentro de una clase que describe lo que un objeto puede hacer."},
+                {"concepto": "Constructor", "palabra": "__init__", "definicion": "Método especial que inicializa el estado de un objeto al crearse."},
+                {"concepto": "Encapsulación", "palabra": "protección de datos", "definicion": "Control del acceso a los datos internos de un objeto."},
+                {"concepto": "Herencia", "palabra": "clase padre e hija", "definicion": "Una clase reutiliza y especializa atributos y métodos de otra."},
+            ],
+            [
+                {"concepto": "Polimorfismo", "palabra": "misma interfaz, distinta forma", "definicion": "Distintos objetos responden a su manera a un mismo método."},
+                {"concepto": "Composición", "palabra": "tiene un", "definicion": "Una clase se construye integrando instancias de otras clases."},
+                {"concepto": "Análisis semántico", "palabra": "sustantivos y verbos", "definicion": "Identificar posibles clases (sustantivos) y métodos (verbos) en un enunciado."},
+                {"concepto": "Instancia", "palabra": "objeto creado", "definicion": "Un objeto particular creado a partir de una clase."},
+                {"concepto": "Estado", "palabra": "datos actuales", "definicion": "El conjunto de valores que tienen los atributos de un objeto en un momento dado."},
+            ],
+        ],
+    },
     # Linux · Lectura de archivos y bitácoras (Módulo 3a del temario).
     "lectura-bitacoras": {
         "titulo": "Relacionar conceptos: lectura de archivos",

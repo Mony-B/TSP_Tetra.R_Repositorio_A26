@@ -31,13 +31,25 @@ MATERIAS = [
         "slug": "introprog",
         "nombre": "Introducción a la Programación",
         "subtemas": [
-            {"nombre": "Conceptos básicos", "retos": [
-                ("reto_obtener_termino", "conceptos-basicos-1"),
-                ("reto_obtener_termino", "conceptos-basicos-2"),
-                ("reto_obtener_termino", "conceptos-basicos-3"),
+            {"nombre": "Fundamentos de computación y herramientas", "retos": [
+                ("reto_conceptos", "fundamentos-computacion"),
             ]},
-            {"nombre": "Control de flujo: condicionales y ciclos", "retos": [
+            {"nombre": "Datos y sentencias básicas", "retos": [
+                ("reto_obtener_termino", "conceptos-basicos-1"),
+            ]},
+            {"nombre": "Sentencias condicionales", "retos": [
                 ("reto_clasificar", "condicionales-ciclos"),
+            ]},
+            {"nombre": "Ciclos y arreglos", "retos": [
+                ("reto_obtener_termino", "conceptos-basicos-2"),
+                ("reto_laberinto", "ciclos-arreglos"),
+            ]},
+            {"nombre": "Subrutinas y programación modular", "retos": [
+                ("reto_sopa_letras", "subrutinas"),
+            ]},
+            {"nombre": "Introducción a POO", "retos": [
+                ("reto_obtener_termino", "conceptos-basicos-3"),
+                ("reto_conceptos", "poo-pilares"),
             ]},
         ],
     },
