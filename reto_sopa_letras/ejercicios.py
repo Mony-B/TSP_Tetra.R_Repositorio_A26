@@ -116,6 +116,62 @@ EJERCICIOS = {
             },
         ],
     },
+    # Linux · Búsqueda avanzada (find, grep y vocabulario relacionado).
+    "busqueda-avanzada": {
+        "titulo": "Vocabulario de búsqueda",
+        "instrucciones": (
+            "Lee cada definición y encuentra el concepto en la sopa: arrastra "
+            "sobre las letras o toca la primera y la última. Superas el reto "
+            "cuando completas los dos niveles."
+        ),
+        "bitcoins": 30,
+        "niveles": [
+            {
+                "tamano": 10,
+                "semilla": "linux-busqueda-1",
+                "pasos": [
+                    {
+                        "palabra": "FIND",
+                        "definicion": "Comando que recorre carpetas para encontrar archivos por nombre o tipo.",
+                    },
+                    {
+                        "palabra": "GREP",
+                        "definicion": "Comando que busca un patrón de texto dentro del contenido de un archivo.",
+                    },
+                    {
+                        "palabra": "PATRON",
+                        "definicion": "Texto (puede incluir comodines) que le dices a un comando que busque.",
+                    },
+                    {
+                        "palabra": "FILTRO",
+                        "definicion": "Operación que se queda solo con la parte de la información que cumple una condición.",
+                    },
+                ],
+            },
+            {
+                "tamano": 13,
+                "semilla": "linux-busqueda-2",
+                "pasos": [
+                    {
+                        "palabra": "RECURSIVO",
+                        "definicion": "Que revisa también las subcarpetas, no solo la carpeta actual.",
+                    },
+                    {
+                        "palabra": "REDIRECCION",
+                        "definicion": "Mandar la salida de un comando a un archivo en vez de a la pantalla.",
+                    },
+                    {
+                        "palabra": "TUBERIA",
+                        "definicion": "El símbolo | que conecta la salida de un comando con la entrada de otro.",
+                    },
+                    {
+                        "palabra": "COMODIN",
+                        "definicion": "Símbolo como * que representa cualquier texto al buscar nombres.",
+                    },
+                ],
+            },
+        ],
+    },
 }
 
 # Derecha, abajo y diagonal hacia abajo a la derecha.

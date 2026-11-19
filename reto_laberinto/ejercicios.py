@@ -28,6 +28,28 @@ EJERCICIOS = {
             },
         ],
     },
+    # Linux · Rutas y jerarquía de directorios (Módulo 1 del temario).
+    "rutas-jerarquia": {
+        "titulo": "Laberinto de sombras: rutas",
+        "bitcoins": 30,
+        "preguntas": [
+            {
+                "texto": "Sector 1 de 3: ¿Cuál de estas es una ruta absoluta?",
+                "opciones": ["documentos/notas.txt", "/home/alumno/documentos", "../documentos"],
+                "respuesta": "/home/alumno/documentos",
+            },
+            {
+                "texto": "Sector 2 de 3: ¿Qué símbolo representa tu carpeta personal (home)?",
+                "opciones": ["~", "..", "."],
+                "respuesta": "~",
+            },
+            {
+                "texto": "Sector 3 de 3: ¿Qué comando te lleva un nivel arriba, al directorio padre?",
+                "opciones": ["cd ..", "cd ~", "cd ."],
+                "respuesta": "cd ..",
+            },
+        ],
+    },
 }
 
 

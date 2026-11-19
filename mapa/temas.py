@@ -46,10 +46,12 @@ MATERIAS = [
         "nombre": "Linux",
         "subtemas": [
             {"nombre": "Exploración del entorno", "retos": [("reto_comandos_linux", "basicos")]},
+            {"nombre": "Rutas y jerarquía", "retos": [("reto_laberinto", "rutas-jerarquia")]},
             {"nombre": "Creación y manipulación de archivos", "retos": [("reto_comandos_linux", "archivos")]},
-            {"nombre": "Lectura y filtrado de información", "retos": [("reto_comandos_linux", "filtrado")]},
-            {"nombre": "Búsqueda avanzada", "retos": [("reto_comandos_linux", "busqueda"), ("reto_laberinto", "busqueda-avanzada")]},
+            {"nombre": "Lectura de bitácoras", "retos": [("reto_conceptos", "lectura-bitacoras")]},
+            {"nombre": "Búsqueda avanzada", "retos": [("reto_sopa_letras", "busqueda-avanzada")]},
             {"nombre": "Permisos y propiedad", "retos": [("reto_comandos_linux", "permisos")]},
+            {"nombre": "Procesos", "retos": [("reto_obtener_termino", "procesos")]},
         ],
     },
         {

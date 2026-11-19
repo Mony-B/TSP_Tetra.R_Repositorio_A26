@@ -72,6 +72,16 @@ EJERCICIOS = {
         pista="Se crea a partir de una clase.",
     ),
 
+    # --- Linux · Procesos (Módulo 4b del temario) --------------------------
+    "procesos": nuevo_termino(
+        "El término oculto · Procesos", "PROCESO", 5,
+        significado=(
+            "Proceso: programa en ejecución que el sistema operativo gestiona "
+            "y al que puede asignar o quitar recursos."
+        ),
+        pista="Lo que ves listado al ejecutar el comando ps.",
+    ),
+
     # --- Lógica y Algoritmos · Conjuntos (el ejemplo original, ya como Wordle)
     "conjuntos": nuevo_termino(
         "El término oculto", "UNION", 5,

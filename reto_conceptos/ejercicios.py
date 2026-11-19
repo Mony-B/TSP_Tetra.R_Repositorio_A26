@@ -37,6 +37,32 @@ EJERCICIOS = {
             ],
         ],
     },
+    # Linux · Lectura de archivos y bitácoras (Módulo 3a del temario).
+    "lectura-bitacoras": {
+        "titulo": "Relacionar conceptos: lectura de archivos",
+        "bitcoins": 30,
+        "semilla": "lectura-bitacoras",
+        "rondas": [
+            [
+                {"concepto": "cat", "palabra": "mostrar completo", "definicion": "Muestra todo el contenido del archivo de una vez."},
+                {"concepto": "less", "palabra": "paginado", "definicion": "Muestra el archivo página por página para navegarlo con calma."},
+                {"concepto": "nano", "palabra": "editor", "definicion": "Editor de texto sencillo para crear o modificar archivos en la terminal."},
+            ],
+            [
+                {"concepto": "head", "palabra": "primeras líneas", "definicion": "Muestra el inicio de un archivo."},
+                {"concepto": "tail", "palabra": "últimas líneas", "definicion": "Muestra el final de un archivo."},
+                {"concepto": "bitácora", "palabra": "log", "definicion": "Registro cronológico de eventos que genera un sistema o programa."},
+                {"concepto": "texto plano", "palabra": "sin formato", "definicion": "Archivo que solo contiene caracteres, sin estilos ni formato especial."},
+            ],
+            [
+                {"concepto": "Ctrl+O", "palabra": "guardar", "definicion": "Atajo de nano para guardar los cambios en el archivo."},
+                {"concepto": "Ctrl+X", "palabra": "salir", "definicion": "Atajo de nano para cerrar el editor."},
+                {"concepto": "wc -l", "palabra": "contar líneas", "definicion": "Cuenta cuántas líneas tiene un archivo."},
+                {"concepto": "log rotado", "palabra": "archivo histórico", "definicion": "Bitácora anterior que el sistema guarda aparte cuando la actual crece mucho."},
+                {"concepto": "timestamp", "palabra": "marca de tiempo", "definicion": "Fecha y hora que acompaña cada línea de una bitácora."},
+            ],
+        ],
+    },
 }
 
 
