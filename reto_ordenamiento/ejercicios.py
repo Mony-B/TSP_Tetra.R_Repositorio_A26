@@ -82,6 +82,43 @@ EJERCICIOS = {
         ],
         "orden_mostrado": [4, 1, 5, 2, 0, 3],
     },
+    # Cálculo · Desigualdades compuestas (Módulo 1 del temario).
+    "desigualdades-compuestas": {
+        "titulo": "Algoritmo: resolver desigualdades compuestas",
+        "bitcoins": 30,
+        "mision": (
+            "Reconstruye los pasos para resolver un sistema de dos "
+            "desigualdades que deben cumplirse al mismo tiempo "
+            "(y > x − 2 y y ≤ 4 − x²)."
+        ),
+        "pasos": [
+            "Inicio",
+            "Resolver o graficar la primera desigualdad por separado",
+            "Resolver o graficar la segunda desigualdad por separado",
+            "Identificar la región donde se traslapan las soluciones de ambas",
+            "Marcar esa intersección como la región solución final",
+            "Fin",
+        ],
+        "orden_mostrado": [2, 4, 0, 5, 1, 3],
+    },
+    # Cálculo · Derivación: regla de la cadena (Módulo 4 del temario).
+    "regla-cadena": {
+        "titulo": "Algoritmo: derivar con la regla de la cadena",
+        "bitcoins": 30,
+        "mision": (
+            "Reconstruye los pasos para derivar una función compuesta "
+            "usando la regla de la cadena."
+        ),
+        "pasos": [
+            "Inicio",
+            "Identificar la función externa y la función interna",
+            "Derivar la función externa, dejando la interna sin tocar",
+            "Derivar la función interna por separado",
+            "Multiplicar la derivada externa por la derivada interna",
+            "Fin",
+        ],
+        "orden_mostrado": [3, 0, 5, 2, 4, 1],
+    },
 }
 
 

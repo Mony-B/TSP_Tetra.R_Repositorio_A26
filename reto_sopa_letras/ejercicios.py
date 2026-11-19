@@ -228,6 +228,54 @@ EJERCICIOS = {
             },
         ],
     },
+    # Cálculo · Exponenciales, logaritmos y límites (Módulo 3 del temario).
+    "exponenciales-limites": {
+        "titulo": "Vocabulario de límites",
+        "instrucciones": (
+            "Lee cada definición y encuentra el concepto en la sopa: arrastra "
+            "sobre las letras o toca la primera y la última. Superas el reto "
+            "cuando completas los dos niveles."
+        ),
+        "bitcoins": 30,
+        "niveles": [
+            {
+                "tamano": 11,
+                "semilla": "exp-limites-1",
+                "pasos": [
+                    {
+                        "palabra": "LIMITE",
+                        "definicion": "Valor al que se acerca una función cuando x se aproxima a un punto.",
+                    },
+                    {
+                        "palabra": "ASINTOTA",
+                        "definicion": "Línea recta a la que una gráfica se acerca sin llegar a tocarla.",
+                    },
+                    {
+                        "palabra": "LOGARITMO",
+                        "definicion": "Operación inversa a elevar una base a un exponente.",
+                    },
+                ],
+            },
+            {
+                "tamano": 16,
+                "semilla": "exp-limites-2",
+                "pasos": [
+                    {
+                        "palabra": "EXPONENCIAL",
+                        "definicion": "Función donde la variable está en el exponente.",
+                    },
+                    {
+                        "palabra": "RACIONALIZAR",
+                        "definicion": "Técnica algebraica para quitar raíces del denominador.",
+                    },
+                    {
+                        "palabra": "INDETERMINACION",
+                        "definicion": "Expresión como 0/0 que no tiene un valor definido a simple vista.",
+                    },
+                ],
+            },
+        ],
+    },
 }
 
 # Derecha, abajo y diagonal hacia abajo a la derecha.

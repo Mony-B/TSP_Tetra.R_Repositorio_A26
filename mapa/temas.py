@@ -88,10 +88,14 @@ MATERIAS = [
         "nombre": "Cálculo",
         "subtemas": [
             {"nombre": "Desigualdades lineales", "retos": [("reto_clasificar", "lineales")]},
-            {"nombre": "Desigualdades cuadráticas", "retos": [("reto_clasificar", "cuadraticas")]},
-            {"nombre": "Desigualdades racionales", "retos": [("reto_clasificar", "racionales")]},
-            {"nombre": "Desigualdades compuestas", "retos": [("reto_clasificar", "compuestas")]},
-            {"nombre": "Ecuaciones cuadráticas", "retos": [("reto_parabolica", "cuadraticas")]},
+            {"nombre": "Desigualdades cuadráticas", "retos": [("reto_laberinto", "desigualdades-cuadraticas")]},
+            {"nombre": "Desigualdades racionales", "retos": [("reto_conceptos", "desigualdades-racionales")]},
+            {"nombre": "Desigualdades compuestas", "retos": [("reto_ordenamiento", "desigualdades-compuestas")]},
+            {"nombre": "Ecuaciones cuadráticas y tiro parabólico", "retos": [("reto_parabolica", "cuadraticas")]},
+            {"nombre": "Funciones: evaluación y gráficas", "retos": [("reto_clasificar", "evaluacion-funciones")]},
+            {"nombre": "Funciones: vocabulario y transformaciones", "retos": [("reto_conceptos", "funciones-vocabulario")]},
+            {"nombre": "Exponenciales, logaritmos y límites", "retos": [("reto_sopa_letras", "exponenciales-limites")]},
+            {"nombre": "Derivación: regla de la cadena", "retos": [("reto_ordenamiento", "regla-cadena")]},
         ],
     },
     {

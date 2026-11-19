@@ -94,6 +94,28 @@ EJERCICIOS = {
             },
         ],
     },
+    # Cálculo · Desigualdades cuadráticas (Módulo 1 del temario).
+    "desigualdades-cuadraticas": {
+        "titulo": "Laberinto de sombras: parábolas",
+        "bitcoins": 30,
+        "preguntas": [
+            {
+                "texto": "Sector 1 de 3: Si y > x² − 4, ¿hacia dónde abre la parábola de la frontera?",
+                "opciones": ["Hacia arriba", "Hacia abajo", "No es una parábola"],
+                "respuesta": "Hacia arriba",
+            },
+            {
+                "texto": "Sector 2 de 3: ¿Cuál es el vértice de la parábola y = x² − 4?",
+                "opciones": ["(0, -4)", "(0, 4)", "(-4, 0)"],
+                "respuesta": "(0, -4)",
+            },
+            {
+                "texto": "Sector 3 de 3: Con y > x² − 4 (desigualdad estricta), el punto (0, -4) está justo sobre la curva. ¿Es parte de la solución?",
+                "opciones": ["Sí", "No", "Depende de x"],
+                "respuesta": "No",
+            },
+        ],
+    },
 }
 
 

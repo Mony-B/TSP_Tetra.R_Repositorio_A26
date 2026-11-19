@@ -89,6 +89,58 @@ EJERCICIOS = {
             ],
         ],
     },
+    # Cálculo · Desigualdades racionales (Módulo 1 del temario).
+    "desigualdades-racionales": {
+        "titulo": "Relacionar conceptos: desigualdades racionales",
+        "bitcoins": 30,
+        "semilla": "desigualdades-racionales",
+        "rondas": [
+            [
+                {"concepto": "Denominador", "palabra": "no puede ser cero", "definicion": "La parte de abajo de la fracción; si vale 0 la expresión no está definida."},
+                {"concepto": "Dominio restringido", "palabra": "excluye puntos", "definicion": "El conjunto de valores de x donde la desigualdad racional sí está definida."},
+                {"concepto": "Asíntota vertical", "palabra": "línea que no se toca", "definicion": "Recta vertical donde el denominador se hace cero y la gráfica se dispara."},
+            ],
+            [
+                {"concepto": "Punto crítico", "palabra": "cambia de signo", "definicion": "Valor de x donde el numerador o el denominador se vuelven cero."},
+                {"concepto": "Tabla de signos", "palabra": "organiza el análisis", "definicion": "Método para ver en qué intervalos la expresión racional es positiva o negativa."},
+                {"concepto": "Intervalo abierto", "palabra": "no incluye el extremo", "definicion": "Notación que excluye el valor exacto donde el denominador se anula."},
+                {"concepto": "Numerador", "palabra": "la parte de arriba", "definicion": "La parte de la fracción que se divide entre el denominador."},
+            ],
+            [
+                {"concepto": "Simplificación", "palabra": "factorizar primero", "definicion": "Reducir la expresión racional antes de analizar su signo."},
+                {"concepto": "Signo del cociente", "palabra": "positivo o negativo", "definicion": "Depende de si numerador y denominador tienen el mismo signo o distinto."},
+                {"concepto": "Valor no permitido", "palabra": "fuera del dominio", "definicion": "Un valor de x que haría cero al denominador y por eso se excluye siempre de la solución."},
+                {"concepto": "Desigualdad estricta", "palabra": "> o <", "definicion": "No incluye los puntos donde la expresión vale exactamente cero o es indefinida."},
+                {"concepto": "Desigualdad no estricta", "palabra": "≥ o ≤", "definicion": "Puede incluir el cero del numerador, pero nunca el del denominador."},
+            ],
+        ],
+    },
+    # Cálculo · Funciones, gráficas y operaciones (Módulo 2 del temario).
+    "funciones-vocabulario": {
+        "titulo": "Relacionar conceptos: funciones",
+        "bitcoins": 30,
+        "semilla": "funciones-vocabulario",
+        "rondas": [
+            [
+                {"concepto": "Dominio", "palabra": "valores de x", "definicion": "Conjunto de todos los valores de entrada para los que la función está definida."},
+                {"concepto": "Rango", "palabra": "valores de y", "definicion": "Conjunto de todos los valores de salida que produce la función."},
+                {"concepto": "Función par", "palabra": "f(−x) = f(x)", "definicion": "Su gráfica es simétrica respecto al eje y."},
+            ],
+            [
+                {"concepto": "Función impar", "palabra": "f(−x) = −f(x)", "definicion": "Su gráfica es simétrica respecto al origen."},
+                {"concepto": "Asíntota", "palabra": "línea que no se cruza", "definicion": "Recta a la que la gráfica de la función se acerca sin tocarla."},
+                {"concepto": "Composición", "palabra": "f∘g", "definicion": "Aplicar primero g y después f al resultado: f(g(x))."},
+                {"concepto": "Función inversa", "palabra": "f⁻¹", "definicion": "Función que deshace lo que hace f, intercambiando entradas y salidas."},
+            ],
+            [
+                {"concepto": "Reflexión", "palabra": "espejo", "definicion": "Transformación que voltea la gráfica respecto a un eje."},
+                {"concepto": "Desplazamiento vertical", "palabra": "sube o baja", "definicion": "Sumar o restar una constante a f(x) mueve la gráfica hacia arriba o abajo."},
+                {"concepto": "Desplazamiento horizontal", "palabra": "izquierda o derecha", "definicion": "Sumar o restar dentro del argumento mueve la gráfica a los lados."},
+                {"concepto": "Estiramiento", "palabra": "más alto o más ancho", "definicion": "Multiplicar f(x) o su entrada por una constante cambia qué tan \"apretada\" se ve la gráfica."},
+                {"concepto": "Intersección con los ejes", "palabra": "dónde cruza", "definicion": "Puntos donde la gráfica toca el eje x (raíces) o el eje y."},
+            ],
+        ],
+    },
     # Linux · Lectura de archivos y bitácoras (Módulo 3a del temario).
     "lectura-bitacoras": {
         "titulo": "Relacionar conceptos: lectura de archivos",

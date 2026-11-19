@@ -104,6 +104,22 @@ EJERCICIOS = {
         "ayuda": "Revisa cada desigualdad por separado; si falla una, el punto no es solución.",
         "bitcoins": 30,
     },
+    # Cálculo · Funciones, gráficas y operaciones (Módulo 2 del temario).
+    # Truco: dos desigualdades (<= y >=) con la misma f obligan a que el
+    # punto quede EXACTAMENTE sobre la curva, así la mecánica "gráfica"
+    # sirve para evaluar si un punto pertenece a la gráfica de f(x).
+    "evaluacion-funciones": {
+        "kind": "grafica",
+        "nivel": 2,
+        "subtema": "Funciones, gráficas y operaciones",
+        "titulo": "¿Pertenece a la gráfica?",
+        "instrucciones": "Arrastra cada punto a la caja correcta: ¿pertenece a la gráfica de la función?",
+        "enunciado": ["y = x² − 4"],
+        "desigualdades": [{"op": "<=", "f": _parabola}, {"op": ">=", "f": _parabola}],
+        "puntos": [(-2, 0), (-1, -3), (0, -4), (1, 1), (0, 0), (3, 2)],
+        "ayuda": "Sustituye x en f(x) = x² − 4. El punto pertenece a la gráfica solo si y es EXACTAMENTE igual a ese resultado.",
+        "bitcoins": 30,
+    },
     # Primer ejercicio "genérico" del catálogo real (sin gráfica): prueba de
     # que la mecánica sirve para otra materia, no solo Cálculo (ver
     # Temario_A26, 4.2 Introducción a la programación → Control de flujo).
