@@ -6,7 +6,6 @@
     const { rondas, total_rondas: totalRondas } = ReCode.reto.datos;
     const resultado = document.getElementById("resultado");
     const acciones = document.getElementById("acciones-conceptos");
-    const dialogo = document.getElementById("dialogo-salir");
     const dialogoExito = document.getElementById("dialogo-exito");
 
     let ronda = 0;
@@ -22,10 +21,20 @@
     function pintarCarretes() {
         const cols = columnas();
         cols.forEach((col, i) => {
-            document.getElementById(`valor-${i}`).textContent = col[idx[i]];
+            document.getElementById(`valor-${i}`).innerHTML = `<span>${ReCode.dialogos.escaparHTML(col[idx[i]])}</span>`;
         });
         document.getElementById("ronda-num").textContent = ronda + 1;
         pintarPistas();
+    }
+
+    // Reinicia la animación del carrete que se acaba de girar (si se gira
+    // rápido varias veces seguidas, fuerza el reflow para que no se quede
+    // a medias).
+    function animarCarrete(carrete) {
+        const el = document.getElementById(`valor-${carrete}`);
+        el.classList.remove("girando");
+        void el.offsetWidth;
+        el.classList.add("girando");
     }
 
     function pintarPistas() {
@@ -44,6 +53,7 @@
         const col = columnas()[carrete];
         idx[carrete] = (idx[carrete] + dir + col.length) % col.length;
         pintarCarretes();
+        animarCarrete(carrete);
     }
 
     function mensaje(html, error = false) {
@@ -84,7 +94,8 @@
                 ? "Ya habías completado el reto, por lo que no se otorgan bitcoins de nuevo."
                 : `Ganaste <strong>₿ ${r.bitcoins_otorgados}</strong>.`;
             acciones.hidden = true;
-            document.getElementById("exito-premio").innerHTML = `<strong>¡Reto completado!</strong> ${premio}`;
+            document.getElementById("exito-mensaje").innerHTML = "<strong>¡Reto completado!</strong>";
+            document.getElementById("exito-premio").innerHTML = premio;
             ReCode.dialogos.abrir(dialogoExito);
             return;
         }
@@ -94,6 +105,7 @@
             idx = [0, 0, 0];
             resueltas = 0;
             pintarCarretes();
+            [0, 1, 2].forEach(animarCarrete);
             mensaje(`Ronda ${ronda} superada. Avanzaste a la ronda ${ronda + 1}.`);
             return;
         }
@@ -101,22 +113,14 @@
         mensaje("Combinación correcta. Sigue girando para encontrar las que faltan.");
     }
 
-    // --- FE-1: salir / rendirse con confirmación ----------------------------
-    const MENSAJE_SALIR = "Se perderá el progreso de esta ronda y no obtendrás bitcoins. ¿Salir?";
-    function pedirSalida(e) {
-        if (bloqueado) return;
-        ReCode.dialogos.pedirSalida(dialogo, MENSAJE_SALIR, ReCode.reto.volverUrl, e);
-    }
-
     document.querySelectorAll(".flecha").forEach((b) => {
         b.addEventListener("click", () => girar(Number(b.dataset.carrete), Number(b.dataset.dir)));
     });
     document.getElementById("btn-probar").addEventListener("click", probar);
-    document.getElementById("btn-salir").addEventListener("click", pedirSalida);
-    ReCode.dialogos.conectarFlechaSalir(dialogo, MENSAJE_SALIR, ReCode.reto.volverUrl, () => (ronda > 0 || resueltas > 0) && !bloqueado);
-    document.getElementById("btn-cancelar-salida").addEventListener("click", () => ReCode.dialogos.cerrar(dialogo));
-    document.getElementById("btn-confirmar-salida").addEventListener("click", () => {
-        window.location.href = ReCode.reto.volverUrl;
+
+    ReCode.dialogos.inicializarSalir({
+        hayProgreso: () => ronda > 0 || resueltas > 0,
+        puedeSalir: () => !bloqueado,
     });
 
     pintarCarretes();
