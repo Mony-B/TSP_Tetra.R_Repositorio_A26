@@ -24,7 +24,7 @@ examen.js), así que aquí sí hubo un intento calificado de verdad.
     {% include "comun/_topbar.html" with topbar_marca="RE:CODE — EXAMEN" topbar_titulo=examen.agente topbar_volver_url=volver_url topbar_volver_tip="Regresar a los retos" %}
 
     <main class="body">
-        <div class="card resultado-examen">
+        <div class="card examen-card resultado-examen">
             <p class="qnum">{% if materia %}{{ materia.nombre|upper }} · {% endif %}RESULTADO</p>
             <h1 class="qtext">{{ aciertos }} de {{ total }} correctas</h1>
 
