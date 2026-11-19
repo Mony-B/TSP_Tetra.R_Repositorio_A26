@@ -250,9 +250,10 @@
 
     // "Salir / Rendirse" dentro de la ventana de agotado (FA-1.4.5) no pide
     // esa misma confirmación: ya no hay progreso que perder ni bitcoins que
-    // obtener en este intento, así que el aviso no aplica y solo navega.
+    // obtener en este intento. En vez de repetir la navegación, reusa el
+    // botón "Salir" del diálogo de confirmación (ya la hace sin guardar nada).
     document.getElementById("btn-salir-agotado").addEventListener("click", () => {
-        window.location.href = ReCode.reto.volverUrl;
+        document.getElementById("btn-confirmar-salida").click();
     });
 
     btnDisparar.addEventListener("click", disparar);
