@@ -29,6 +29,16 @@
     // repartir.
     const W = 15, H = 11, T = 40, OX = 0, OY = 0;
 
+    // Color de luz/niebla/salidas de acuerdo a la materia (comun/colores.py
+    // vía --accent en el <body>, igual que el resto de los retos); el traje
+    // del personaje no cambia, es su diseño fijo.
+    const ACENTO = getComputedStyle(document.body).getPropertyValue("--accent").trim() || "#59c7ff";
+    const ACENTO_RGB = (() => {
+        const hex = ACENTO.replace("#", "");
+        const n = parseInt(hex, 16);
+        return `${(n >> 16) & 255},${(n >> 8) & 255},${n & 255}`;
+    })();
+
     let actual = ReCode.reto.datos; // {numero, total, pregunta, opciones}
     let grid = [], player = { x: 1, y: 1 }, exits = [];
     let visited = new Set(), moving = false, finished = false, flash = 0;
@@ -252,8 +262,8 @@
                     ctx.fillStyle = `rgba(8,20,34,${0.24 + light * 0.65})`;
                     ctx.fillRect(x * T, y * T, T, T);
                     if (light > 0.025) {
-                        ctx.strokeStyle = `rgba(89,199,255,${0.1 + light * 0.8})`;
-                        ctx.shadowColor = "#59c7ff"; ctx.shadowBlur = light * 16; ctx.lineWidth = 1.8;
+                        ctx.strokeStyle = `rgba(${ACENTO_RGB},${0.1 + light * 0.8})`;
+                        ctx.shadowColor = ACENTO; ctx.shadowBlur = light * 16; ctx.lineWidth = 1.8;
                         ctx.strokeRect(x * T + 2, y * T + 2, T - 4, T - 4);
                         ctx.shadowBlur = 0;
                     }
@@ -261,7 +271,7 @@
                     ctx.fillStyle = `rgba(12,27,45,${0.18 + light * 0.6})`;
                     ctx.fillRect(x * T, y * T, T, T);
                     if (conocido) {
-                        ctx.fillStyle = `rgba(89,199,255,${light * 0.16})`;
+                        ctx.fillStyle = `rgba(${ACENTO_RGB},${light * 0.16})`;
                         ctx.fillRect(x * T + T / 2 - 2, y * T + T / 2 - 2, 4, 4);
                     }
                 }
@@ -273,10 +283,10 @@
             const a = Math.max(0, 1 - dist / (T * 6));
             if (a <= 0) continue;
             ctx.save();
-            ctx.shadowColor = "#59c7ff"; ctx.shadowBlur = 20 * a;
-            ctx.strokeStyle = `rgba(89,199,255,${a})`; ctx.lineWidth = 3;
+            ctx.shadowColor = ACENTO; ctx.shadowBlur = 20 * a;
+            ctx.strokeStyle = `rgba(${ACENTO_RGB},${a})`; ctx.lineWidth = 3;
             ctx.strokeRect(e.wallX * T + 3, e.wallY * T + 3, T - 6, T - 6);
-            ctx.fillStyle = `rgba(89,199,255,${0.25 * a})`;
+            ctx.fillStyle = `rgba(${ACENTO_RGB},${0.25 * a})`;
             ctx.fillRect(e.wallX * T + 5, e.wallY * T + 5, T - 10, T - 10);
             ctx.restore();
             ctx.font = "bold 12px monospace";
@@ -290,17 +300,17 @@
             lx = Math.min(W * T - tw, Math.max(0, lx));
             ctx.fillStyle = `rgba(9,20,35,${0.98 * a})`;
             ctx.fillRect(lx, ly, tw, 21);
-            ctx.strokeStyle = `rgba(89,199,255,${a})`;
+            ctx.strokeStyle = `rgba(${ACENTO_RGB},${a})`;
             ctx.strokeRect(lx, ly, tw, 21);
             ctx.fillStyle = `rgba(232,246,255,${a})`;
             ctx.fillText(texto, lx + 9, ly + 15);
         }
         const halo = ctx.createRadialGradient(px, py, 2, px, py, T * 4.8);
-        halo.addColorStop(0, "rgba(89,199,255,.20)");
-        halo.addColorStop(1, "rgba(89,199,255,0)");
+        halo.addColorStop(0, `rgba(${ACENTO_RGB},.20)`);
+        halo.addColorStop(1, `rgba(${ACENTO_RGB},0)`);
         ctx.fillStyle = halo;
         ctx.beginPath(); ctx.arc(px, py, T * 4.8, 0, Math.PI * 2); ctx.fill();
-        ctx.shadowColor = "#59c7ff"; ctx.shadowBlur = 15;
+        ctx.shadowColor = ACENTO; ctx.shadowBlur = 15;
         ctx.fillStyle = "#223c5b"; ctx.fillRect(px - 9, py + 1, 18, 12);
         ctx.fillStyle = "#ffd7ae"; ctx.fillRect(px - 7, py - 10, 14, 13);
         ctx.fillStyle = "#17233c"; ctx.fillRect(px - 9, py - 13, 18, 6); ctx.fillRect(px - 9, py - 9, 4, 6);
@@ -317,14 +327,14 @@
         ctx.fillRect(0, 0, W * T, H * T);
         ctx.restore();
         if (flash !== 0) {
-            ctx.fillStyle = flash > 0 ? "rgba(89,199,255,.18)" : "rgba(255,30,60,.2)";
+            ctx.fillStyle = flash > 0 ? `rgba(${ACENTO_RGB},.18)` : "rgba(255,30,60,.2)";
             ctx.fillRect(0, 0, W * T, H * T);
             flash *= 0.85;
             if (Math.abs(flash) < 0.02) flash = 0;
         }
         if (finished) {
-            ctx.fillStyle = "#59c7ff"; ctx.textAlign = "center"; ctx.font = "bold 32px monospace";
-            ctx.shadowColor = "#59c7ff"; ctx.shadowBlur = 20;
+            ctx.fillStyle = ACENTO; ctx.textAlign = "center"; ctx.font = "bold 32px monospace";
+            ctx.shadowColor = ACENTO; ctx.shadowBlur = 20;
             ctx.fillText("✦ SALIDA ENCONTRADA ✦", (W * T) / 2, (H * T) / 2);
             ctx.textAlign = "left"; ctx.shadowBlur = 0;
         }
