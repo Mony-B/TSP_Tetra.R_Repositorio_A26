@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'mapa',         # mapa de materias y subtemas
     'novela',       # novela visual (Monogatari)
     'batalla',      # exámenes por materia y batalla final
+    'red_corrupta', # catálogo de pistas y Snake (CU03)
 
     # Retos: cada uno revisa sus respuestas en el servidor
     'reto_algebra_booleana',  # CU-05
@@ -59,6 +60,10 @@ INSTALLED_APPS = [
     'reto_clasificar',        # CU-08
     'reto_obtener_termino',   # CU-09
     'reto_sopa_letras',         # CU-10
+    'reto_ordenamiento',       # CU-11
+    'reto_parabolica',         # CU-12
+    'reto_conceptos',          # CU-13
+    'reto_laberinto',          # CU-14
 ]
 
 MIDDLEWARE = [
@@ -86,6 +91,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'progreso.context_processors.progreso_alumno',
+                'comun.context_processors.color_reto',
             ],
         },
     },

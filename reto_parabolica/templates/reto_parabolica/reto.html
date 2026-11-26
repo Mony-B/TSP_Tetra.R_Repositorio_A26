@@ -1,0 +1,110 @@
+{% extends "comun/reto_base.html" %}
+{% load static %}
+{% block estilos %}
+<style>
+    .estado-tiro { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 10px; }
+    .intentos-puntos { display: inline-flex; gap: 4px; margin-left: 6px; }
+    .punto { width: 10px; height: 10px; border-radius: 50%; background: var(--verde); display: inline-block; }
+    .punto.usado { background: transparent; border: 1px solid var(--borde); }
+
+    .lienzo-caja { position: relative; border: 1px solid var(--borde); margin: 10px 0; background: #000; }
+    canvas { display: block; width: 100%; height: auto; }
+
+    .trayectoria-info { border: 1px solid var(--borde); border-radius: 6px; padding: 10px 12px; margin: 10px 0; font-size: 0.85rem; }
+    .trayectoria-info .titulo { display: flex; align-items: center; gap: 8px; font-weight: bold; }
+    .trayectoria-info .titulo small { font-weight: normal; color: var(--verde-medio); }
+    .ecuacion { font-size: 0.9rem; color: var(--verde); margin: 6px 0; }
+    .coeficientes { display: flex; gap: 8px; flex-wrap: wrap; margin: 4px 0; }
+    .coeficientes span { border: 1px solid var(--borde); border-radius: 4px; padding: 2px 6px; }
+    .coeficientes b { color: var(--verde); }
+    .ayuda-trayectoria { color: var(--verde-medio); font-size: 0.78rem; margin-top: 4px; }
+
+    .controles { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 14px 0; }
+    .campo { display: flex; flex-direction: column; gap: 4px; }
+    .campo label { font-size: 0.85rem; display: flex; justify-content: space-between; }
+    .campo input[type="range"] { width: 100%; }
+
+    .acciones-parabolica { gap: 10px; flex-wrap: wrap; justify-content: space-between; margin-top: 10px; }
+    .acciones-parabolica:not([hidden]) { display: flex; }
+    .boton[disabled] { opacity: 0.4; cursor: not-allowed; }
+
+    .info-matematica { font-size: 0.85rem; line-height: 1.5; margin-top: 10px; }
+    .info-matematica b { color: #fff; }
+
+    /* Los diálogos de salir y de reto completado (dialog.confirmar) ya
+       vienen estilizados de comun/css/reto.css: no se redefinen aquí. */
+</style>
+{% endblock %}
+
+{% block juego %}
+<div id="parabolica" data-disparo-url="{{ disparo_url }}" data-reintentar-url="{{ reintentar_url }}">
+    <div class="estado-tiro">
+        <span>Intentos: <span class="intentos-puntos" id="puntos"></span></span>
+    </div>
+
+    <div class="lienzo-caja">
+        <canvas id="lienzo" width="800" height="400"></canvas>
+    </div>
+
+    <div class="trayectoria-info">
+        <div class="titulo">Trayectoria prevista <small>— guía antes de disparar</small></div>
+        <div class="ecuacion" id="ecuacion-previa">y(x) = —</div>
+        <div class="coeficientes">
+            <span>a = <b id="coef-a">—</b></span>
+            <span>b = <b id="coef-b">—</b></span>
+            <span>c = <b>0</b></span>
+        </div>
+        <div class="ayuda-trayectoria">La guía punteada solo muestra el inicio. Los valores a, b y c corresponden a la ecuación cuadrática de la trayectoria y cambian al mover los controles.</div>
+    </div>
+
+    <div class="controles">
+        <div class="campo">
+            <label>Ángulo <span id="valor-angulo"></span>°</label>
+            <input type="range" id="angulo" />
+        </div>
+        <div class="campo">
+            <label>Fuerza <span id="valor-fuerza"></span></label>
+            <input type="range" id="fuerza" />
+        </div>
+    </div>
+
+    <div class="acciones-parabolica" id="acciones-parabolica">
+        <button type="button" class="boton peligro" id="btn-salir">Salir / Rendirse</button>
+        <button type="button" class="boton" id="btn-disparar">Disparar</button>
+    </div>
+</div>
+
+<!-- Los diálogos de salir y de reto completado ya vienen de
+     comun/reto_base.html (dialogo-salir / dialogo-exito); el de éxito se
+     sobreescribe para agregar la ecuación, el vértice y las raíces del
+     disparo, que los demás retos no necesitan. -->
+
+<!-- FA-1: intentos agotados. Ventana emergente propia de este reto (y de
+     reto_obtener_termino, los únicos dos con intentos limitados): el botón
+     "Salir / Rendirse" normal de arriba se queda tal cual la plantilla
+     (nunca se oculta); aquí solo se ofrecen Reintentar o Salir mientras
+     dura el estado de "sin intentos". -->
+<dialog class="confirmar" id="dialogo-agotado">
+    <p id="agotado-mensaje"></p>
+    <div class="dialogo-acciones">
+        <button type="button" class="boton" id="btn-reintentar">Reintentar</button>
+        <button type="button" class="boton peligro" id="btn-salir-agotado">Salir</button>
+    </div>
+</dialog>
+{% endblock %}
+
+{% block exito %}
+<p id="exito-mensaje"><strong>¡Impacto!</strong></p>
+<p id="exito-premio"></p>
+<div class="info-matematica">
+    <p>Ecuación del disparo: <b id="exito-ecuacion"></b></p>
+    <p>Vértice (altura máxima): <b id="exito-vertice"></b></p>
+    <p>Raíces (nivel del suelo): <b id="exito-raices"></b></p>
+    <p>El coeficiente de x² es negativo, por eso la parábola abre hacia abajo; el vértice es la altura máxima y las raíces marcan dónde la trayectoria toca el suelo.</p>
+</div>
+<div class="dialogo-acciones">
+    <a class="boton" href="{% firstof volver_url url_materia url_mapa %}">Regresar a la selección de retos</a>
+</div>
+{% endblock %}
+
+{% block script_juego %}<script src="{% static 'reto_parabolica/juego.js' %}"></script>{% endblock %}

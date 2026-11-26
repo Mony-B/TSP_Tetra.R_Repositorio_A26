@@ -1,0 +1,40 @@
+{% extends "comun/reto_base.html" %}
+{% load static %}
+{% block estilos %}<link rel="stylesheet" href="{% static 'reto_conceptos/conceptos.css' %}">{% endblock %}
+
+{% block juego %}
+<div id="conceptos">
+    <div class="ronda-cabecera">
+        <span>Ronda <b id="ronda-num">1</b> de {{ datos_publicos.total_rondas }}</span>
+        <span class="combo-pista" id="combo-pista"></span>
+    </div>
+
+    <div class="carretes">
+        <div class="carrete">
+            <div class="etiqueta">Concepto</div>
+            <button type="button" class="boton flecha" data-carrete="0" data-dir="1">▲</button>
+            <div class="valor" id="valor-0"></div>
+            <button type="button" class="boton flecha" data-carrete="0" data-dir="-1">▼</button>
+        </div>
+        <div class="carrete">
+            <div class="etiqueta">Palabra clave</div>
+            <button type="button" class="boton flecha" data-carrete="1" data-dir="1">▲</button>
+            <div class="valor" id="valor-1"></div>
+            <button type="button" class="boton flecha" data-carrete="1" data-dir="-1">▼</button>
+        </div>
+        <div class="carrete">
+            <div class="etiqueta">Definición</div>
+            <button type="button" class="boton flecha" data-carrete="2" data-dir="1">▲</button>
+            <div class="valor" id="valor-2"></div>
+            <button type="button" class="boton flecha" data-carrete="2" data-dir="-1">▼</button>
+        </div>
+    </div>
+
+    <div class="acciones-conceptos" id="acciones-conceptos">
+        <button type="button" class="boton peligro" id="btn-salir">Salir / Rendirse</button>
+        <button type="button" class="boton" id="btn-probar">Probar combinación</button>
+    </div>
+</div>
+{% endblock %}
+
+{% block script_juego %}<script src="{% static 'reto_conceptos/juego.js' %}"></script>{% endblock %}

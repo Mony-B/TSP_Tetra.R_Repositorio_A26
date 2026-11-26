@@ -1,0 +1,125 @@
+{% load static %}<!DOCTYPE html>
+{% comment %}
+Catálogo de la red corrupta (CU03). No extiende comun/reto_base.html: esa
+plantilla asume un solo "ejercicio" de un reto con materia; la red
+corrupta es una pantalla aparte, navegable desde cualquier lado, con su
+propio catálogo completo de pistas (no limitado a ningún reto ni
+subtema). Reutiliza _topbar.html (misma barra que el resto de la app) y
+recode.css para los componentes base (botones, tarjetas).
+{% endcomment %}
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Red corrupta - Re:Code</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'comun/css/recode.css' %}">
+    <link rel="stylesheet" href="{% static 'comun/css/topbar.css' %}">
+    <link rel="stylesheet" href="{% static 'red_corrupta/css/red_corrupta.css' %}">
+</head>
+<body class="pantalla-red-corrupta" style="--accent: {{ color_acento }};">
+    {% include "comun/_topbar.html" with topbar_marca="RE:CODE — RED CORRUPTA" topbar_titulo="Catálogo de pistas" topbar_volver_url=origen_url topbar_volver_tip=origen_label %}
+
+    <main class="body">
+        <div class="intro">
+            <p>
+                Cada pista es la definición de un concepto del temario, de cualquier materia.
+                No está limitada al reto desde el que entraste: puedes consultar cualquiera.
+                Una pista nueva cuesta <strong>₿ {{ costo_pista }}</strong>; si no te alcanza,
+                puedes hackear la red con <strong>Snake</strong> para obtenerla sin costo.
+                Una vez obtenida, queda disponible para consultarla de nuevo sin pagar.
+            </p>
+        </div>
+
+        <nav class="materia-tabs" id="materia-tabs">
+            {% for materia in materias %}
+            <button type="button" class="tab{% if forloop.first %} activa{% endif %}"
+                    data-materia="{{ materia.slug }}" style="--card-accent: {{ materia.acento }};">
+                {{ materia.nombre }}
+                <span class="tab-progreso">{{ materia.obtenidas }}/{{ materia.total }}</span>
+            </button>
+            {% endfor %}
+        </nav>
+
+        {% for materia in materias %}
+        <section class="materia" data-materia="{{ materia.slug }}"{% if not forloop.first %} hidden{% endif %}
+                  style="--card-accent: {{ materia.acento }};">
+            {% for subtema in materia.subtemas %}
+            <div class="subtema">
+                <h3>{{ subtema.nombre }}</h3>
+                <div class="pistas">
+                    {% for pista in subtema.pistas %}
+                    <button type="button" class="pista {% if pista.obtenida %}obtenida{% endif %}"
+                            data-id="{{ pista.id }}" data-termino="{{ pista.termino }}"
+                            data-obtenida="{{ pista.obtenida|yesno:'1,0' }}"
+                            data-definicion="{{ pista.definicion }}">
+                        <span class="candado">{% if pista.obtenida %}✓{% else %}🔒{% endif %}</span>
+                        {{ pista.termino }}
+                    </button>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endfor %}
+        </section>
+        {% endfor %}
+    </main>
+
+    <dialog class="panel-pista" id="panel-pista">
+        <div class="panel-cabecera">
+            <span class="panel-materia" id="panel-contexto"></span>
+            <h3 id="panel-termino"></h3>
+        </div>
+
+        <div class="vista" id="vista-bloqueada">
+            <p>Esta pista no la has obtenido. Cuesta <strong>₿ {{ costo_pista }}</strong>.</p>
+            <div class="acciones">
+                <button type="button" class="boton secundario" id="btn-cancelar-compra">Cancelar</button>
+                <button type="button" class="boton" id="btn-confirmar-compra">Comprar por ₿ {{ costo_pista }}</button>
+            </div>
+        </div>
+
+        <div class="vista" id="vista-insuficiente" hidden>
+            <p>No te alcanzan los bitcoins para comprarla. Puedes obtenerla hackeando la red con
+               <strong>Snake</strong>, el único minijuego de hackeo, en vez de pagarla.</p>
+            <div class="acciones">
+                <button type="button" class="boton secundario" id="btn-rechazar-snake">Volver a las pistas</button>
+                <button type="button" class="boton" id="btn-aceptar-snake">Hackear con Snake</button>
+            </div>
+        </div>
+
+        <div class="vista" id="vista-revelada" hidden>
+            <p class="definicion" id="texto-definicion"></p>
+            <div class="acciones">
+                <a class="boton" id="btn-volver-origen" href="{{ origen_url }}">{{ origen_label }}</a>
+                <button type="button" class="boton secundario" id="btn-cerrar-revelada">Volver a las pistas</button>
+            </div>
+        </div>
+
+        <div class="vista" id="vista-snake" hidden>
+            <p class="snake-estado" id="snake-estado">Nivel 1: come <span id="snake-meta"></span> datos sin chocar.</p>
+            <div class="snake-escenario">
+                <canvas id="snake-lienzo" width="440" height="440"></canvas>
+                <div class="snake-mensaje" id="snake-mensaje"></div>
+            </div>
+            <div class="acciones">
+                <button type="button" class="boton secundario" id="btn-abandonar-snake">Abandonar Snake</button>
+                <button type="button" class="boton" id="btn-reintentar-snake" hidden>Reintentar</button>
+            </div>
+            <p class="snake-ayuda">Flechas o WASD para moverte. En móvil, desliza sobre el tablero.</p>
+        </div>
+    </dialog>
+
+    <script src="{% static 'comun/js/recode.js' %}"></script>
+    <script>
+        window.RedCorrupta = {
+            comprarUrlBase: "{% url 'red_corrupta:comprar' pista_id='__ID__' %}",
+            snakeUrlBase: "{% url 'red_corrupta:snake_completado' pista_id='__ID__' %}",
+            costoPista: {{ costo_pista }},
+        };
+    </script>
+    <script src="{% static 'red_corrupta/js/snake.js' %}"></script>
+    <script src="{% static 'red_corrupta/js/catalogo.js' %}"></script>
+</body>
+</html>

@@ -66,7 +66,7 @@ a { color: var(--verde); }
     text-decoration: none;
     cursor: pointer;
 }
-.boton:hover, button:hover { background: #004400; color: #fff; }
+.boton:hover, button:hover { background: color-mix(in srgb, var(--verde) 30%, black); color: #fff; }
 .boton.secundario { border-color: var(--verde-medio); color: var(--verde-medio); background: transparent; }
 
 .lista {

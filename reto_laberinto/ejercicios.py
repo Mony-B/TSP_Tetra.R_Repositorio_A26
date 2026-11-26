@@ -1,0 +1,161 @@
+"""
+Responder preguntas explorando el laberinto (CU-14). El contenido
+(preguntas, opciones y respuesta correcta) se configura por subtema sin
+tocar la mecánica del laberinto (R70). El servidor nunca manda cuál de las
+opciones es la correcta: solo el texto y las opciones de la pregunta
+actual.
+"""
+
+EJERCICIOS = {
+    "busqueda-avanzada": {
+        "titulo": "Laberinto de sombras: Linux",
+        "bitcoins": 30,
+        "preguntas": [
+            {
+                "texto": "Sector 1 de 3: ¿Qué comando lista el contenido de la carpeta actual?",
+                "opciones": ["pwd", "ls", "mv"],
+                "respuesta": "ls",
+            },
+            {
+                "texto": "Sector 2 de 3: ¿Qué comando muestra la ruta de la carpeta en la que estás?",
+                "opciones": ["ls", "pwd", "chmod"],
+                "respuesta": "pwd",
+            },
+            {
+                "texto": "Sector 3 de 3: ¿Qué comando cambia los permisos de un archivo?",
+                "opciones": ["grep", "chown", "chmod"],
+                "respuesta": "chmod",
+            },
+        ],
+    },
+    # Linux · Rutas y jerarquía de directorios (Módulo 1 del temario).
+    "rutas-jerarquia": {
+        "titulo": "Laberinto de sombras: rutas",
+        "bitcoins": 30,
+        "preguntas": [
+            {
+                "texto": "Sector 1 de 3: ¿Cuál de estas es una ruta absoluta?",
+                "opciones": ["documentos/notas.txt", "/home/alumno/documentos", "../documentos"],
+                "respuesta": "/home/alumno/documentos",
+            },
+            {
+                "texto": "Sector 2 de 3: ¿Qué símbolo representa tu carpeta personal (home)?",
+                "opciones": ["~", "..", "."],
+                "respuesta": "~",
+            },
+            {
+                "texto": "Sector 3 de 3: ¿Qué comando te lleva un nivel arriba, al directorio padre?",
+                "opciones": ["cd ..", "cd ~", "cd ."],
+                "respuesta": "cd ..",
+            },
+        ],
+    },
+    # Introprog · Sentencias repetitivas y arreglos (Módulo 3 del temario).
+    "ciclos-arreglos": {
+        "titulo": "Laberinto de sombras: ciclos",
+        "bitcoins": 30,
+        "preguntas": [
+            {
+                "texto": "Sector 1 de 3: ¿Cuántas veces se ejecuta for i in range(5):?",
+                "opciones": ["4", "5", "6"],
+                "respuesta": "5",
+            },
+            {
+                "texto": "Sector 2 de 3: ¿Cuál es el índice del primer elemento de una lista en Python?",
+                "opciones": ["1", "0", "-1"],
+                "respuesta": "0",
+            },
+            {
+                "texto": "Sector 3 de 3: Si no sabes de antemano cuántas veces se repetirá algo, solo hasta que se cumpla una condición, ¿qué ciclo usarías?",
+                "opciones": ["for", "while", "range"],
+                "respuesta": "while",
+            },
+        ],
+    },
+    # Lógica · Relaciones, operaciones y Venn (Módulo 2 del temario).
+    "relaciones-conjuntos": {
+        "titulo": "Laberinto de sombras: conjuntos",
+        "bitcoins": 30,
+        "preguntas": [
+            {
+                "texto": "Sector 1 de 3: Si A = {1, 2, 3}, ¿2 pertenece a A?",
+                "opciones": ["Sí, 2 ∈ A", "No, 2 ∉ A", "No se puede saber"],
+                "respuesta": "Sí, 2 ∈ A",
+            },
+            {
+                "texto": "Sector 2 de 3: Si A = {1, 2} y B = {1, 2, 3}, ¿A es subconjunto de B?",
+                "opciones": ["Sí", "No", "Solo si son iguales"],
+                "respuesta": "Sí",
+            },
+            {
+                "texto": "Sector 3 de 3: Si A = {1, 2, 3} y B = {2, 3, 4}, ¿qué es A ∩ B?",
+                "opciones": ["{1, 2, 3, 4}", "{2, 3}", "{1, 4}"],
+                "respuesta": "{2, 3}",
+            },
+        ],
+    },
+    # Cálculo · Desigualdades cuadráticas (Módulo 1 del temario).
+    "desigualdades-cuadraticas": {
+        "titulo": "Laberinto de sombras: parábolas",
+        "bitcoins": 30,
+        "preguntas": [
+            {
+                "texto": "Sector 1 de 3: Si y > x² − 4, ¿hacia dónde abre la parábola de la frontera?",
+                "opciones": ["Hacia arriba", "Hacia abajo", "No es una parábola"],
+                "respuesta": "Hacia arriba",
+            },
+            {
+                "texto": "Sector 2 de 3: ¿Cuál es el vértice de la parábola y = x² − 4?",
+                "opciones": ["(0, -4)", "(0, 4)", "(-4, 0)"],
+                "respuesta": "(0, -4)",
+            },
+            {
+                "texto": "Sector 3 de 3: Con y > x² − 4 (desigualdad estricta), el punto (0, -4) está justo sobre la curva. ¿Es parte de la solución?",
+                "opciones": ["Sí", "No", "Depende de x"],
+                "respuesta": "No",
+            },
+        ],
+    },
+    # Álgebra · Análisis y acotación de raíces (Módulo 3 del temario).
+    "descartes-acotacion": {
+        "titulo": "Laberinto de sombras: raíces",
+        "bitcoins": 30,
+        "preguntas": [
+            {
+                "texto": "Sector 1 de 3: Si P(x) tiene 3 cambios de signo entre sus coeficientes, ¿cuántas raíces reales positivas puede tener como máximo?",
+                "opciones": ["1", "3", "5"],
+                "respuesta": "3",
+            },
+            {
+                "texto": "Sector 2 de 3: ¿Qué se evalúa para contar las posibles raíces reales negativas de P(x)?",
+                "opciones": ["P(x)", "P(-x)", "P(0)"],
+                "respuesta": "P(-x)",
+            },
+            {
+                "texto": "Sector 3 de 3: Si al dividir P(x) entre (x − c) con división sintética toda la fila final sale positiva (o cero), ¿qué es c?",
+                "opciones": ["Una cota inferior", "Una cota superior", "No se puede saber"],
+                "respuesta": "Una cota superior",
+            },
+        ],
+    },
+}
+
+
+def total_pasos(ejercicio):
+    return len(ejercicio["preguntas"])
+
+
+def datos_publicos(ejercicio, numero):
+    """Lo que ve el navegador de la pregunta actual: texto y opciones (sin
+    marcar cuál es la correcta)."""
+    pregunta = ejercicio["preguntas"][numero]
+    return {
+        "numero": numero + 1,
+        "total": len(ejercicio["preguntas"]),
+        "pregunta": pregunta["texto"],
+        "opciones": list(pregunta["opciones"]),
+    }
+
+
+def revisar_respuesta(ejercicio, numero, respuesta):
+    return respuesta == ejercicio["preguntas"][numero]["respuesta"]

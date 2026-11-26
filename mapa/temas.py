@@ -10,25 +10,61 @@ from importlib import import_module
 
 from django.urls import reverse
 
+from comun.colores import ACENTO_MAPA, acento_de_materia
+
 
 MATERIAS = [
     {
         "slug": "logica",
         "nombre": "Lógica y Algoritmos",
         "subtemas": [
-            {"nombre": "Algoritmos", "retos": [("reto_sopa_letras", "algoritmos")]},
-            {"nombre": "Lógica proposicional", "retos": [("reto_algebra_booleana", "proposicional")]},
-            {"nombre": "Conjuntos", "retos": [("reto_obtener_termino", "conjuntos")]},
+            {"nombre": "Teoría de conjuntos y representación", "retos": [
+                ("reto_clasificar", "tipos-de-conjuntos"),
+            ]},
+            {"nombre": "Relaciones, operaciones y Venn", "retos": [
+                ("reto_obtener_termino", "conjuntos"),
+                ("reto_laberinto", "relaciones-conjuntos"),
+            ]},
+            {"nombre": "Lógica proposicional y tablas de verdad", "retos": [
+                ("reto_algebra_booleana", "proposicional"),
+            ]},
+            {"nombre": "Álgebra de proposiciones y demostración", "retos": [
+                ("reto_sopa_letras", "algoritmos"),
+                ("reto_ordenamiento", "demostracion-induccion"),
+                ("reto_algebra_booleana", "leyes-de-morgan"),
+            ]},
+            {"nombre": "Algoritmos básicos (refuerzo)", "retos": [
+                ("reto_ordenamiento", "par-impar"),
+            ]},
+            {"nombre": "Lógica de programación (refuerzo)", "retos": [
+                ("reto_conceptos", "logica-programacion"),
+            ]},
         ],
     },
     {
         "slug": "introprog",
         "nombre": "Introducción a la Programación",
         "subtemas": [
-            {"nombre": "Conceptos básicos", "retos": [
+            {"nombre": "Fundamentos de computación y herramientas", "retos": [
+                ("reto_conceptos", "fundamentos-computacion"),
+            ]},
+            {"nombre": "Datos y sentencias básicas", "retos": [
                 ("reto_obtener_termino", "conceptos-basicos-1"),
+                ("reto_ordenamiento", "suma-dos-numeros"),
+            ]},
+            {"nombre": "Sentencias condicionales", "retos": [
+                ("reto_clasificar", "condicionales-ciclos"),
+            ]},
+            {"nombre": "Ciclos y arreglos", "retos": [
                 ("reto_obtener_termino", "conceptos-basicos-2"),
+                ("reto_laberinto", "ciclos-arreglos"),
+            ]},
+            {"nombre": "Subrutinas y programación modular", "retos": [
+                ("reto_sopa_letras", "subrutinas"),
+            ]},
+            {"nombre": "Introducción a POO", "retos": [
                 ("reto_obtener_termino", "conceptos-basicos-3"),
+                ("reto_conceptos", "poo-pilares"),
             ]},
         ],
     },
@@ -37,10 +73,14 @@ MATERIAS = [
         "nombre": "Linux",
         "subtemas": [
             {"nombre": "Exploración del entorno", "retos": [("reto_comandos_linux", "basicos")]},
+            {"nombre": "Rutas y jerarquía", "retos": [("reto_laberinto", "rutas-jerarquia")]},
             {"nombre": "Creación y manipulación de archivos", "retos": [("reto_comandos_linux", "archivos")]},
-            {"nombre": "Lectura y filtrado de información", "retos": [("reto_comandos_linux", "filtrado")]},
-            {"nombre": "Búsqueda avanzada", "retos": [("reto_comandos_linux", "busqueda")]},
+            {"nombre": "Lectura de bitácoras", "retos": [("reto_conceptos", "lectura-bitacoras")]},
+            {"nombre": "Búsqueda avanzada", "retos": [("reto_sopa_letras", "busqueda-avanzada")]},
             {"nombre": "Permisos y propiedad", "retos": [("reto_comandos_linux", "permisos")]},
+            {"nombre": "Procesos", "retos": [("reto_obtener_termino", "procesos")]},
+            {"nombre": "Búsqueda avanzada (refuerzo)", "retos": [("reto_ordenamiento", "busqueda-eficiente")]},
+            {"nombre": "Permisos y propiedad (refuerzo)", "retos": [("reto_comandos_linux", "permisos-avanzado")]},
         ],
     },
         {
@@ -48,19 +88,51 @@ MATERIAS = [
         "nombre": "Cálculo",
         "subtemas": [
             {"nombre": "Desigualdades lineales", "retos": [("reto_clasificar", "lineales")]},
-            {"nombre": "Desigualdades cuadráticas", "retos": [("reto_clasificar", "cuadraticas")]},
-            {"nombre": "Desigualdades racionales", "retos": [("reto_clasificar", "racionales")]},
-            {"nombre": "Desigualdades compuestas", "retos": [("reto_clasificar", "compuestas")]},
+            {"nombre": "Desigualdades cuadráticas", "retos": [("reto_laberinto", "desigualdades-cuadraticas")]},
+            {"nombre": "Desigualdades racionales", "retos": [("reto_conceptos", "desigualdades-racionales")]},
+            {"nombre": "Desigualdades compuestas", "retos": [("reto_ordenamiento", "desigualdades-compuestas")]},
+            {"nombre": "Ecuaciones cuadráticas y tiro parabólico", "retos": [("reto_parabolica", "cuadraticas")]},
+            {"nombre": "Funciones: evaluación y gráficas", "retos": [("reto_clasificar", "evaluacion-funciones")]},
+            {"nombre": "Funciones: vocabulario y transformaciones", "retos": [("reto_conceptos", "funciones-vocabulario")]},
+            {"nombre": "Exponenciales, logaritmos y límites", "retos": [("reto_sopa_letras", "exponenciales-limites")]},
+            {"nombre": "Derivación: regla de la cadena", "retos": [("reto_ordenamiento", "regla-cadena")]},
         ],
     },
     {
         "slug": "algebra",
         "nombre": "Álgebra",
         "subtemas": [
-            {"nombre": "Ecuaciones", "retos": [("reto_ecuaciones", "lineales")]},
+            {"nombre": "Números reales y sistemas de ecuaciones", "retos": [
+                ("reto_ecuaciones", "lineales"),
+                ("reto_clasificar", "conjuntos-numericos"),
+                ("reto_conceptos", "propiedades-reales"),
+            ]},
+            {"nombre": "Polinomios y teoremas fundamentales", "retos": [
+                ("reto_ordenamiento", "division-sintetica"),
+                ("reto_sopa_letras", "polinomios-teoremas"),
+            ]},
+            {"nombre": "Naturaleza de las raíces", "retos": [
+                ("reto_conceptos", "naturaleza-raices"),
+            ]},
+            {"nombre": "Análisis y acotación de raíces", "retos": [
+                ("reto_laberinto", "descartes-acotacion"),
+            ]},
+            {"nombre": "Álgebra matricial y operaciones con matrices", "retos": [
+                ("reto_clasificar", "tipos-de-matrices"),
+                ("reto_ecuaciones", "operaciones-matrices"),
+            ]},
         ],
     },
 ]
+
+# "acento" es el color fijo del mapa del campus (igual para las 5, ver
+# comun/colores.py). "acento_retos" es el color propio de la materia: se usa
+# en la tarjeta de cada reto en su selección y en la pantalla de cada uno de
+# sus retos (ver info_reto/retos_de_materia abajo y comun/context_processors.py).
+for _materia in MATERIAS:
+    _materia["acento"] = ACENTO_MAPA
+    _materia["acento_retos"] = acento_de_materia(_materia["slug"])
+del _materia
 
 
 def obtener_materia(slug):
@@ -83,7 +155,12 @@ def info_reto(app, ejercicio_id):
 
 
 def retos_de_materia(materia):
-    return [info_reto(app, ej) for sub in materia["subtemas"] for app, ej in sub["retos"]]
+    # El acento de cada tarjeta es el de la materia, no el de la app del reto.
+    return [
+        {**info_reto(app, ej), "acento": materia["acento_retos"]}
+        for sub in materia["subtemas"]
+        for app, ej in sub["retos"]
+    ]
 
 
 def materia_de_reto(app, ejercicio_id):

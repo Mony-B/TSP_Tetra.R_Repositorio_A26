@@ -1,5 +1,10 @@
-/* Puertas lógicas (CU-05). Mismo estilo terminal verde sobre negro del resto de Re:Code. */
-.puertas { --verde: #00ff00; --verde-tenue: #00aa00; --rojo: #ff3b3b; --ambar: #ffd84a; max-width: 760px; }
+/* Puertas lógicas (CU-05). --verde/--rojo se heredan de .card (comun/css/
+   reto.css), que los deriva de --accent según la materia del reto
+   (comun/colores.py). No se redefinen aquí: --verde-tenue se deriva de
+   var(--verde) con color-mix() para que cambie junto con el acento.
+   --ambar sí queda fijo a propósito: es el "encendido" universal del foco,
+   no depende de la materia. */
+.puertas { --verde-tenue: color-mix(in srgb, var(--verde) 65%, black); --ambar: #ffd84a; max-width: 760px; }
 
 .puertas-enunciado { margin: 0 0 18px; }
 
@@ -8,10 +13,11 @@
     display: grid;
     grid-template-columns: 1fr auto;
     gap: 16px 32px;
-    align-items: end;
+    align-items: center;
     border: 2px solid #1f4d1f;
     background: rgba(0, 20, 0, 0.5);
     padding: 20px 24px;
+    margin-bottom: 16px;
 }
 .puertas-circuito { display: flex; align-items: flex-end; gap: 22px; }
 .puertas-columna { display: flex; flex-direction: column; align-items: center; gap: 6px; }
@@ -44,7 +50,7 @@
 .interruptor-on .int-1 { background: #0f2a0f; color: var(--verde); border-color: var(--verde-tenue); }
 
 /* Foco grande de la habitación */
-.puertas-foco { grid-row: 1 / span 2; grid-column: 2; align-self: center; }
+.puertas-foco { grid-column: 2; align-self: center; }
 .foco { width: 120px; height: 180px; overflow: visible; }
 .foco * { fill: none; stroke: var(--verde-tenue); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
 .foco .foco-casquillo { fill: #0a1a0a; }
@@ -71,19 +77,21 @@
 }
 
 /* Botones y mensajes */
-.puertas-acciones { display: flex; gap: 12px; flex-wrap: wrap; grid-column: 1; }
+.puertas-acciones { display: flex; gap: 12px; flex-wrap: wrap; }
 .puertas .boton:disabled { opacity: .4; cursor: not-allowed; }
 .boton-secundario { opacity: .8; }
+#puertas-avance { margin-top: 10px; }
 
-.puertas-resultado, .puertas-confirmar { margin-top: 18px; }
+.puertas-resultado { margin-top: 18px; }
 .puertas-mensaje.error { color: var(--rojo); }
-.puertas-recompensa { color: var(--ambar); font-weight: bold; }
-.puertas-confirmar { border: 2px dashed var(--rojo); padding: 14px 18px; }
 .puertas [hidden] { display: none !important; }
+
+/* Los diálogos de salir y de reto completado (dialog.confirmar) ya vienen
+   estilizados de comun/css/reto.css: no se redefinen aquí. */
 
 @media (max-width: 560px) {
     .puertas-escena { grid-template-columns: 1fr; }
-    .puertas-foco { grid-row: auto; grid-column: 1; justify-self: center; }
+    .puertas-foco { grid-column: 1; justify-self: center; }
 }
 @media (prefers-reduced-motion: reduce) {
     .foco-parpadea .foco-vidrio, .foco-parpadea .foco-filamento, .foco-roto .foco-vidrio { animation: none; }

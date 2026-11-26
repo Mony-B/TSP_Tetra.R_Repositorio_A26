@@ -14,6 +14,7 @@ function iniciarMatriz() {
     }
     const revisarUrl = raiz.dataset.revisarUrl;
     const $ = id => document.getElementById(id);
+    const escapar = ReCode.dialogos.escaparHTML;
     const cajas = {};                       // nombre de celda -> <input>
 
     $("matriz-mision").textContent = datos.mision;
@@ -141,17 +142,19 @@ function iniciarMatriz() {
 
     function mostrarExito(r) {
         Object.values(cajas).forEach(c => { c.readOnly = true; });
-        $("matriz-mision").hidden = true;
-        $("matriz-escena").hidden = true;
-        $("resultado-exito").hidden = false;
-        $("exito-recompensa").textContent = r.bitcoins_otorgados
-            ? `+${r.bitcoins_otorgados} ₿`
-            : "La recompensa de este reto ya fue otorgada anteriormente.";
+        $("exito-mensaje").innerHTML = `<strong>${escapar(r.mensaje || "Correcto.")}</strong> Resolviste la matriz.`;
+        $("exito-premio").innerHTML = r.bitcoins_otorgados
+            ? `Obtuviste <strong>₿ ${r.bitcoins_otorgados}</strong>.`
+            : "La recompensa de este reto ya se te había otorgado antes.";
+        ReCode.dialogos.abrir($("dialogo-exito"));
     }
 
     // --- Salir / Rendirse (FE-1): no se guarda nada -------------------------------
-    $("btn-salir").addEventListener("click", () => { $("confirmar-salir").hidden = false; });
-    $("btn-salir-no").addEventListener("click", () => { $("confirmar-salir").hidden = true; });
+    // Diálogo y mensaje de salida compartidos con los demás retos
+    // (comun/reto_base.html + comun/js/reto_dialogos.js).
+    ReCode.dialogos.inicializarSalir({
+        hayProgreso: () => Object.values(cajas).some(c => c.value.trim() !== ""),
+    });
 
     pintarVivas();
 }

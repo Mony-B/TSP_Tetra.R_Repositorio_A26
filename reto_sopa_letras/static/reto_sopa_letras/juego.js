@@ -11,12 +11,8 @@
   const lista = document.getElementById('conceptos');
   const indicadorNivel = document.getElementById('nivel');
   const resultado = document.getElementById('resultado');
-  const victoria = document.getElementById('victoria');
-  const textoVictoria = document.getElementById('victoria-texto');
+  const victoria = document.getElementById('dialogo-exito');
   const botonSalir = document.getElementById('btn-salir');
-  const dialogo = document.getElementById('dialogo-salir');
-  const MENSAJE_SALIR =
-    'Se perderá el progreso de este reto y no obtendrás bitcoins. ¿Salir?';
 
   const PAUSA_ENTRE_NIVELES = 1800;
 
@@ -154,11 +150,13 @@
   function mostrarVictoria(respuesta) {
     terminado = true;
     resultado.textContent = '';
-    textoVictoria.textContent = respuesta.bitcoins_otorgados
-      ? `¡Felicidades! +${respuesta.bitcoins_otorgados} bitcoins`
-      : '¡Felicidades! Ya habías recibido los bitcoins de este reto.';
-    victoria.hidden = false;
+    const premio = respuesta.bitcoins_otorgados
+      ? `Obtuviste <strong>₿ ${respuesta.bitcoins_otorgados}</strong>.`
+      : 'La recompensa de este reto ya se te había otorgado antes.';
+    document.getElementById('exito-mensaje').innerHTML = '<strong>¡Felicidades! Completaste la sopa de letras.</strong>';
+    document.getElementById('exito-premio').innerHTML = premio;
     botonSalir.hidden = true;
+    ReCode.dialogos.abrir(victoria);
   }
 
   /** Avisa que se superó el nivel y, tras una pausa, muestra el siguiente. */
@@ -273,19 +271,6 @@
     }
   }
 
-  /** Pide confirmación antes de salir (FE-1). */
-  function pedirSalida(evento) {
-    if (terminado) {
-      return;
-    }
-    evento.preventDefault();
-    if (typeof dialogo.showModal === 'function') {
-      dialogo.showModal();
-    } else if (window.confirm(MENSAJE_SALIR)) {
-      window.location.href = ReCode.reto.volverUrl;
-    }
-  }
-
   cargarNivel(ReCode.reto.datos);
 
   tablero.addEventListener('pointerdown', alPresionar);
@@ -299,15 +284,9 @@
     }
   });
 
-  botonSalir.addEventListener('click', pedirSalida);
-  const flecha = document.querySelector('.btn-regresar');
-  if (flecha) {
-    flecha.addEventListener('click', pedirSalida);
-  }
-  document.getElementById('btn-cancelar-salida').addEventListener('click', () => {
-    dialogo.close();
-  });
-  document.getElementById('btn-confirmar-salida').addEventListener('click', () => {
-    window.location.href = ReCode.reto.volverUrl;
+  // FE-1: salir / rendirse con confirmación. Diálogo y mensaje de salida
+  // compartidos con los demás retos (comun/reto_base.html + comun/js/reto_dialogos.js).
+  ReCode.dialogos.inicializarSalir({
+    puedeSalir: () => !terminado,
   });
 })();

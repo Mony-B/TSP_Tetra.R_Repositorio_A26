@@ -16,9 +16,9 @@ ejercicio con nuevo_termino() y apúntalo en mapa/temas.py.
 """
 import unicodedata
 
-# Bitcoins según el largo del término (4 letras = 30, 5 = 40, 6 = 50, ...).
-BITCOINS_BASE = 30
-BITCOINS_POR_LETRA_EXTRA = 10
+# Todos los retos dan lo mismo (30 bitcoins): el examen da más que
+# cualquier reto individual, así que aquí no se escala por dificultad.
+BITCOINS_POR_RETO = 30
 
 VERDE = "verde"
 AMARILLO = "amarillo"
@@ -26,7 +26,7 @@ GRIS = "gris"
 
 
 def bitcoins_por_largo(largo):
-    return max(BITCOINS_BASE, BITCOINS_BASE + (largo - 4) * BITCOINS_POR_LETRA_EXTRA)
+    return BITCOINS_POR_RETO
 
 
 def nuevo_termino(titulo, termino, intentos, significado, pista=""):
@@ -70,6 +70,16 @@ EJERCICIOS = {
             "comportamiento (métodos) en la programación orientada a objetos."
         ),
         pista="Se crea a partir de una clase.",
+    ),
+
+    # --- Linux · Procesos (Módulo 4b del temario) --------------------------
+    "procesos": nuevo_termino(
+        "El término oculto · Procesos", "PROCESO", 5,
+        significado=(
+            "Proceso: programa en ejecución que el sistema operativo gestiona "
+            "y al que puede asignar o quitar recursos."
+        ),
+        pista="Lo que ves listado al ejecutar el comando ps.",
     ),
 
     # --- Lógica y Algoritmos · Conjuntos (el ejemplo original, ya como Wordle)

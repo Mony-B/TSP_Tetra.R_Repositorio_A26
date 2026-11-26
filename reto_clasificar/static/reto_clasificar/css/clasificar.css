@@ -3,67 +3,95 @@
 
 .cl-barra { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin-bottom: 14px; }
 .cl-enunciado {
-    flex: 1; min-width: 200px; padding: 10px 14px; background: #000;
-    border: 2px solid var(--verde); font-size: 1.35rem; font-weight: bold; text-align: center;
+    flex: 1; min-width: 200px; padding: 16px 18px;
+    background: color-mix(in srgb, var(--verde) 8%, transparent);
+    border: 1px solid color-mix(in srgb, var(--verde) 35%, transparent);
+    border-radius: 12px; font-size: 1.2rem; font-weight: 700; text-align: center;
 }
 .cl-enunciado div { line-height: 1.5; }
-.cl-progreso { width: 150px; height: 14px; border: 1px solid var(--verde-medio); background: #000; }
-.cl-progreso-relleno { height: 100%; width: 0; background: var(--verde-medio); transition: width 0.3s; }
+
+/* La barra de avance vive ahora en el pie (ver .cl-avance), junto a los
+   botones, en vez de aquí arriba junto al enunciado. */
+.cl-progreso {
+    flex: 1; max-width: 220px; height: 6px; border-radius: 999px;
+    background: var(--borde); overflow: hidden;
+}
+.cl-progreso-relleno { display: block; height: 100%; width: 0; background: var(--verde); transition: width 0.3s; }
 
 .cl-tablero { display: flex; gap: 14px; flex-wrap: wrap; align-items: stretch; }
 .cl-grafica { width: 300px; height: 300px; max-width: 100%; background: #000; border: 1px solid var(--verde-medio); }
 
+/* Cajas de destino: borde fino y tenue (no bloques sólidos de color), un
+   número en vez de un significado fijo "si/no", para que se vea igual con
+   cualquier cantidad de categorías y en cualquier materia. */
 .cl-zonas { flex: 1; min-width: 260px; display: flex; gap: 12px; }
 .cl-zona {
     flex: 1; display: flex; flex-direction: column; align-items: center; gap: 8px;
-    padding: 10px 6px; background: #000; border: 2px solid; min-height: 190px;
-    transition: background 0.15s, transform 0.15s;
+    padding: 14px 10px; background: color-mix(in srgb, var(--verde) 6%, transparent);
+    border: 1px solid color-mix(in srgb, var(--verde) 35%, var(--borde));
+    border-radius: 10px; min-height: 190px;
+    transition: background 0.15s, border-color 0.15s, transform 0.15s;
 }
-.cl-zona.si { border-color: var(--verde); }
-.cl-zona.no { border-color: var(--rojo); color: var(--rojo); }
-.cl-zona h3 { margin: 0; font-size: 1rem; text-align: center; line-height: 1.3; }
-.cl-zona h3 small { display: block; font-weight: normal; opacity: 0.8; }
-.cl-zona hr { width: 80%; border: 0; border-top: 1px solid currentColor; margin: 0; }
-.cl-zona.encima { background: #112211; transform: scale(1.02); }
-.cl-zona.no.encima { background: #221111; }
-.cl-zona.error { animation: cl-sacudir 0.35s; }
-.cl-zona-fichas { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; }
+.cl-zona-num {
+    width: 22px; height: 22px; border-radius: 50%;
+    border: 1px solid color-mix(in srgb, var(--verde) 60%, transparent);
+    color: var(--verde); font-size: 0.75rem; font-weight: bold;
+    display: flex; align-items: center; justify-content: center; flex: none;
+}
+.cl-zona h3 { margin: 0; font-size: 0.95rem; text-align: center; line-height: 1.35; font-weight: 600; }
+.cl-zona h3 small { display: block; font-weight: normal; opacity: 0.7; font-size: 0.82em; }
+.cl-zona.encima {
+    background: color-mix(in srgb, var(--verde) 14%, transparent);
+    border-color: var(--verde); transform: scale(1.02);
+}
+.cl-zona.error { animation: cl-sacudir 0.35s; border-color: var(--rojo); }
+.cl-zona-fichas { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; align-content: flex-start; flex: 1; width: 100%; }
+.cl-zona-fichas:empty {
+    border: 1px dashed color-mix(in srgb, var(--verde) 30%, var(--borde));
+    border-radius: 8px; align-items: center; justify-content: center;
+}
+.cl-zona-fichas:empty::before {
+    content: "Suelta aquí las fichas"; color: var(--verde-medio);
+    font-size: 0.78rem; opacity: 0.75; text-align: center; padding: 6px;
+}
 
 .cl-bandeja {
     display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; align-items: center;
-    margin: 14px 0; padding: 12px; min-height: 72px; background: #000; border: 1px solid var(--borde);
+    margin: 14px 0; padding: 12px; min-height: 72px;
+    background: color-mix(in srgb, var(--verde) 4%, transparent);
+    border: 1px solid var(--borde); border-radius: 10px;
 }
 .cl-bandeja:empty { display: none; }
 .cl-ficha {
-    min-width: 62px; padding: 10px 12px; border: 2px solid #fff; border-radius: 999px;
-    font-family: inherit; font-size: 1rem; font-weight: bold; color: #fff; text-align: center;
-    cursor: grab; touch-action: none; box-shadow: 0 3px 0 rgba(255, 255, 255, 0.25);
+    min-width: 62px; padding: 7px 14px 7px 10px; border: 1px solid var(--borde); border-radius: 999px;
+    font-family: inherit; font-size: 0.92rem; font-weight: 500; color: var(--verde); text-align: center;
+    cursor: grab; touch-action: none; background: color-mix(in srgb, var(--verde) 8%, transparent);
+    display: inline-flex; align-items: center; gap: 8px;
 }
-.cl-ficha:hover { color: #fff; filter: brightness(1.2); }
-.cl-ficha.seleccionada { outline: 3px solid #ffd166; }
+.cl-ficha-punto { width: 9px; height: 9px; border-radius: 50%; flex: none; }
+.cl-ficha:hover { border-color: var(--verde); background: color-mix(in srgb, var(--verde) 16%, transparent); }
+.cl-ficha.seleccionada { outline: 2px solid #ffd166; outline-offset: 1px; }
 .cl-ficha.arrastrando { position: fixed; z-index: 50; pointer-events: none; cursor: grabbing; opacity: 0.95; }
 .cl-ficha.fantasma { opacity: 0.25; }
 .cl-ficha.fallo { animation: cl-sacudir 0.35s; border-color: var(--rojo); }
-.cl-ficha.colocada { cursor: default; box-shadow: none; padding: 6px 10px; min-width: 0; }
+.cl-ficha.colocada { cursor: default; padding: 5px 10px 5px 8px; min-width: 0; }
 .cl-ficha.colocada::after { content: " ✔"; color: var(--verde); }
 
 .cl-pie[hidden] { display: none; }
-.cl-pie { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; }
+.cl-pie { display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; }
 .cl-botones { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
-.cl-puntos { font-weight: bold; padding: 6px 12px; border: 1px solid var(--verde-medio); }
-.cl-ayuda { padding: 10px; border: 1px dashed #ffd166; color: #ffd166; }
-.cl-ayuda[hidden] { display: none; }
+
+/* Una sola barra de avance (sustituye al contador "Puntos: x/y"). */
+.cl-avance { display: flex; align-items: center; gap: 10px; flex: 1; min-width: 180px; justify-content: flex-end; }
+.cl-avance-etiqueta { font-size: 0.78rem; color: var(--verde-medio); white-space: nowrap; }
+.cl-avance-fraccion { font-size: 0.78rem; color: var(--verde-medio); white-space: nowrap; }
+
 .cl-mensaje { margin: 10px 0 0; min-height: 1.2em; }
 .cl-mensaje.error { color: var(--rojo); }
 .cl-mensaje.bien { color: var(--verde); }
 
-.boton.peligro { border-color: var(--rojo); color: var(--rojo); background: transparent; }
-
-dialog.confirmar {
-    background: #000; color: var(--verde); border: 1px solid var(--verde);
-    font-family: inherit; max-width: 420px;
-}
-dialog.confirmar::backdrop { background: rgba(0, 0, 0, 0.7); }
+/* Los diálogos de salir y de reto completado (dialog.confirmar) ya vienen
+   estilizados de comun/css/reto.css: no se redefinen aquí. */
 
 @keyframes cl-sacudir {
     0%, 100% { transform: translateX(0); }
@@ -73,5 +101,6 @@ dialog.confirmar::backdrop { background: rgba(0, 0, 0, 0.7); }
 
 @media (max-width: 640px) {
     .cl-zonas { flex-direction: row; }
-    .cl-progreso { width: 100%; }
+    .cl-avance { width: 100%; justify-content: flex-start; }
+    .cl-progreso { max-width: none; }
 }

@@ -51,7 +51,7 @@ NIVELES = {
             "Una puerta bloqueada te cierra el paso. Explora la terminal, "
             "encuentra la contraseña y escríbela en la puerta."
         ),
-        "bitcoins": 50,
+        "bitcoins": 30,
         "clave": "0cult0_4lumn0",
         "usuario": "alumno",
         "comandos": ["help", "clear", "pwd", "ls", "cd", "cat", "whoami"],
@@ -77,7 +77,7 @@ NIVELES = {
         "subtema": "Creación y manipulación de archivos",
         "titulo": "La bóveda",
         "instrucciones": "El guardia solo revela la contraseña cuando la bóveda está en orden.",
-        "bitcoins": 75,
+        "bitcoins": 30,
         "clave": "c0pi4_s3gur4",
         "usuario": "alumno",
         "comandos": ["help", "clear", "ls", "cd", "cat", "mkdir", "touch", "cp", "mv", "rm"],
@@ -110,7 +110,7 @@ NIVELES = {
         "subtema": "Lectura y filtrado de información",
         "titulo": "El log interminable",
         "instrucciones": "La contraseña está enterrada en un registro enorme. No lo leas todo: fíltralo.",
-        "bitcoins": 100,
+        "bitcoins": 30,
         "clave": "gr3p_t4rg3t",
         "usuario": "alumno",
         "comandos": ["help", "clear", "ls", "cd", "cat", "grep", "head", "tail", "wc"],
@@ -131,7 +131,7 @@ NIVELES = {
         "subtema": "Búsqueda avanzada",
         "titulo": "Aguja en el pajar",
         "instrucciones": "La contraseña está dentro de un programa perdido en el sistema.",
-        "bitcoins": 125,
+        "bitcoins": 30,
         "clave": "f1nd_str1ngs",
         "usuario": "alumno",
         "comandos": ["help", "clear", "ls", "cd", "cat", "find", "locate", "strings"],
@@ -161,7 +161,7 @@ NIVELES = {
         "subtema": "Permisos y propiedad",
         "titulo": "Acceso denegado",
         "instrucciones": "El archivo con la contraseña existe, pero no te pertenece ni puedes leerlo.",
-        "bitcoins": 150,
+        "bitcoins": 30,
         "clave": "ch0wn_r00t",
         "usuario": "alumno",
         "comandos": ["help", "clear", "ls", "cd", "cat", "whoami", "chmod", "su", "chown"],
@@ -182,6 +182,40 @@ NIVELES = {
         # La contraseña de `su` se escribe en la línea siguiente.
         "solucion": ["su admin", "adm1n_2026", "chown admin secreto.txt",
                      "chmod 600 secreto.txt", "cat secreto.txt"],
+    },
+    # Subtema 5b · Permisos y propiedad (refuerzo): dos candados encadenados.
+    "permisos-avanzado": {
+        "nivel": 6,
+        "subtema": "Permisos y propiedad (refuerzo)",
+        "titulo": "La doble cerradura",
+        "instrucciones": (
+            "Dos candados separan la contraseña final. Resuélvelos uno tras "
+            "otro: cada uno es un archivo con el dueño o los permisos mal "
+            "puestos."
+        ),
+        "bitcoins": 30,
+        "clave": "d0bl3_c4nd4d0",
+        "usuario": "alumno",
+        "comandos": ["help", "clear", "ls", "cd", "cat", "whoami", "chmod", "su", "chown"],
+        "sistema": {
+            "readme.txt": (
+                "El admin puede arreglar dueños y permisos, pero nunca inicia sesión "
+                "directamente: vuélvete admin con 'su admin' (clave: adm1n_f1n4l).\n"
+                "Primer candado: pista.txt. Segundo candado: el archivo que pista.txt te señale."
+            ),
+            "pista.txt": "El bunker con la contraseña final está escondido en una carpeta llamada 'bunker'.",
+            "bunker": {
+                "secreto.txt": "PASSWORD: d0bl3_c4nd4d0",
+            },
+        },
+        "usuarios": {"alumno": None, "admin": "adm1n_f1n4l"},
+        "administradores": ["admin"],
+        "permisos": {
+            "pista.txt": {"dueno": "operador", "modo": "640"},
+            "bunker/secreto.txt": {"dueno": "root", "modo": "000"},
+        },
+        "solucion": ["su admin", "adm1n_f1n4l", "chmod 644 pista.txt", "cat pista.txt",
+                     "cd bunker", "chmod 644 secreto.txt", "cat secreto.txt"],
     },
 }
 

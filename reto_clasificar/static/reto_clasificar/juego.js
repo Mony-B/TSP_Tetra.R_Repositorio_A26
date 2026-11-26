@@ -2,17 +2,15 @@
 // El navegador solo dibuja y manda dónde soltó cada ficha; Django decide si es
 // correcto y cuándo se completó el reto (la categoría correcta nunca llega aquí).
 (() => {
-    const { enunciado, categorias, fichas, grafica, ayuda } = ReCode.reto.datos;
+    const { enunciado, categorias, fichas, grafica } = ReCode.reto.datos;
     const raiz = document.getElementById("clasificar");
     const clasificarUrl = raiz.dataset.clasificarUrl;
     const zonasEl = document.getElementById("zonas");
     const bandeja = document.getElementById("bandeja");
     const canvas = document.getElementById("grafica");
     const aviso = document.getElementById("aviso");
-    const resultado = document.getElementById("resultado");
-    const dialogo = document.getElementById("dialogo-salir");
+    const dialogoExito = document.getElementById("dialogo-exito");
     const COLORES = ["#1e88e5", "#2e9e44", "#d93a3a", "#c98f00", "#8e44ad", "#00899b"];
-    const SEGUNDOS_REDIRECCION = 10;
     const UMBRAL_ARRASTRE = 6; // px; menos que esto se considera un toque
 
     const colocadas = new Set();   // ids de fichas ya bien clasificadas
@@ -32,13 +30,16 @@
     document.getElementById("total").textContent = fichas.length;
 
     const zonas = {};
-    categorias.forEach((c) => {
+    categorias.forEach((c, i) => {
         const z = document.createElement("div");
         z.className = `cl-zona ${c.id}`;
         z.dataset.categoria = c.id;
         z.tabIndex = 0;
         z.setAttribute("role", "button");
         z.setAttribute("aria-label", `${c.nombre} ${c.detalle}`);
+        const num = document.createElement("span");
+        num.className = "cl-zona-num";
+        num.textContent = i + 1;
         const h = document.createElement("h3");
         h.textContent = c.nombre;
         const det = document.createElement("small");
@@ -46,7 +47,7 @@
         h.appendChild(det);
         const cont = document.createElement("div");
         cont.className = "cl-zona-fichas";
-        z.append(h, document.createElement("hr"), cont);
+        z.append(num, h, cont);
         zonasEl.appendChild(z);
         zonas[c.id] = { el: z, cont };
         z.addEventListener("click", () => soltarSeleccionada(c.id));
@@ -59,18 +60,24 @@
         const b = document.createElement("button");
         b.type = "button";
         b.className = "cl-ficha";
-        b.textContent = `(${f.x}, ${f.y})`;
-        b.style.background = COLORES[i % COLORES.length];
         b.dataset.id = f.id;
+        const punto = document.createElement("span");
+        punto.className = "cl-ficha-punto";
+        punto.style.background = COLORES[i % COLORES.length];
+        const texto = document.createElement("span");
+        texto.textContent = f.etiqueta !== undefined ? f.etiqueta : `(${f.x}, ${f.y})`;
+        b.append(punto, texto);
         bandeja.appendChild(b);
         elFicha[f.id] = b;
         engancharArrastre(b, f);
     });
 
-    // --- Gráfica ----------------------------------------------------------------
+    // --- Gráfica (solo en los ejercicios tipo "grafica"; los genéricos no la traen) --
 
-    const ctx = canvas.getContext("2d");
+    if (!grafica) canvas.style.display = "none";
+    const ctx = grafica ? canvas.getContext("2d") : null;
     function dibujar() {
+        if (!grafica) return;
         const W = canvas.width, n = grafica.rango * 2, u = W / n;
         const px = (x) => (x + grafica.rango) * u;
         const py = (y) => (grafica.rango - y) * u;
@@ -248,11 +255,7 @@
 
     // --- Victoria (pasos 7-9) -----------------------------------------------------
 
-    function escapar(texto) {
-        const d = document.createElement("div");
-        d.textContent = texto;
-        return d.innerHTML;
-    }
+    const escapar = ReCode.dialogos.escaparHTML;
 
     async function completar() {
         const r = await ReCode.postJSON(ReCode.reto.revisarUrl, {});
@@ -264,50 +267,22 @@
         const premio = r.ya_otorgado
             ? "La recompensa de este reto ya se te había otorgado antes."
             : `Obtuviste <strong>₿ ${r.bitcoins_otorgados}</strong>.`;
-        resultado.innerHTML = `
-            <div class="mensaje">
-                <p><strong>${escapar(r.mensaje)}</strong> Clasificaste todas las fichas.</p>
-                <p>${premio}</p>
-                <p class="etiqueta">Regresando a los retos en <span id="cuenta">${SEGUNDOS_REDIRECCION}</span> s…</p>
-            </div>
-            <a class="boton" href="${ReCode.reto.volverUrl}">Volver a los retos</a>`;
-        let quedan = SEGUNDOS_REDIRECCION;
-        const reloj = setInterval(() => {
-            quedan--;
-            const cuenta = document.getElementById("cuenta");
-            if (cuenta) cuenta.textContent = quedan;
-            if (quedan <= 0) {
-                clearInterval(reloj);
-                window.location.href = ReCode.reto.volverUrl;
-            }
-        }, 1000);
+        document.getElementById("exito-mensaje").innerHTML = `<strong>${escapar(r.mensaje)}</strong> Clasificaste todas las fichas.`;
+        document.getElementById("exito-premio").innerHTML = premio;
+        ReCode.dialogos.abrir(dialogoExito);
     }
 
-    // --- Ayuda, reiniciar y FE-1 (salir / rendirse) ---------------------------------
+    // --- Reiniciar y FE-1 (salir / rendirse) ---------------------------------
+    // (La pista/PE-1 vía CU-03 todavía no está conectada a ningún reto; se
+    // integrará desde la plantilla compartida cuando exista.)
 
-    document.getElementById("btn-ayuda").addEventListener("click", () => {
-        const a = document.getElementById("ayuda");
-        a.textContent = ayuda;
-        a.hidden = !a.hidden;
-    });
     // jugar() siempre reinicia la partida en el servidor, así que recargar basta.
     document.getElementById("btn-reiniciar").addEventListener("click", () => window.location.reload());
 
-    function pedirSalida(e) {
-        if (e) e.preventDefault();
-        if (typeof dialogo.showModal === "function") {
-            dialogo.showModal();
-        } else if (window.confirm("Se perderá el progreso de este reto y no obtendrás bitcoins. ¿Salir?")) {
-            window.location.href = ReCode.reto.volverUrl;
-        }
-    }
-    document.getElementById("btn-salir").addEventListener("click", pedirSalida);
-    // La flecha de regresar de la plantilla también pide confirmación mientras se juega.
-    const flecha = document.querySelector(".btn-regresar");
-    if (flecha) flecha.addEventListener("click", (e) => { if (!terminado) pedirSalida(e); });
-    document.getElementById("btn-cancelar-salida").addEventListener("click", () => dialogo.close());
-    document.getElementById("btn-confirmar-salida").addEventListener("click", () => {
-        window.location.href = ReCode.reto.volverUrl; // no se guarda nada ni se dan bitcoins
+    // Diálogo y mensaje de salida compartidos con los demás retos
+    // (comun/reto_base.html + comun/js/reto_dialogos.js).
+    ReCode.dialogos.inicializarSalir({
+        hayProgreso: () => !terminado,
     });
 
     dibujar();

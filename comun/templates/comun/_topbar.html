@@ -1,0 +1,33 @@
+{% comment %}
+Barra superior reutilizable: flecha para regresar, marca + título, y la
+billetera de bitcoins del alumno. La usan mapa/materia.html y
+comun/reto_base.html (y cualquier pantalla nueva que la necesite) con
+{% include "comun/_topbar.html" with ... %}. El estilo vive aparte en
+comun/static/comun/css/topbar.css: quien la incluya solo tiene que
+cargar ese CSS, nunca tiene que volver a escribir este HTML.
+
+Variables que recibe (todas por "with" al incluirla):
+  topbar_marca       "RE:CODE — MATERIA" / "RE:CODE — RETO" / etc.
+  topbar_titulo       Lo que va en grande (nombre de la materia, título del reto...).
+  topbar_volver_url   A dónde regresa la flecha.
+  topbar_volver_tip    (opcional) title="" de la flecha, para accesibilidad.
+  topbar_resuelto     (opcional) True para mostrar "✓ resuelto" junto al título.
+
+Los bitcoins salen de progreso_alumno (ya lo pone
+progreso.context_processors.progreso_alumno en todas las pantallas), así
+que no hay que mandarlos aparte.
+{% endcomment %}
+<header class="topbar">
+    <div class="topbar-izq">
+        <a href="{{ topbar_volver_url }}" class="volver" title="{{ topbar_volver_tip|default:"Regresar" }}">←</a>
+        <div>
+            <div class="brand">{{ topbar_marca }}</div>
+            <div class="subject">{{ topbar_titulo }}{% if topbar_resuelto %} <span class="hecho">✓ resuelto</span>{% endif %}</div>
+        </div>
+    </div>
+    <div class="topbar-der">
+        {% if user.is_authenticated %}
+        <div class="wallet"><span class="coin"></span> <span id="bitcoins-alumno">{{ progreso_alumno.bitcoins }}</span> bitcoins</div>
+        {% endif %}
+    </div>
+</header>

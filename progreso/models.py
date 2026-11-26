@@ -62,6 +62,42 @@ class IntentoExamen(models.Model):
         return f"{self.alumno.username} - {self.examen} ({self.aciertos}/{self.total}, {estado})"
 
 
+class PistaAdquirida(models.Model):
+    """Pistas (definiciones de conceptos) que el alumno ya desbloqueó en la
+    red corrupta (CU03). El catálogo de pistas en sí vive en el código de
+    red_corrupta (igual que los ejercicios de cada reto), no aquí: esta
+    tabla solo guarda cuáles ya obtuvo y cómo, para no volver a cobrarlas
+    (R100) ni volver a pedir Snake."""
+
+    COMPRA = "compra"
+    SNAKE = "snake"
+    METODO_CHOICES = [
+        (COMPRA, "Compra (10 bitcoins)"),
+        (SNAKE, "Snake (minijuego de hackeo)"),
+    ]
+
+    alumno = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="pistas_adquiridas"
+    )
+    pista = models.CharField(
+        max_length=100,
+        help_text='identificador de la pista en el catálogo de la red corrupta, '
+                   'ej. "logica:conjuntos-venn:union" (no es un reto: una pista '
+                   'no está limitada a ningún reto ni subtema, ver CU03)',
+    )
+    metodo_desbloqueo = models.CharField(max_length=10, choices=METODO_CHOICES)
+    fecha = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name_plural = "pistas adquiridas"
+        constraints = [
+            models.UniqueConstraint(fields=["alumno", "pista"], name="pista_adquirida_una_vez"),
+        ]
+
+    def __str__(self):
+        return f"{self.alumno.username} - {self.pista} ({self.metodo_desbloqueo})"
+
+
 class NovelaVista(models.Model):
     alumno = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="novelas_vistas"

@@ -33,13 +33,9 @@
 
     .acciones-termino { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; margin-top: 12px; }
     .acciones-termino [hidden], .acciones-termino[hidden] { display: none; }
-    .boton.peligro { border-color: var(--rojo); color: var(--rojo); background: transparent; }
 
-    dialog.confirmar {
-        background: #000; color: var(--verde); border: 1px solid var(--verde);
-        font-family: inherit; max-width: 420px;
-    }
-    dialog.confirmar::backdrop { background: rgba(0, 0, 0, 0.7); }
+    /* Los diálogos de salir y de reto completado (dialog.confirmar) ya
+       vienen estilizados de comun/css/reto.css: no se redefinen aquí. */
 
     @media (max-width: 600px) {
         .fila { grid-auto-columns: 44px; }
@@ -62,18 +58,35 @@
     <div class="teclado" id="teclado"></div>
 
     <div class="acciones-termino" id="acciones">
-        <button type="button" class="boton" id="btn-reintentar" hidden>Reintentar</button>
         <button type="button" class="boton peligro" id="btn-salir">Salir / Rendirse</button>
     </div>
 </div>
 
-<dialog class="confirmar" id="dialogo-salir">
-    <p>¿Seguro que quieres salir? Se perderá el progreso de este reto y no obtendrás bitcoins.</p>
-    <div class="acciones-termino">
-        <button type="button" class="boton secundario" id="btn-cancelar-salida">Seguir jugando</button>
-        <button type="button" class="boton peligro" id="btn-confirmar-salida">Salir</button>
+<!-- El diálogo de salir ya viene de comun/reto_base.html (dialogo-salir);
+     el de éxito se sobreescribe solo para agregar "exito-significado"
+     (el significado del término), que los demás retos no necesitan. -->
+
+<!-- FA-1: intentos agotados. Ventana emergente propia de este reto (y de
+     reto_parabolica, los únicos dos con intentos limitados): el botón
+     "Salir / Rendirse" normal de arriba se queda tal cual la plantilla
+     (nunca se oculta); aquí solo se ofrecen Reintentar o Salir mientras
+     dura el estado de "sin intentos". -->
+<dialog class="confirmar" id="dialogo-agotado">
+    <p id="agotado-mensaje"></p>
+    <div class="dialogo-acciones">
+        <button type="button" class="boton" id="btn-reintentar">Reintentar</button>
+        <button type="button" class="boton peligro" id="btn-salir-agotado">Salir</button>
     </div>
 </dialog>
+{% endblock %}
+
+{% block exito %}
+<p id="exito-mensaje"></p>
+<p id="exito-significado"></p>
+<p id="exito-premio"></p>
+<div class="dialogo-acciones">
+    <a class="boton" href="{% firstof volver_url url_materia url_mapa %}">Volver a los retos</a>
+</div>
 {% endblock %}
 
 {% block script_juego %}<script src="{% static 'reto_obtener_termino/juego.js' %}"></script>{% endblock %}

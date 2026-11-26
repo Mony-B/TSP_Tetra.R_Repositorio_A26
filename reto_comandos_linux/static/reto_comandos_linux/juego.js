@@ -11,8 +11,7 @@
     const inputComando = document.getElementById("comando");
     const inputClave = document.getElementById("clave");
     const resultado = document.getElementById("resultado");
-    const dialogo = document.getElementById("dialogo-salir");
-    const SEGUNDOS_REDIRECCION = 10;
+    const dialogoExito = document.getElementById("dialogo-exito");
 
     let promptTexto = promptInicial;
     let oculto = false;    // la siguiente línea es una contraseña (su): no se muestra
@@ -47,6 +46,7 @@
         if (!comando.trim() && !oculto) return; // solo Enter: nuevo prompt (FA-1)
 
         ocupado = true;
+        inputComando.disabled = true;   // mientras se espera, no se "pierden" comandos escritos de más
         try {
             const r = await ReCode.postJSON(comandoUrl, { comando });
             if (r.limpiar) lineas.innerHTML = "";
@@ -58,6 +58,7 @@
             escribir(err.message, "error");
         } finally {
             ocupado = false;
+            if (!terminado) inputComando.disabled = false;
             inputComando.focus();
         }
     });
@@ -72,11 +73,7 @@
         resultado.innerHTML = `<p class="mensaje ${error ? "error" : ""}">${html}</p>`;
     }
 
-    function escapar(texto) {
-        const d = document.createElement("div");
-        d.textContent = texto;
-        return d.innerHTML;
-    }
+    const escapar = ReCode.dialogos.escaparHTML;
 
     document.getElementById("form-puerta").addEventListener("submit", async (e) => {
         e.preventDefault();
@@ -87,21 +84,29 @@
             return;
         }
         ocupado = true;
+        inputClave.disabled = true;
+        document.getElementById("btn-abrir").disabled = true;
         try {
             const r = await ReCode.postJSON(ReCode.reto.revisarUrl, { respuesta: clave });
             const saldo = document.getElementById("bitcoins-alumno");
             if (saldo) saldo.textContent = r.bitcoins_total;
             if (r.correcto) return exito(r);
-            mensaje(escapar(r.mensaje), true); // FA-3: la puerta sigue cerrada, sin límite
-            inputClave.select();
-        } catch (err) {
-            mensaje(escapar(err.message), true);
-        } finally {
             ocupado = false;
+            inputClave.disabled = false;
+            document.getElementById("btn-abrir").disabled = false;
+            mensaje(escapar(r.mensaje), true); // FA-3: la puerta sigue cerrada, sin límite
+            inputClave.select();               // ya re-habilitado: sí se ve seleccionado
+        } catch (err) {
+            ocupado = false;
+            inputClave.disabled = false;
+            document.getElementById("btn-abrir").disabled = false;
+            mensaje(escapar(err.message), true);
         }
     });
 
-    // Pasos 7-8: mensaje de victoria, bitcoins (solo la primera vez) y regreso.
+    // Pasos 7-8: ventana emergente de victoria, con los bitcoins (solo la
+    // primera vez); el alumno decide cuándo volver, sin redirección
+    // automática, igual que en los demás retos.
     function exito(r) {
         terminado = true;
         document.getElementById("icono-puerta").textContent = "🔓";
@@ -114,46 +119,16 @@
         const premio = r.ya_otorgado
             ? "La recompensa de este reto ya se te había otorgado antes."
             : `Obtuviste <strong>₿ ${r.bitcoins_otorgados}</strong>.`;
-        resultado.innerHTML = `
-            <div class="mensaje">
-                <p><strong>${escapar(r.mensaje)}</strong> Superaste el reto.</p>
-                <p>${premio}</p>
-                <p class="etiqueta">Regresando a los retos en <span id="cuenta">${SEGUNDOS_REDIRECCION}</span> s…</p>
-            </div>
-            <a class="boton" href="${ReCode.reto.volverUrl}">Volver a los retos</a>`;
-        let quedan = SEGUNDOS_REDIRECCION;
-        const reloj = setInterval(() => {
-            quedan--;
-            const cuenta = document.getElementById("cuenta");
-            if (cuenta) cuenta.textContent = quedan;
-            if (quedan <= 0) {
-                clearInterval(reloj);
-                window.location.href = ReCode.reto.volverUrl;
-            }
-        }, 1000);
+        document.getElementById("exito-mensaje").innerHTML = `<strong>${escapar(r.mensaje)}</strong> Superaste el reto.`;
+        document.getElementById("exito-premio").innerHTML = premio;
+        ReCode.dialogos.abrir(dialogoExito);
     }
 
     // --- FE-1: salir / rendirse con confirmación ----------------------------
-
-    function pedirSalida(e) {
-        if (e) e.preventDefault();
-        if (typeof dialogo.showModal === "function") {
-            dialogo.showModal();
-        } else if (window.confirm("Se perderá el progreso de este reto y no obtendrás bitcoins. ¿Salir?")) {
-            window.location.href = ReCode.reto.volverUrl;
-        }
-    }
-
-    document.getElementById("btn-salir").addEventListener("click", pedirSalida);
-    // La flecha de regresar de la plantilla también pide confirmación mientras se juega.
-    const flecha = document.querySelector(".btn-regresar");
-    if (flecha) flecha.addEventListener("click", (e) => { if (!terminado) pedirSalida(e); });
-    document.getElementById("btn-cancelar-salida").addEventListener("click", () => {
-        dialogo.close();
-        inputComando.focus();
-    });
-    document.getElementById("btn-confirmar-salida").addEventListener("click", () => {
-        window.location.href = ReCode.reto.volverUrl; // no se guarda nada ni se dan bitcoins
+    ReCode.dialogos.inicializarSalir({
+        puedeSalir: () => !terminado,
+        hayProgreso: () => !terminado,
+        alCancelar: () => inputComando.focus(),
     });
 
     pintarPrompt();

@@ -1,0 +1,31 @@
+{% extends "comun/reto_base.html" %}
+{% load static %}
+{% block estilos %}<link rel="stylesheet" href="{% static 'reto_laberinto/laberinto.css' %}">{% endblock %}
+
+{% block juego %}
+<div id="laberinto" data-revisar-url="{{ revisar_url }}">
+    <p class="progreso-laberinto" id="progreso"></p>
+    <p class="pregunta-laberinto" id="pregunta"></p>
+
+    <div class="escenario">
+        <canvas id="lienzo" width="600" height="440"></canvas>
+        <div class="mensaje-flotante" id="toast" aria-live="polite"></div>
+    </div>
+
+    <div class="controles-laberinto">
+        <div class="dpad">
+            <button type="button" class="boton arriba" data-dx="0" data-dy="-1">↑</button>
+            <button type="button" class="boton izquierda" data-dx="-1" data-dy="0">←</button>
+            <button type="button" class="boton abajo" data-dx="0" data-dy="1">↓</button>
+            <button type="button" class="boton derecha" data-dx="1" data-dy="0">→</button>
+        </div>
+        <p class="ayuda-laberinto">Muévete con las flechas, WASD o los botones. Caminar hacia una respuesta escrita en la pared la selecciona automáticamente.</p>
+    </div>
+
+    <div class="acciones-laberinto" id="acciones-laberinto">
+        <button type="button" class="boton peligro" id="btn-salir">Salir / Rendirse</button>
+    </div>
+</div>
+{% endblock %}
+
+{% block script_juego %}<script src="{% static 'reto_laberinto/juego.js' %}"></script>{% endblock %}

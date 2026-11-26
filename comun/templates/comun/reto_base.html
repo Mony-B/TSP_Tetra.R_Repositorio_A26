@@ -1,30 +1,89 @@
-{% extends "comun/base.html" %}
+{% load static %}<!DOCTYPE html>
 {% comment %}
-Plantilla que comparten las 6 apps de reto. Cada app llena el bloque "juego"
+Plantilla que comparten las apps de reto. Cada app llena el bloque "juego"
 (o lo dibuja con su JS dentro de #juego) y manda las respuestas con
 ReCode.enviarRespuesta(paso, respuesta). Django las revisa en el servidor.
+
+Pantalla plana (sin monitor ni animación): la tarjeta del reto es visible e
+interactiva desde que carga la página, sin ningún retraso artificial.
+No extiende comun/base.html porque usa su propio layout de pantalla completa.
 {% endcomment %}
-{% block titulo %}{{ ejercicio.titulo }} - Re:Code{% endblock %}
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block titulo %}{{ ejercicio.titulo }} - Re:Code{% endblock %}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'comun/css/recode.css' %}">
+    <link rel="stylesheet" href="{% static 'comun/css/topbar.css' %}">
+    <link rel="stylesheet" href="{% static 'comun/css/reto.css' %}">
+    {% block estilos %}{% endblock %}
+</head>
+<body class="pantalla-reto" style="--accent: {{ color_acento }};">
+    {% url 'mapa:inicio' as url_mapa %}
+    {% if materia.slug %}{% url 'mapa:materia' materia.slug as url_materia %}{% endif %}
+    {% firstof volver_url url_materia url_mapa as topbar_url_volver %}
 
-{% block contenido %}
-<h1>{{ ejercicio.titulo }}</h1>
-<h2>{{ nombre_reto }}{% if ya_resuelto %} · ✓ resuelto{% endif %}</h2>
-{% if ejercicio.instrucciones %}<p>{{ ejercicio.instrucciones }}</p>{% endif %}
+    {% include "comun/_topbar.html" with topbar_marca="RE:CODE — RETO" topbar_titulo=ejercicio.titulo topbar_volver_url=topbar_url_volver topbar_volver_tip="Regresar a los retos" topbar_resuelto=ya_resuelto %}
 
-<div id="juego">{% block juego %}{% endblock %}</div>
-<div id="resultado"></div>
+    <main class="body">
+        <div class="card">
+            <!-- Pedir pista (CU03): en la esquina superior derecha de la
+                 tarjeta del reto, no en la barra superior. Coloreado con
+                 --accent (el mismo acento de la materia que ya trae el
+                 body) para que resalte sobre la tarjeta. -->
+            <a class="boton-pista"
+               href="{% url 'red_corrupta:catalogo' %}?origen={{ request.path|urlencode }}&origen_label={{ nombre_reto|urlencode }}"
+               title="Consultar una pista de cualquier materia, no solo de este reto">🔓 Pista</a>
 
-<a href="{{ volver_url }}" class="btn-regresar" title="Regresar">←</a>
-{{ datos_publicos|json_script:"datos-reto" }}
-{% endblock %}
+            <p class="qnum">{{ nombre_reto|upper }}</p>
+            <h1 class="qtext">{{ ejercicio.titulo }}</h1>
+            {% if ejercicio.instrucciones %}<p class="instrucciones">{{ ejercicio.instrucciones }}</p>{% endif %}
 
-{% block scripts %}
-<script>
-    ReCode.configurarReto({
-        revisarUrl: "{{ revisar_url }}",
-        volverUrl: "{{ volver_url }}",
-        datos: JSON.parse(document.getElementById("datos-reto").textContent),
-    });
-</script>
-{% block script_juego %}{% endblock %}
-{% endblock %}
+            <div id="juego">{% block juego %}{% endblock %}</div>
+            <div id="resultado"></div>
+        </div>
+    </main>
+
+    <!-- Reto completado: ventana emergente, sin redirección automática (el
+         alumno decide cuándo volver). El contenido varía por reto (algunos
+         muestran info extra como la ecuación o el vértice), por eso es un
+         bloque; la mayoría puede usar el default tal cual. -->
+    <dialog class="confirmar" id="dialogo-exito">
+        {% block exito %}
+        <p id="exito-mensaje"></p>
+        <p id="exito-premio"></p>
+        <div class="dialogo-acciones">
+            <a class="boton" href="{% firstof volver_url url_materia url_mapa %}">Volver a los retos</a>
+        </div>
+        {% endblock %}
+    </dialog>
+
+    <!-- Confirmación de abandono (FE-1): mismo texto y botones en los 10
+         retos; cada reto solo tiene que llamar a
+         ReCode.dialogos.inicializarSalir() desde su juego.js. -->
+    <dialog class="confirmar" id="dialogo-salir">
+        <p>Se perderá el progreso de este reto y no obtendrás bitcoins. ¿Seguro que quieres salir?</p>
+        <div class="dialogo-acciones">
+            <button type="button" class="boton secundario" id="btn-cancelar-salida">Seguir jugando</button>
+            <button type="button" class="boton peligro" id="btn-confirmar-salida">Salir</button>
+        </div>
+    </dialog>
+
+    {{ datos_publicos|json_script:"datos-reto" }}
+
+    <script src="{% static 'comun/js/recode.js' %}"></script>
+    <script src="{% static 'comun/js/reto_dialogos.js' %}"></script>
+    <script>
+        ReCode.configurarReto({
+            revisarUrl: "{{ revisar_url }}",
+            volverUrl: "{% firstof volver_url url_materia url_mapa %}",
+            datos: JSON.parse(document.getElementById("datos-reto").textContent),
+        });
+    </script>
+    <script src="{% static 'comun/js/reto.js' %}"></script>
+    {% block script_juego %}{% endblock %}
+</body>
+</html>

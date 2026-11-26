@@ -1,0 +1,106 @@
+/* Relacionar conceptos (CU-13): los 3 carretes se ven como una máquina de
+   slots — ventana oscura con marco, flechas para girar arriba/abajo, y una
+   animación corta cada vez que un carrete cambia de valor. */
+
+.ronda-cabecera {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 10px;
+}
+
+.combo-pista { display: flex; gap: 6px; }
+.combo-pista .punto {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    border: 1px solid var(--verde);
+    display: inline-block;
+    transition: background 0.2s ease;
+}
+.combo-pista .punto.hecho { background: var(--verde); box-shadow: 0 0 6px var(--verde); }
+
+.carretes {
+    display: flex;
+    gap: 22px;
+    flex-wrap: wrap;
+    margin-bottom: 18px;
+    padding: 28px 24px;
+    background: linear-gradient(180deg, color-mix(in srgb, var(--verde) 6%, transparent), transparent);
+    border: 1px solid var(--borde);
+    border-radius: 10px;
+}
+
+.carrete {
+    flex: 1;
+    min-width: 220px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.carrete .etiqueta {
+    font-size: 0.9rem;
+    color: var(--verde-medio);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.carrete .flecha {
+    width: 100%;
+    padding: 8px 6px;
+    font-size: 1.1rem;
+    line-height: 1;
+}
+
+/* La "ventana" del carrete: fondo oscuro con un degradado arriba/abajo que
+   simula profundidad, como si el texto entrara desde fuera del marco. Más
+   alta que una caja de texto normal porque aquí el carrete es el
+   protagonista de la pantalla (no así en otros retos, por eso vive en
+   este CSS y no en comun/). */
+.carrete .valor {
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+    min-height: 6.5em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-size: 1.15rem;
+    line-height: 1.3;
+    padding: 10px 14px;
+    background: #000;
+    border: 1px solid var(--verde);
+    border-radius: 6px;
+    box-shadow:
+        inset 0 16px 14px -10px rgba(0, 0, 0, 0.9),
+        inset 0 -16px 14px -10px rgba(0, 0, 0, 0.9),
+        inset 0 0 18px rgba(0, 0, 0, 0.6);
+}
+
+/* Pequeño giro al cambiar de valor: entra desde abajo como si el carrete
+   hubiera avanzado una posición y se asentara. */
+@keyframes conceptos-girar {
+    0%   { transform: translateY(70%); opacity: 0.2; }
+    60%  { transform: translateY(-6%); opacity: 1; }
+    100% { transform: translateY(0); opacity: 1; }
+}
+.carrete .valor > span { display: inline-block; }
+.carrete .valor.girando > span { animation: conceptos-girar 0.22s ease-out; }
+
+.acciones-conceptos {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    margin-top: 10px;
+}
+.acciones-conceptos[hidden] { display: none; }
+
+@media (max-width: 600px) {
+    .carretes { flex-direction: column; }
+}

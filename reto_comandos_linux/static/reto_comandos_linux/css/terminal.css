@@ -13,6 +13,10 @@
     flex: 1; min-width: 0; background: transparent; border: none; color: var(--verde);
     font-family: inherit; font-size: inherit; outline: none; padding: 0;
 }
+/* Mientras se espera la respuesta del servidor el campo se deshabilita (para
+   no "perder" en silencio un comando escrito de más); esto lo hace visible,
+   para que no se sienta como que el reto se quedó pasmado. */
+.terminal input:disabled { opacity: .5; }
 
 .puerta {
     display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
@@ -25,13 +29,8 @@
     border: 1px solid var(--verde-medio); font-family: inherit; font-size: 1rem;
 }
 .puerta.abierta { border-color: var(--verde); }
+.puerta input:disabled, .puerta button:disabled { opacity: .5; }
 
 .acciones-linux { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
 .acciones-linux[hidden] { display: none; }
-.boton.peligro { border-color: var(--rojo); color: var(--rojo); background: transparent; }
-
-dialog.confirmar {
-    background: #000; color: var(--verde); border: 1px solid var(--verde);
-    font-family: inherit; max-width: 420px;
-}
-dialog.confirmar::backdrop { background: rgba(0, 0, 0, 0.7); }
+/* dialog.confirmar vive ahora en comun/css/reto.css (mismo marco en los 10 retos). */

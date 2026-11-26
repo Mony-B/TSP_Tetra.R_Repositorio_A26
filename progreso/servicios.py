@@ -5,7 +5,9 @@ Así ninguna otra app toca los modelos directamente.
 from django.db import IntegrityError, transaction
 from django.db.models import F
 
-from .models import Progreso, RetoResuelto, IntentoExamen, NovelaVista
+from .models import Progreso, RetoResuelto, IntentoExamen, NovelaVista, PistaAdquirida
+
+COSTO_PISTA = 10  # R35/R36: cada pista nueva cuesta exactamente 10 bitcoins.
 
 
 def obtener_progreso(alumno):
@@ -84,6 +86,60 @@ def registrar_examen(alumno, examen, aciertos, total, aprobado, bitcoins):
     return otorgados
 
 
+# --- Pistas (red corrupta, CU03) --------------------------------------------
+# El catálogo de pistas (textos, a qué materia/subtema pertenecen) vive en
+# red_corrupta.pistas, igual que los EJERCICIOS de cada reto viven en su
+# propia app: aquí solo se guarda cuáles ya obtuvo el alumno.
+
+def pista_obtenida(alumno, pista_id):
+    return PistaAdquirida.objects.filter(alumno=alumno, pista=pista_id).exists()
+
+
+def pistas_obtenidas(alumno):
+    return set(PistaAdquirida.objects.filter(alumno=alumno).values_list("pista", flat=True))
+
+
+def comprar_pista(alumno, pista_id):
+    """FA-1/R35/R36: descuenta COSTO_PISTA bitcoins y registra la pista como
+    comprada, todo en una sola transacción. Si el saldo es insuficiente no
+    descuenta nada y regresa False (el llamador debe ofrecer Snake). Si la
+    pista ya estaba obtenida, tampoco descuenta (R100) y regresa True sin
+    crear un segundo registro."""
+    if pista_obtenida(alumno, pista_id):
+        return True
+    with transaction.atomic():
+        obtener_progreso(alumno)  # asegura que exista la fila antes del update
+        actualizado = Progreso.objects.filter(
+            alumno=alumno, bitcoins__gte=COSTO_PISTA
+        ).update(bitcoins=F("bitcoins") - COSTO_PISTA)
+        if not actualizado:
+            return False
+        try:
+            PistaAdquirida.objects.create(
+                alumno=alumno, pista=pista_id, metodo_desbloqueo=PistaAdquirida.COMPRA
+            )
+        except IntegrityError:
+            # Carrera entre dos compras simultáneas de la misma pista: revierte
+            # el descuento, ya quedó registrada por la otra.
+            Progreso.objects.filter(alumno=alumno).update(bitcoins=F("bitcoins") + COSTO_PISTA)
+    return True
+
+
+def otorgar_pista_snake(alumno, pista_id):
+    """FA-1 (4a.4): victoria en Snake. Registra la pista sin tocar el saldo.
+    Si ya la tenía (R100), no hace nada distinto: solo confirma que está
+    disponible."""
+    if pista_obtenida(alumno, pista_id):
+        return True
+    try:
+        PistaAdquirida.objects.create(
+            alumno=alumno, pista=pista_id, metodo_desbloqueo=PistaAdquirida.SNAKE
+        )
+    except IntegrityError:
+        pass
+    return True
+
+
 # --- Novelas -----------------------------------------------------------------
 
 def novelas_vistas(alumno):
@@ -103,6 +159,7 @@ def resumen(alumno):
         "retos_resueltos": sorted(retos_resueltos(alumno)),
         "examenes_aprobados": sorted(examenes_aprobados(alumno)),
         "novelas_vistas": sorted(novelas_vistas(alumno)),
+        "pistas_obtenidas": sorted(pistas_obtenidas(alumno)),
     }
 
 

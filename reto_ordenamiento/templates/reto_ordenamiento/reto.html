@@ -1,0 +1,26 @@
+{% extends "comun/reto_base.html" %}
+{% load static %}
+{% block estilos %}<link rel="stylesheet" href="{% static 'reto_ordenamiento/ordenamiento.css' %}">{% endblock %}
+
+{% block juego %}
+<div id="ordenamiento">
+  <div class="mensaje mision">{{ ejercicio.mision }}</div>
+
+  <p class="etiqueta-seccion">Pasos desordenados</p>
+  <div class="pozo" id="pozo" aria-label="Pasos desordenados"></div>
+
+  <p class="etiqueta-seccion">Línea de secuencia</p>
+  <ol class="linea" id="linea" aria-label="Línea de secuencia"></ol>
+
+  <div class="acciones-ordenamiento" id="acciones-ordenamiento">
+    <button type="button" class="boton peligro" id="btn-salir">Salir / Rendirse</button>
+    <button type="button" class="boton" id="btn-verificar">Verificar</button>
+  </div>
+</div>
+
+<!-- Los diálogos de salir y de reto completado ya vienen de
+     comun/reto_base.html (dialogo-salir / dialogo-exito); este reto usa
+     el bloque "exito" por defecto, no necesita contenido extra. -->
+{% endblock %}
+
+{% block script_juego %}<script src="{% static 'reto_ordenamiento/juego.js' %}"></script>{% endblock %}

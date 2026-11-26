@@ -1,0 +1,62 @@
+/* Estilo de comun/templates/comun/_topbar.html — la barra superior que
+   comparten la selección de retos (mapa/materia.html) y la pantalla de
+   cada reto (comun/reto_base.html). Un solo lugar: cambiar aquí cambia
+   la barra en todas las pantallas que la incluyen.
+
+   Usa variables que cada pantalla ya define en su propio :root
+   (--bg, --surface, --line, --fg, --muted); si la pantalla no las define
+   el navegador usa su color inicial (negro/transparente), así que al
+   incluir la barra en una pantalla nueva conviene definir esas mismas
+   variables ahí, como ya hacen mapa/materia.css y comun/reto.css. */
+.topbar {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 22px 40px;
+    border-bottom: 1px solid var(--line);
+}
+/* min-width: 0 es necesario para que un flex item pueda encogerse por
+   debajo del ancho de su contenido; sin esto, un título largo (como el
+   de reto_ecuaciones) no se trunca, sino que empuja/encima a .wallet en
+   vez de dejarle su espacio. */
+.topbar-izq { display: flex; align-items: center; gap: 18px; flex: 1 1 auto; min-width: 0; }
+.topbar-izq > div { min-width: 0; }
+.volver {
+    display: flex; align-items: center; justify-content: center;
+    width: 34px; height: 34px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 16px;
+    flex: none;
+    transition: color .15s, border-color .15s;
+}
+.volver:hover { color: var(--fg); border-color: rgba(255, 255, 255, .3); }
+.brand {
+    font-family: "Chakra Petch", monospace;
+    letter-spacing: .06em; font-size: 13px; color: var(--muted);
+    text-transform: uppercase;
+}
+.subject {
+    font-family: "Chakra Petch", monospace; font-weight: 700;
+    font-size: 22px; color: var(--fg); margin-top: 2px;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.subject .hecho { font-size: 13px; color: var(--hecho, #19ffb4); font-weight: 400; }
+.topbar-der { display: flex; align-items: center; gap: 14px; flex: none; }
+.wallet {
+    display: flex; align-items: center; gap: 10px;
+    background: var(--surface); border: 1px solid var(--line);
+    border-radius: 10px; padding: 10px 16px; flex: none;
+    font-size: 14px; color: var(--fg);
+}
+.wallet .coin {
+    width: 18px; height: 18px; border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, #ffe27a, #e6a71a);
+    box-shadow: 0 0 10px rgba(230, 167, 26, .5);
+    flex: none;
+}
+
+@media (max-width: 600px) {
+    .topbar { padding: 16px 20px; flex-wrap: wrap; gap: 10px; }
+    .subject { font-size: 19px; }
+}

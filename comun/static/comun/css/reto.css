@@ -1,0 +1,208 @@
+/* =====================================================================
+   Pantalla de reto: tarjeta plana centrada (sin monitor ni animación de
+   encendido). El contenido es interactivo desde que carga la página.
+
+   Misma paleta que la pantalla de selección de retos (mapa/materia.css),
+   para que todo el recorrido de un reto se vea como una sola interfaz:
+   fondo y tarjeta oscuros, acento azul para lo interactivo, y el verde
+   turquesa reservado solo para marcar lo ya completado.
+   ===================================================================== */
+:root {
+    --bg: #0b0a0d;
+    --surface: #15131a;
+    --surface-2: #1d1a24;
+    --line: #2c2733;
+    --fg: #ece8f0;
+    --muted: #9b94a8;
+    --accent: #59c7ff;
+    --hecho: #19ffb4;
+}
+
+body.pantalla-reto {
+    /* Columna (barra arriba, .body abajo) para que .body pueda crecer con
+       flex: 1 y la tarjeta llegue hasta abajo de la pantalla en vez de
+       quedar flotando centrada con espacio vacío debajo (ver .body más
+       abajo: retos con mucho contenido, como reto_ecuaciones, la
+       necesitan). */
+    display: flex;
+    flex-direction: column;
+    /* recode.css define un body { align-items: center; justify-content:
+       center; } genérico (para sus pantallas de una sola tarjeta chica);
+       sin pisarlo aquí, la barra superior heredaba ese "center" y se
+       encogía a su contenido en vez de ocupar todo el ancho. */
+    align-items: stretch;
+    justify-content: flex-start;
+    min-height: 100vh;
+    min-height: 100dvh;
+    margin: 0;
+    padding: 0;
+    background:
+        radial-gradient(circle at 20% -10%, rgba(225, 29, 46, .10), transparent 40%),
+        radial-gradient(circle at 100% 110%, color-mix(in srgb, var(--accent) 12%, transparent), transparent 45%),
+        var(--bg);
+    color: var(--fg);
+    font-family: "Share Tech Mono", monospace;
+
+    /* Recoloreado de los elementos de recode.css (botones, inputs, listas)
+       para que combinen con el acento del reto en vez del verde terminal
+       puro. --verde-medio/--verde-oscuro se derivan de --accent
+       (color-mix) para que cambien junto con el acento de cada reto/
+       materia. Van en el body (no solo en .card) para que también los
+       hereden los <dialog> de salir/victoria, que son hermanos de .card,
+       no sus hijos. */
+    --verde: var(--accent);
+    --verde-medio: color-mix(in srgb, var(--accent) 65%, black);
+    --verde-oscuro: color-mix(in srgb, var(--accent) 12%, transparent);
+    --borde: var(--line);
+    --rojo: #ff5a5f;
+}
+
+/* La barra superior (flecha, marca, título, billetera) ya no se define
+   aquí: vive en comun/static/comun/css/topbar.css, compartida con la
+   pantalla de selección de retos (mapa/materia.html). Esta hoja solo
+   trae lo propio de la tarjeta del reto. */
+
+.body {
+    display: flex; flex: 1; align-items: stretch; justify-content: center;
+    padding: 40px;
+}
+.card {
+    position: relative;
+    width: 100%; max-width: 1200px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 40px;
+    box-shadow: 0 30px 60px -20px rgba(0, 0, 0, .6);
+    color: var(--fg);
+}
+
+/* Pedir pista (CU03): relleno sólido del acento de la materia (--accent,
+   el mismo que ya trae el body) con letras blancas, para que resalte
+   contra la tarjeta oscura en vez de mimetizarse con ella. */
+.boton-pista {
+    position: absolute; top: 32px; right: 40px;
+    display: flex; align-items: center; gap: 8px;
+    font-family: "Chakra Petch", monospace; font-weight: 700; letter-spacing: .04em;
+    font-size: 15px; color: #fff;
+    background: var(--accent);
+    border: none; border-radius: 999px;
+    padding: 12px 22px; text-decoration: none;
+    box-shadow: 0 6px 18px -4px color-mix(in srgb, var(--accent) 60%, transparent);
+    transition: filter .15s, transform .15s;
+}
+.boton-pista:hover { filter: brightness(1.12); transform: translateY(-1px); }
+
+.qnum {
+    font-size: 12px; color: #e11d2e; letter-spacing: .1em;
+    text-transform: uppercase; margin: 0 0 10px;
+    /* Espacio reservado para que el botón flotante de pista nunca quede
+       encima de un título largo (ver .boton-pista, misma esquina). */
+    padding-right: 150px;
+}
+.qtext {
+    font-family: "Chakra Petch", "Share Tech Mono", monospace;
+    font-size: 22px; line-height: 1.4; font-weight: 700;
+    margin: 0 0 20px; color: var(--fg); text-decoration: none;
+    padding-right: 150px;
+}
+.instrucciones {
+    margin: 0 0 24px; padding: 12px 16px;
+    border-left: 2px solid var(--muted);
+    background: rgba(255, 255, 255, .03);
+    color: #c8c6c2;
+    font-size: 14px; line-height: 1.5;
+}
+
+/* Fila de opción estilo "opción múltiple" (radio): disponible para
+   cualquier reto que presente alternativas para elegir.
+   Marcado esperado: <button class="opt" type="button"><span class="dot"></span>Texto</button>
+   La opción elegida lleva la clase "sel". */
+.opt {
+    display: flex; align-items: center; gap: 14px; width: 100%;
+    text-align: left; padding: 16px 18px; margin-bottom: 12px;
+    border-radius: 10px; border: 1px solid var(--line);
+    background: var(--surface-2); color: var(--fg);
+    font-family: inherit; font-size: 15px; cursor: pointer;
+    transition: border-color .15s, background .15s;
+}
+.opt:hover { border-color: rgba(225, 29, 46, .4); }
+.opt.sel { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 10%, transparent); }
+.opt .dot {
+    width: 10px; height: 10px; border-radius: 50%;
+    border: 1px solid var(--muted); flex: 0 0 auto;
+}
+.opt.sel .dot { background: var(--accent); border-color: var(--accent); }
+
+/* Barra inferior opcional con las acciones del reto (verificar, salir...).
+   Disponible para el reto que quiera usarla en vez de botones sueltos. */
+.footer {
+    display: flex; align-items: center; justify-content: space-between;
+    margin: 28px -40px -40px; padding: 22px 40px;
+    border-top: 1px solid var(--line);
+}
+a.btn, button.btn {
+    font-family: "Chakra Petch", "Share Tech Mono", monospace;
+    font-size: 13px; letter-spacing: .06em; text-transform: uppercase;
+    text-decoration: none; border-radius: 8px; padding: 13px 22px;
+    border: 1px solid transparent; cursor: pointer;
+    display: inline-flex; align-items: center; gap: 8px;
+}
+.btn-ghost { color: #e11d2e; border: 1px solid rgba(225, 29, 46, .4); background: transparent; }
+.btn-ghost:hover { background: rgba(225, 29, 46, .1); }
+.btn-primary { background: var(--accent); color: #07141f; border: 1px solid var(--accent); }
+.btn-primary[disabled] { opacity: .35; cursor: not-allowed; }
+.btn-primary:not([disabled]):hover { background: #8ad9ff; }
+
+/* El contenido de cada reto (opciones, formularios, terminal) ya trae su
+   estilo de recode.css; aquí solo se ajustan detalles para que combinen
+   con la tarjeta oscura. */
+#juego .boton, #juego button {
+    font-family: "Chakra Petch", "Share Tech Mono", monospace;
+}
+#resultado:empty { display: none; }
+#resultado .mensaje { margin-top: 20px; }
+
+/* Botón "peligro" (salir/rendirse, confirmar salida): mismo estándar en
+   los 10 retos, antes repetido suelto en 7 archivos distintos. Transparente,
+   marco y letras en --rojo; sin cambio al pasar el mouse (a diferencia del
+   resto de los botones, que sí responden al hover). */
+.boton.peligro { border-color: var(--rojo); color: var(--rojo); background: transparent; }
+.boton.peligro:hover { background: transparent; color: var(--rojo); }
+
+/* Ventanas emergentes de "salir" y "reto completado": mismo marco en los
+   10 retos. Ya vienen armadas desde comun/reto_base.html (dialogo-salir,
+   dialogo-exito), así que esta regla también vive en un solo lugar. */
+dialog.confirmar {
+    background: #000; color: var(--verde); border: 1px solid var(--verde);
+    font-family: inherit; padding: 20px 24px; max-width: 420px;
+}
+dialog.confirmar::backdrop { background: rgba(0, 0, 0, 0.7); }
+dialog.confirmar p { margin: 0 0 16px; }
+.dialogo-acciones { display: flex; gap: 10px; flex-wrap: wrap; justify-content: flex-end; }
+
+/* El reto de Linux ya era una terminal: que se funda con la tarjeta */
+.card .terminal {
+    background: transparent;
+    border: 0;
+    border-top: 1px dashed var(--borde, #333);
+    padding: 12px 0 0;
+    max-height: none;
+}
+
+@media (max-width: 600px) {
+    .body { padding: 20px; }
+    .card { padding: 24px 20px; }
+    .footer { margin: 24px -20px -24px; padding: 18px 20px; flex-wrap: wrap; gap: 12px; }
+    /* En pantallas angostas el título puede llegar a dos líneas: un botón
+       flotando encima lo taparía. Pasa a fluir normal, arriba del todo,
+       y el título ya no necesita reservarle espacio a la derecha. */
+    .boton-pista { position: static; margin: 0 0 16px; font-size: 13.5px; padding: 10px 16px; }
+    .qnum, .qtext { padding-right: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .pantalla-reto *, .pantalla-reto *::before, .pantalla-reto *::after {
+        animation: none !important; transition: none !important;
+    }
+}

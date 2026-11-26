@@ -116,6 +116,218 @@ EJERCICIOS = {
             },
         ],
     },
+    # Linux · Búsqueda avanzada (find, grep y vocabulario relacionado).
+    "busqueda-avanzada": {
+        "titulo": "Vocabulario de búsqueda",
+        "instrucciones": (
+            "Lee cada definición y encuentra el concepto en la sopa: arrastra "
+            "sobre las letras o toca la primera y la última. Superas el reto "
+            "cuando completas los dos niveles."
+        ),
+        "bitcoins": 30,
+        "niveles": [
+            {
+                "tamano": 10,
+                "semilla": "linux-busqueda-1",
+                "pasos": [
+                    {
+                        "palabra": "FIND",
+                        "definicion": "Comando que recorre carpetas para encontrar archivos por nombre o tipo.",
+                    },
+                    {
+                        "palabra": "GREP",
+                        "definicion": "Comando que busca un patrón de texto dentro del contenido de un archivo.",
+                    },
+                    {
+                        "palabra": "PATRON",
+                        "definicion": "Texto (puede incluir comodines) que le dices a un comando que busque.",
+                    },
+                    {
+                        "palabra": "FILTRO",
+                        "definicion": "Operación que se queda solo con la parte de la información que cumple una condición.",
+                    },
+                ],
+            },
+            {
+                "tamano": 13,
+                "semilla": "linux-busqueda-2",
+                "pasos": [
+                    {
+                        "palabra": "RECURSIVO",
+                        "definicion": "Que revisa también las subcarpetas, no solo la carpeta actual.",
+                    },
+                    {
+                        "palabra": "REDIRECCION",
+                        "definicion": "Mandar la salida de un comando a un archivo en vez de a la pantalla.",
+                    },
+                    {
+                        "palabra": "TUBERIA",
+                        "definicion": "El símbolo | que conecta la salida de un comando con la entrada de otro.",
+                    },
+                    {
+                        "palabra": "COMODIN",
+                        "definicion": "Símbolo como * que representa cualquier texto al buscar nombres.",
+                    },
+                ],
+            },
+        ],
+    },
+    # Introprog · Subrutinas y programación modular (Módulo 4 del temario).
+    "subrutinas": {
+        "titulo": "Vocabulario de subrutinas",
+        "instrucciones": (
+            "Lee cada definición y encuentra el concepto en la sopa: arrastra "
+            "sobre las letras o toca la primera y la última. Superas el reto "
+            "cuando completas los dos niveles."
+        ),
+        "bitcoins": 30,
+        "niveles": [
+            {
+                "tamano": 10,
+                "semilla": "subrutinas-1",
+                "pasos": [
+                    {
+                        "palabra": "FUNCION",
+                        "definicion": "Subrutina que procesa datos y devuelve un resultado explícito con return.",
+                    },
+                    {
+                        "palabra": "RETORNO",
+                        "definicion": "Palabra clave que envía un valor de regreso desde una función.",
+                    },
+                    {
+                        "palabra": "ALCANCE",
+                        "definicion": "Qué tan visible es una variable dentro o fuera de una subrutina (scope).",
+                    },
+                    {
+                        "palabra": "ARGUMENTO",
+                        "definicion": "Valor que se envía a una función o procedimiento al invocarlo.",
+                    },
+                ],
+            },
+            {
+                "tamano": 14,
+                "semilla": "subrutinas-2",
+                "pasos": [
+                    {
+                        "palabra": "PARAMETRO",
+                        "definicion": "Nombre que recibe un valor dentro de la definición de una función.",
+                    },
+                    {
+                        "palabra": "PROCEDIMIENTO",
+                        "definicion": "Subrutina que ejecuta una tarea sin devolver un valor útil (retorna None).",
+                    },
+                    {
+                        "palabra": "MODULAR",
+                        "definicion": "Organizar el código en partes reutilizables e independientes.",
+                    },
+                    {
+                        "palabra": "SUBRUTINA",
+                        "definicion": "Bloque de código con nombre propio que se puede reutilizar y llamar varias veces.",
+                    },
+                ],
+            },
+        ],
+    },
+    # Cálculo · Exponenciales, logaritmos y límites (Módulo 3 del temario).
+    "exponenciales-limites": {
+        "titulo": "Vocabulario de límites",
+        "instrucciones": (
+            "Lee cada definición y encuentra el concepto en la sopa: arrastra "
+            "sobre las letras o toca la primera y la última. Superas el reto "
+            "cuando completas los dos niveles."
+        ),
+        "bitcoins": 30,
+        "niveles": [
+            {
+                "tamano": 11,
+                "semilla": "exp-limites-1",
+                "pasos": [
+                    {
+                        "palabra": "LIMITE",
+                        "definicion": "Valor al que se acerca una función cuando x se aproxima a un punto.",
+                    },
+                    {
+                        "palabra": "ASINTOTA",
+                        "definicion": "Línea recta a la que una gráfica se acerca sin llegar a tocarla.",
+                    },
+                    {
+                        "palabra": "LOGARITMO",
+                        "definicion": "Operación inversa a elevar una base a un exponente.",
+                    },
+                ],
+            },
+            {
+                "tamano": 16,
+                "semilla": "exp-limites-2",
+                "pasos": [
+                    {
+                        "palabra": "EXPONENCIAL",
+                        "definicion": "Función donde la variable está en el exponente.",
+                    },
+                    {
+                        "palabra": "RACIONALIZAR",
+                        "definicion": "Técnica algebraica para quitar raíces del denominador.",
+                    },
+                    {
+                        "palabra": "INDETERMINACION",
+                        "definicion": "Expresión como 0/0 que no tiene un valor definido a simple vista.",
+                    },
+                ],
+            },
+        ],
+    },
+    # Álgebra · Operaciones con polinomios y teoremas fundamentales (Módulo 1).
+    "polinomios-teoremas": {
+        "titulo": "Vocabulario de polinomios",
+        "instrucciones": (
+            "Lee cada definición y encuentra el concepto en la sopa: arrastra "
+            "sobre las letras o toca la primera y la última. Superas el reto "
+            "cuando completas los dos niveles."
+        ),
+        "bitcoins": 30,
+        "niveles": [
+            {
+                "tamano": 9,
+                "semilla": "polinomios-1",
+                "pasos": [
+                    {
+                        "palabra": "GRADO",
+                        "definicion": "El exponente más alto de la variable en un polinomio.",
+                    },
+                    {
+                        "palabra": "FACTOR",
+                        "definicion": "Expresión que divide exactamente a un polinomio, sin dejar residuo.",
+                    },
+                    {
+                        "palabra": "RAIZ",
+                        "definicion": "Valor de x que hace que el polinomio valga cero.",
+                    },
+                    {
+                        "palabra": "RESIDUO",
+                        "definicion": "Lo que sobra al dividir un polinomio entre otro; si es cero, el divisor es factor.",
+                    },
+                ],
+            },
+            {
+                "tamano": 12,
+                "semilla": "polinomios-2",
+                "pasos": [
+                    {
+                        "palabra": "COEFICIENTE",
+                        "definicion": "Número que multiplica a la variable en cada término del polinomio.",
+                    },
+                    {
+                        "palabra": "SINTETICA",
+                        "definicion": "Método abreviado para dividir un polinomio entre (x − c).",
+                    },
+                    {
+                        "palabra": "POLINOMIO",
+                        "definicion": "Expresión algebraica formada por la suma de varios términos con exponentes enteros no negativos.",
+                    },
+                ],
+            },
+        ],
+    },
 }
 
 # Derecha, abajo y diagonal hacia abajo a la derecha.

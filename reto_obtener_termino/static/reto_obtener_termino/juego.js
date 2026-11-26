@@ -10,10 +10,11 @@
     const resultado = document.getElementById("resultado");
     const btnReintentar = document.getElementById("btn-reintentar");
     const dialogo = document.getElementById("dialogo-salir");
+    const dialogoExito = document.getElementById("dialogo-exito");
+    const dialogoAgotado = document.getElementById("dialogo-agotado");
 
     const RENGLONES = ["QWERTYUIOP", "ASDFGHJKL", "ZXCVBNM"];
     const PRIORIDAD = { gris: 1, amarillo: 2, verde: 3 };
-    const SEGUNDOS_REDIRECCION = 10;
 
     let fila = 0;          // intento actual (renglón de la cuadrícula)
     let escrito = "";      // letras del intento actual
@@ -150,35 +151,23 @@
         const premio = r.ya_otorgado
             ? "La recompensa de este reto ya se te había otorgado antes."
             : `Obtuviste <strong>₿ ${r.bitcoins_otorgados}</strong>.`;
-        resultado.innerHTML = `
-            <div class="mensaje">
-                <p><strong>${r.mensaje}</strong></p>
-                <p>${r.significado}</p>
-                <p>${premio}</p>
-                <p class="etiqueta">Regresando a los retos en <span id="cuenta">${SEGUNDOS_REDIRECCION}</span> s…</p>
-            </div>
-            <a class="boton" href="${ReCode.reto.volverUrl}">Volver a los retos</a>`;
-        let quedan = SEGUNDOS_REDIRECCION;
-        const reloj = setInterval(() => {
-            quedan--;
-            const cuenta = document.getElementById("cuenta");
-            if (cuenta) cuenta.textContent = quedan;
-            if (quedan <= 0) {
-                clearInterval(reloj);
-                window.location.href = ReCode.reto.volverUrl;
-            }
-        }, 1000);
+        document.getElementById("exito-mensaje").innerHTML = `<strong>${r.mensaje}</strong>`;
+        document.getElementById("exito-significado").innerHTML = r.significado;
+        document.getElementById("exito-premio").innerHTML = premio;
+        ReCode.dialogos.abrir(dialogoExito);
     }
 
-    // FA-1: intentos agotados -> Reintentar o Salir.
+    // FA-1: intentos agotados -> ventana emergente con Reintentar o Salir.
+    // El botón "Salir / Rendirse" normal (fuera del diálogo) nunca se oculta.
     function agotado(r) {
-        mensaje(r.mensaje, true);
-        btnReintentar.hidden = false;
+        document.getElementById("agotado-mensaje").textContent = r.mensaje;
+        ReCode.dialogos.abrir(dialogoAgotado);
     }
 
     async function reintentar() {
         try {
             const r = await ReCode.postJSON(reiniciarUrl);
+            ReCode.dialogos.cerrar(dialogoAgotado);
             iniciar(r.intentos_restantes);
         } catch (err) {
             mensaje(err.message, true);
@@ -189,7 +178,6 @@
         fila = 0;
         escrito = "";
         bloqueado = false;
-        btnReintentar.hidden = true;
         resultado.innerHTML = "";
         armarCuadricula();
         armarTeclado();
@@ -197,24 +185,20 @@
     }
 
     // --- FE-1: salir / rendirse con confirmación ----------------------------
-
-    function pedirSalida(e) {
-        if (e) e.preventDefault();
-        if (typeof dialogo.showModal === "function") {
-            dialogo.showModal();
-        } else if (window.confirm("Se perderá el progreso de este reto y no obtendrás bitcoins. ¿Salir?")) {
-            window.location.href = ReCode.reto.volverUrl;
-        }
-    }
-
-    document.getElementById("btn-salir").addEventListener("click", pedirSalida);
-    // La flecha de regresar de la plantilla también pide confirmación mientras se juega.
-    const flecha = document.querySelector(".btn-regresar");
-    if (flecha) flecha.addEventListener("click", (e) => { if (fila > 0 && !bloqueado) pedirSalida(e); });
-    document.getElementById("btn-cancelar-salida").addEventListener("click", () => dialogo.close());
-    document.getElementById("btn-confirmar-salida").addEventListener("click", () => {
-        window.location.href = ReCode.reto.volverUrl;
+    // Diálogo y mensaje de salida compartidos con los demás retos
+    // (comun/reto_base.html + comun/js/reto_dialogos.js).
+    ReCode.dialogos.inicializarSalir({
+        hayProgreso: () => fila > 0 && !bloqueado,
     });
+
+    // "Salir / Rendirse" dentro de la ventana de agotado (FA-1.4.5) no pide
+    // esa misma confirmación: ya no hay progreso que perder ni bitcoins que
+    // obtener en este intento. En vez de repetir la navegación, reusa el
+    // botón "Salir" del diálogo de confirmación (ya la hace sin guardar nada).
+    document.getElementById("btn-salir-agotado").addEventListener("click", () => {
+        document.getElementById("btn-confirmar-salida").click();
+    });
+
     btnReintentar.addEventListener("click", reintentar);
 
     // Teclado físico.

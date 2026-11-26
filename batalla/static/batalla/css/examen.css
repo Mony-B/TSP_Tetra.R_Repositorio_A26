@@ -1,0 +1,245 @@
+/* Examen final de materia (CU04) y, en lo que CU15 se desarrolla, la
+   batalla final de ejemplo: reutiliza .card/.boton/dialog.confirmar de
+   comun/static/comun/css/reto.css (mismo --accent de la materia, ver el
+   body en batalla/templates/batalla/examen.html). Esta hoja agrega lo
+   propio del examen: boot de "EXAM SYSTEM", reloj, el contador "Q.0X/15",
+   preguntas en formato checkbox y el jumpscare de dos fases (R47). */
+
+/* --- Boot "EXAM SYSTEM" (ambientación antes de poder contestar) ----- */
+.examen-boot {
+    position: fixed; inset: 0; z-index: 60;
+    display: flex; align-items: center; justify-content: center;
+    background: #000;
+    animation: examen-boot-salida .6s ease 1.6s both;
+}
+.examen-boot-ventana {
+    width: min(460px, calc(100% - 48px));
+    border: 1px solid var(--accent);
+    background: rgba(0, 0, 0, .85);
+    padding: 22px 26px;
+    font-family: "Share Tech Mono", monospace;
+    box-shadow: 0 0 40px -10px color-mix(in srgb, var(--accent) 50%, transparent);
+}
+.examen-boot-titulo {
+    margin: 0 0 14px; font-family: "Chakra Petch", monospace; font-weight: 700;
+    font-size: 15px; letter-spacing: .08em; color: #fff;
+}
+.examen-boot-titulo span { color: var(--accent); }
+.examen-boot-linea {
+    margin: 0 0 8px; font-size: 13px; color: var(--accent);
+    opacity: 0; animation: examen-boot-linea .2s steps(1, end) forwards;
+    animation-delay: calc(var(--d, 0) * .32s);
+}
+.examen-boot-linea .ok { color: var(--hecho); font-weight: 700; }
+@keyframes examen-boot-linea { to { opacity: 1; } }
+@keyframes examen-boot-salida { to { opacity: 0; visibility: hidden; } }
+
+/* Mientras existe el boot, el examen no se toca (reloj/clics bloqueados
+   por el overlay con z-index más alto; no hace falta más). Si el
+   navegador pide menos movimiento, no tiene sentido montar todo el show:
+   se salta directo al examen. */
+@media (prefers-reduced-motion: reduce) {
+    .examen-boot { display: none; }
+}
+
+/* --- Ambientación de la tarjeta: parpadeo CRT sutil, igual de discreto
+   que el glitch que ya usan los nodos de reto en recode.css ------------ */
+.examen-card { animation: examen-crt 6s linear infinite; }
+@keyframes examen-crt {
+    0%, 96%, 100% { filter: none; }
+    97% { filter: brightness(1.04) contrast(1.03); }
+    98% { filter: brightness(.97); }
+}
+
+/* --- Badge "[ EXAMEN ]  Q.0X/15" (como en la maqueta) ---------------- */
+.examen-badge {
+    position: absolute; top: 32px; right: 40px;
+    display: flex; flex-direction: column; align-items: flex-end; gap: 2px;
+    font-family: "Share Tech Mono", monospace;
+}
+.examen-badge-tag { font-size: 11px; letter-spacing: .12em; color: var(--muted); }
+.examen-badge-contador {
+    font-family: "Chakra Petch", monospace; font-weight: 700;
+    font-size: 15px; letter-spacing: .04em; color: var(--accent);
+    font-variant-numeric: tabular-nums;
+}
+/* examen.html no trae el botón de pista de reto.css, así que el badge
+   usa la misma esquina reservada por .qnum/.qtext (ver reto.css).
+   .con-badge es solo examen.html -no resultado.html, que no trae badge. */
+.con-badge .qnum, .con-badge .qtext { padding-right: 150px; }
+
+.examen-cabecera {
+    display: flex; align-items: center; justify-content: space-between;
+    flex-wrap: wrap; gap: 10px;
+    margin: 0 0 28px; padding-bottom: 16px;
+    border-bottom: 1px solid var(--borde, var(--line));
+}
+.examen-reloj {
+    font-family: "Chakra Petch", monospace; font-weight: 700;
+    font-size: 26px; letter-spacing: .04em; color: var(--accent);
+    font-variant-numeric: tabular-nums;
+}
+.examen-reloj.urgente { color: var(--rojo, #ff5a5f); animation: examen-parpadeo 1s steps(2, start) infinite; }
+.examen-info { font-size: 13px; color: var(--muted); }
+
+/* --- Preguntas: una visible a la vez (examen.js oculta las demás con
+   [hidden]; con JS desactivado todas quedan visibles y el examen sigue
+   siendo un formulario normal de una sola pantalla) -------------------- */
+.pregunta { border: 0; padding: 0; margin: 0 0 26px; }
+.pregunta legend {
+    font-family: "Chakra Petch", "Share Tech Mono", monospace;
+    font-size: 15px; font-weight: 700; line-height: 1.4;
+    color: var(--fg); margin: 0 0 14px; padding: 0;
+}
+.pregunta .opt { margin-bottom: 10px; }
+.pregunta .opt input[type="radio"] {
+    position: absolute; opacity: 0; width: 0; height: 0;
+}
+/* Casillas cuadradas (como A./B./C./D. de la maqueta) en vez del punto
+   redondo que usan los retos normales: el examen se siente a un sistema
+   distinto, más formal/hostil, que un reto de materia. */
+.opt-check .check {
+    width: 16px; height: 16px; border-radius: 3px;
+    border: 1px solid var(--muted); flex: 0 0 auto;
+    display: flex; align-items: center; justify-content: center;
+}
+.opt-check.sel .check { background: var(--accent); border-color: var(--accent); }
+.opt-check.sel .check::after {
+    content: "✓"; font-size: 11px; font-weight: 700; color: #07141f; line-height: 1;
+}
+
+.examen-nav {
+    display: flex; justify-content: space-between; align-items: center;
+    gap: 12px; margin: 10px 0 0;
+}
+.examen-nav .boton[hidden] { display: none; }
+.examen-nav .boton:disabled { opacity: .35; cursor: not-allowed; }
+
+.examen-acciones {
+    display: flex; justify-content: flex-start; align-items: center;
+    flex-wrap: wrap; gap: 12px;
+    margin-top: 10px; padding-top: 24px; border-top: 1px solid var(--borde, var(--line));
+}
+
+/* --- Resultado del examen ------------------------------------------- */
+.resultado-examen .qtext { margin-bottom: 22px; }
+.resultado-mensaje {
+    padding: 16px 20px; border-radius: 10px; margin: 0 0 28px;
+    line-height: 1.6; font-size: 15px;
+}
+.resultado-mensaje.exito {
+    background: color-mix(in srgb, var(--hecho) 12%, transparent);
+    border-left: 2px solid var(--hecho); color: var(--fg);
+}
+.resultado-mensaje.falla {
+    background: color-mix(in srgb, var(--rojo, #ff5a5f) 12%, transparent);
+    border-left: 2px solid var(--rojo, #ff5a5f); color: var(--fg);
+}
+.resultado-acciones { justify-content: flex-start; border-top: 0; padding-top: 0; margin-top: 0; }
+.resultado-acciones .boton { flex: none; }
+
+/* --- Jumpscare (R47): tiempo agotado, en dos fases -------------------
+   Fase "impacto" (0 a ~900ms): destello + jumpscare_impacto.gif + texto
+   de glitch desordenado encima, con sacudida de pantalla -como el
+   storyboard "Sistema Corrupto" que ya se dibujó para esto-.
+   Fase "bloqueo" (después): se queda fijo jumpscare_bloqueo.gif con el
+   aviso y los botones de Reintentar/Volver. El elemento #jumpscare entero
+   sigue [hidden] hasta que agota el tiempo (ver examen.js); solo entonces
+   aparece, primero en fase impacto. */
+.jumpscare {
+    position: fixed; inset: 0; z-index: 50;
+    display: flex; align-items: center; justify-content: center;
+    background: #000; overflow: hidden;
+}
+/* El selector de clase de arriba (display:flex) le gana en cascada al
+   estilo del navegador para [hidden] (display:none): sin esta regla el
+   jumpscare se vería desde que carga la página en vez de quedarse oculto
+   hasta que agota el tiempo (ver examen.js, agotarTiempo()). */
+.jumpscare[hidden] { display: none; }
+.jumpscare-flash {
+    position: absolute; inset: 0;
+    background: #ff0a2e;
+    animation: jumpscare-destello .45s steps(1, end) 4;
+}
+.jumpscare-img {
+    position: absolute; top: 50%; left: 50%;
+    width: min(420px, 70vw); max-width: 70vh;
+    transform: translate(-50%, -50%);
+    border-radius: 6px;
+    filter: contrast(1.15) saturate(1.2);
+}
+.jumpscare-img-impacto { opacity: 0; animation: jumpscare-sacudida .35s ease-out 3, jumpscare-img-entra .9s ease forwards; }
+.jumpscare-glitchtext {
+    position: absolute; inset: 0; z-index: 2;
+    font-family: "Chakra Petch", monospace; font-weight: 700;
+    text-transform: uppercase; color: #fff;
+    text-shadow: 2px 0 0 #ff0a2e, -2px 0 0 #2ea0ff;
+}
+.jumpscare-glitchtext span {
+    position: absolute; letter-spacing: .04em;
+    animation: jumpscare-glitchtext-parpadeo .9s steps(1, end) forwards;
+}
+.jumpscare-glitchtext span:nth-child(1) { top: 14%; left: 8%; font-size: clamp(14px, 3vw, 20px); animation-delay: .05s; }
+.jumpscare-glitchtext span:nth-child(2) { top: 40%; right: 6%; font-size: clamp(20px, 5vw, 34px); animation-delay: .18s; }
+.jumpscare-glitchtext span:nth-child(3) { bottom: 28%; left: 10%; font-size: clamp(22px, 6vw, 40px); animation-delay: .3s; }
+.jumpscare-glitchtext span:nth-child(4) { bottom: 10%; right: 8%; font-size: clamp(14px, 3vw, 20px); animation-delay: .42s; }
+
+.jumpscare-bloqueo {
+    position: relative; z-index: 3; opacity: 0; visibility: hidden;
+    max-width: 440px; width: calc(100% - 48px); text-align: center;
+    transition: opacity .4s ease;
+}
+.jumpscare.fase-bloqueo .jumpscare-flash,
+.jumpscare.fase-bloqueo .jumpscare-img-impacto,
+.jumpscare.fase-bloqueo .jumpscare-glitchtext { display: none; }
+.jumpscare.fase-bloqueo .jumpscare-bloqueo { opacity: 1; visibility: visible; }
+.jumpscare-bloqueo .jumpscare-img-bloqueo {
+    position: static; width: 150px; height: 150px; object-fit: cover;
+    transform: none; margin: 0 auto 18px;
+    border: 1px solid #ff0a2e; box-shadow: 0 0 30px -4px #ff0a2e;
+    filter: grayscale(.25) contrast(1.1);
+}
+.jumpscare-aviso {
+    font-family: "Chakra Petch", monospace; font-weight: 700;
+    font-size: 26px; letter-spacing: .08em; color: #fff;
+    text-shadow: 0 0 18px #ff0a2e, 0 0 40px #ff0a2e;
+    margin: 0 0 14px;
+}
+.jumpscare-sub { color: #e8c8cc; font-size: 14px; line-height: 1.6; margin: 0 0 26px; }
+.jumpscare .dialogo-acciones { justify-content: center; }
+
+@keyframes jumpscare-destello {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+}
+@keyframes jumpscare-sacudida {
+    0% { transform: translate(-50%, -50%); }
+    25% { transform: translate(calc(-50% - 10px), calc(-50% + 6px)); }
+    50% { transform: translate(calc(-50% + 10px), calc(-50% - 6px)); }
+    75% { transform: translate(calc(-50% - 7px), calc(-50% - 3px)); }
+    100% { transform: translate(-50%, -50%); }
+}
+@keyframes jumpscare-img-entra { 0% { opacity: 0; } 15% { opacity: 1; } 100% { opacity: 1; } }
+@keyframes jumpscare-glitchtext-parpadeo {
+    0% { opacity: 0; }
+    10%, 20% { opacity: 1; }
+    30% { opacity: 0; }
+    45%, 55% { opacity: 1; }
+    70% { opacity: 0; }
+    100% { opacity: 0; }
+}
+@keyframes examen-parpadeo { 50% { opacity: .35; } }
+
+@media (prefers-reduced-motion: reduce) {
+    .examen-card,
+    .jumpscare-flash, .jumpscare-img-impacto, .jumpscare-glitchtext span,
+    .examen-reloj.urgente { animation: none !important; }
+    .jumpscare.fase-bloqueo .jumpscare-bloqueo { transition: none; }
+}
+
+@media (max-width: 600px) {
+    .examen-badge { position: static; align-items: flex-start; margin: 0 0 14px; }
+    .examen-reloj { font-size: 21px; }
+    .jumpscare-aviso { font-size: 22px; }
+    .jumpscare-img { width: min(280px, 60vw); }
+}

@@ -13,7 +13,7 @@ EJERCICIOS = {
     "proposicional": {
         "titulo": "Puertas lógicas",
         "instrucciones": "Logra que el foco prenda interactuando con los interruptores.",
-        "bitcoins": 50,   # se dan una sola vez, al completar las 3 puertas
+        "bitcoins": 30,   # se dan una sola vez, al completar las 3 puertas
         "pasos": [
             {
                 "leyenda": "p ∨ ¬q",
@@ -38,6 +38,39 @@ EJERCICIOS = {
                 "inicial": {"p": 1, "q": 1},
                 "funcion": lambda v: bool((not v["p"]) and (not v["q"])),
                 "pista": "Ambos lados deben valer 1, así que p y q deben ser 0 (De Morgan: ¬p ∧ ¬q = ¬(p ∨ q)).",
+            },
+        ],
+    },
+    # Lógica · Álgebra de proposiciones y demostración (Módulo 4, refuerzo):
+    # equivalencias de De Morgan con tres variables.
+    "leyes-de-morgan": {
+        "titulo": "Puertas lógicas: leyes de De Morgan",
+        "instrucciones": "Logra que el foco prenda interactuando con los interruptores.",
+        "bitcoins": 30,
+        "pasos": [
+            {
+                "leyenda": "¬(p ∧ q) ∨ r",
+                "operador": "∨",
+                "variables": ["p", "q", "r"],
+                "inicial": {"p": 1, "q": 1, "r": 0},
+                "funcion": lambda v: bool((not (v["p"] and v["q"])) or v["r"]),
+                "pista": "De Morgan: ¬(p ∧ q) = ¬p ∨ ¬q. Vale 1 si p o q es 0, o si r es 1.",
+            },
+            {
+                "leyenda": "¬p ∨ ¬q ∨ ¬r",
+                "operador": "∨",
+                "variables": ["p", "q", "r"],
+                "inicial": {"p": 1, "q": 1, "r": 1},
+                "funcion": lambda v: bool((not v["p"]) or (not v["q"]) or (not v["r"])),
+                "pista": "Equivale a ¬(p ∧ q ∧ r): solo es 0 cuando los tres son 1. Cambia cualquiera a 0.",
+            },
+            {
+                "leyenda": "(p ∨ q) ∧ (¬p ∨ ¬q)",
+                "operador": "∧",
+                "variables": ["p", "q"],
+                "inicial": {"p": 0, "q": 0},
+                "funcion": lambda v: bool((v["p"] or v["q"]) and (not v["p"] or not v["q"])),
+                "pista": "Esta expresión es verdadera solo cuando p y q son distintos (es la forma larga de un XOR).",
             },
         ],
     },
