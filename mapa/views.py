@@ -80,7 +80,7 @@ def inicio(request):
         **KERNEL,
         "imagen": _imagen(KERNEL["imagen"]),
         "abierto": abierto,
-        "url": reverse("batalla:examen", args=["final"]) if abierto else None,
+        "url": reverse("batalla_final:jugar") if abierto else None,
     }
     restaurados = sum(1 for e in edificios if e["estado"] == "restaurado")
 

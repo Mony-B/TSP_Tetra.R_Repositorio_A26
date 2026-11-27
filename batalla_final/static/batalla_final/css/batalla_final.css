@@ -1,0 +1,66 @@
+/* Derrotar al Kernel (CU-13): pantallas de la batalla, barra de vida del
+   Kernel y reloj. El jumpscare viene de batalla/css/examen.css. */
+
+.batalla-final { --accent: var(--rojo); }
+.bf-card { max-width: 760px; }
+.bf-pantalla[hidden] { display: none; }
+
+.bf-kernel { display: block; width: 150px; height: 150px; margin: 8px auto 16px; }
+.bf-kernel-chico { width: 64px; height: 64px; margin: 0; flex: none; }
+.bf-kernel .ojo { animation: bf-parpadeo 2.4s ease-in-out infinite; }
+
+/* Vida del Kernel */
+.bf-cabecera { display: flex; align-items: center; gap: 14px; margin-bottom: 14px; }
+.bf-vida { flex: 1; min-width: 0; }
+.bf-vida-texto {
+  display: flex; justify-content: space-between;
+  font-family: "Share Tech Mono", monospace; font-size: 13px; margin-bottom: 4px;
+}
+.bf-barra { height: 14px; border: 1px solid var(--rojo); border-radius: 7px; overflow: hidden; }
+.bf-barra-relleno { height: 100%; width: 100%; background: var(--rojo); transition: width .4s ease; }
+.bf-delta { font-weight: 700; }
+.bf-delta.bueno { color: #4ade80; }
+.bf-delta.malo { color: var(--rojo); }
+
+/* Datos del reto y reloj */
+.bf-meta {
+  display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: center;
+  font-family: "Share Tech Mono", monospace; font-size: 12px; opacity: .85;
+}
+.bf-reloj { margin-left: auto; font-size: 16px; font-weight: 700; }
+.bf-reloj.urgente { color: var(--rojo); }
+.bf-tiempo { height: 4px; background: rgba(255, 255, 255, .12); margin: 6px 0 16px; }
+.bf-tiempo-relleno { height: 100%; width: 100%; background: var(--accent); }
+.bf-enunciado { white-space: pre-line; font-size: 18px; }
+.bf-aviso { min-height: 1.4em; font-family: "Share Tech Mono", monospace; }
+.bf-aviso.bueno { color: #4ade80; }
+.bf-aviso.malo { color: var(--rojo); }
+
+/* Respuestas */
+.bf-opciones, .bf-pasos, .bf-clases { display: grid; gap: 8px; margin: 12px 0; }
+.bf-opcion, .bf-paso {
+  display: flex; align-items: center; gap: 10px; text-align: left;
+  padding: 10px 14px; border: 1px solid rgba(255, 255, 255, .2);
+  border-radius: 8px; background: transparent; color: inherit; font: inherit; cursor: pointer;
+}
+.bf-opcion:hover, .bf-paso:hover { border-color: var(--accent); }
+.bf-opcion.sel { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 12%, transparent); }
+.bf-paso-num { font-family: "Share Tech Mono", monospace; color: var(--accent); min-width: 1.5em; }
+.bf-paso-botones { margin-left: auto; display: flex; gap: 4px; }
+.bf-mini { padding: 2px 8px; border: 1px solid rgba(255, 255, 255, .25); border-radius: 6px; background: transparent; color: inherit; cursor: pointer; }
+.bf-mini:disabled { opacity: .3; cursor: not-allowed; }
+.bf-clase { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; padding: 8px 0; border-bottom: 1px solid rgba(255, 255, 255, .08); }
+.bf-clase-texto { flex: 1; min-width: 200px; }
+.bf-clase-cats { display: flex; gap: 6px; flex-wrap: wrap; }
+.bf-cat { padding: 4px 10px; border: 1px solid rgba(255, 255, 255, .25); border-radius: 999px; background: transparent; color: inherit; font: inherit; font-size: 13px; cursor: pointer; }
+.bf-cat.sel { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 18%, transparent); }
+.bf-terminal { margin: 12px 0; padding: 12px 14px; border-radius: 8px; background: #05080d; font-family: "Share Tech Mono", monospace; }
+.bf-terminal-ruta { color: #4ade80; }
+.bf-terminal-entrada { display: flex; gap: 8px; align-items: center; margin-top: 6px; }
+.bf-terminal-entrada input { flex: 1; background: transparent; border: 0; color: #e6edf3; font: inherit; outline: none; }
+
+
+@keyframes bf-parpadeo { 50% { opacity: .45; } }
+@media (prefers-reduced-motion: reduce) {
+  .bf-kernel .ojo, .bf-barra-relleno { animation: none; transition: none; }
+}

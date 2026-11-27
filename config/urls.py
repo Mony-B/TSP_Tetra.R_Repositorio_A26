@@ -25,4 +25,5 @@ urlpatterns = [
     path('retos/parabolica/', include('reto_parabolica.urls')),
     path('retos/conceptos/', include('reto_conceptos.urls')),
     path('retos/laberinto/', include('reto_laberinto.urls')),
+    path("batalla-final/", include("batalla_final.urls")),
 ]

@@ -1,0 +1,158 @@
+{% load static %}<!DOCTYPE html>
+{% comment %}
+Derrotar al Kernel (CU-13). Una sola página con cinco pantallas que juego.js
+muestra de una en una: intro, batalla, victoria, cierre y abandono. No usa
+comun/reto_base.html porque su diálogo de salida redirige solo y aquí el
+alumno debe regresar con un botón (R80). El jumpscare reutiliza los GIFs de
+la app batalla (R82b). Las respuestas correctas nunca llegan al navegador.
+{% endcomment %}
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Derrotar al Kernel - Re:Code</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'comun/css/recode.css' %}">
+  <link rel="stylesheet" href="{% static 'comun/css/topbar.css' %}">
+  <link rel="stylesheet" href="{% static 'comun/css/reto.css' %}">
+  <link rel="stylesheet" href="{% static 'batalla/css/examen.css' %}">
+  <link rel="stylesheet" href="{% static 'batalla_final/css/batalla_final.css' %}">
+</head>
+<body class="pantalla-reto batalla-final">
+  {% url 'mapa:inicio' as url_menu %}
+  {% include "comun/_topbar.html" with topbar_marca="RE:CODE — BATALLA FINAL" topbar_titulo="Derrotar al Kernel" topbar_volver_url=url_menu topbar_volver_tip="Regresar al menú principal" %}
+
+  <main class="body">
+    <div class="card bf-card" id="batalla-final"
+         data-url-iniciar="{% url 'batalla_final:iniciar' %}"
+         data-url-siguiente="{% url 'batalla_final:siguiente' %}"
+         data-url-responder="{% url 'batalla_final:responder' %}"
+         data-url-tiempo="{% url 'batalla_final:tiempo' %}"
+         data-url-pausa="{% url 'batalla_final:pausa' %}"
+         data-url-abandonar="{% url 'batalla_final:abandonar' %}"
+         data-vida-inicial="{{ vida_inicial }}">
+
+      <!-- Intro (R77): contexto de la batalla y botón para iniciar. -->
+      <section class="bf-pantalla" id="pantalla-intro">
+        <p class="qnum">BATALLA FINAL</p>
+        <h1 class="qtext">Derrotar al Kernel</h1>
+        <svg class="bf-kernel" viewBox="0 0 200 200" role="img" aria-label="El Kernel" id="kernel-intro"></svg>
+        <p class="instrucciones">
+          El Kernel quiere tomar el control del sistema. Resuelve retos
+          avanzados de todas las materias: cada acierto le quita {{ dano }}%
+          de vida y cada fallo (o tiempo agotado) le devuelve {{ cura }}%.
+          Llévalo a 0% para derrotarlo. No hay pistas durante la batalla.
+        </p>
+        <div class="dialogo-acciones">
+          <a class="boton secundario" href="{{ url_menu }}">Volver al menú</a>
+          <button type="button" class="boton" id="btn-iniciar">Iniciar batalla</button>
+        </div>
+      </section>
+
+      <!-- Batalla (R78-R80): vida del Kernel, reloj y reto actual. -->
+      <section class="bf-pantalla" id="pantalla-batalla" hidden>
+        <div class="bf-cabecera">
+          <svg class="bf-kernel bf-kernel-chico" viewBox="0 0 200 200" aria-hidden="true" id="kernel-batalla"></svg>
+          <div class="bf-vida">
+            <div class="bf-vida-texto">
+              <span>KERNEL</span>
+              <span><span id="vida-delta" class="bf-delta"></span> <span id="vida-texto">100%</span></span>
+            </div>
+            <div class="bf-barra" id="vida" role="progressbar" aria-label="Vida del Kernel" aria-valuemin="0" aria-valuemax="100" aria-valuenow="100">
+              <div class="bf-barra-relleno" id="vida-barra"></div>
+            </div>
+          </div>
+          <button type="button" class="boton secundario peligro" id="btn-abandonar">Abandonar</button>
+        </div>
+
+        <div class="bf-meta">
+          <span id="reto-ronda">Ronda 1</span>
+          <span id="reto-tipo"></span>
+          <span id="reto-materia"></span>
+          <span class="bf-reloj" id="reto-reloj"></span>
+        </div>
+        <div class="bf-tiempo"><div class="bf-tiempo-relleno" id="tiempo-barra"></div></div>
+
+        <p class="qtext bf-enunciado" id="reto-enunciado"></p>
+        <div id="reto-cuerpo"></div>
+        <p class="bf-aviso" id="reto-aviso" role="status"></p>
+
+        <div class="dialogo-acciones">
+          <button type="button" class="boton" id="btn-responder">Responder</button>
+          <button type="button" class="boton" id="btn-siguiente" hidden>Siguiente reto</button>
+        </div>
+      </section>
+
+      <!-- Victoria (R81): Re:Code completado; sigue la pantalla de cierre. -->
+      <section class="bf-pantalla" id="pantalla-victoria" hidden>
+        <p class="qnum">VICTORIA</p>
+        <h1 class="qtext">¡Derrotaste al Kernel!</h1>
+        <p class="instrucciones">
+          El Kernel quedó en 0%. Has completado Re:Code.
+        </p>
+        <div class="dialogo-acciones">
+          <button type="button" class="boton" id="btn-cierre">Continuar</button>
+        </div>
+      </section>
+
+      <!-- Cierre (R82): nombre del alumno y regreso al menú principal. -->
+      <section class="bf-pantalla" id="pantalla-cierre" hidden>
+        <p class="qnum">RE:CODE COMPLETADO</p>
+        <h1 class="qtext">Gracias por jugar, {{ nombre_alumno }}</h1>
+        <p class="instrucciones">
+          Terminaste todos los retos, exámenes y la batalla final de Re:Code.
+        </p>
+        <div class="dialogo-acciones">
+          <a class="boton" href="{{ url_menu }}">Regresar al menú principal</a>
+        </div>
+      </section>
+
+      <!-- Abandono (R80): sin redirección automática, el alumno decide. -->
+      <section class="bf-pantalla" id="pantalla-abandono" hidden>
+        <p class="qnum">BATALLA ABANDONADA</p>
+        <h1 class="qtext">Abandonaste la batalla</h1>
+        <p class="instrucciones">
+          No se marcó Re:Code como completado. Puedes volver a intentarlo
+          cuando quieras.
+        </p>
+        <div class="dialogo-acciones">
+          <a class="boton" href="{{ url_menu }}">Regresar al menú principal</a>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <!-- Confirmación de abandono (R80): cancelar deja la batalla como estaba. -->
+  <dialog class="confirmar" id="dialogo-abandono">
+    <p>¿Seguro que quieres abandonar la batalla? Se perderá el avance y Re:Code no se marcará como completado.</p>
+    <div class="dialogo-acciones">
+      <button type="button" class="boton secundario" id="btn-cancelar-abandono">Cancelar</button>
+      <button type="button" class="boton peligro" id="btn-confirmar-abandono">Abandonar</button>
+    </div>
+  </dialog>
+
+  <!-- Jumpscare (R82b): en cada fallo, en dos fases (impacto y bloqueo). -->
+  <div class="jumpscare" id="jumpscare" hidden>
+    <div class="jumpscare-flash"></div>
+    <img class="jumpscare-img jumpscare-img-impacto" src="{% static 'batalla/img/jumpscare_impacto.gif' %}" alt="" aria-hidden="true">
+    <div class="jumpscare-glitchtext" aria-hidden="true">
+      <span>ERROR_04: TIME_HALT</span>
+      <span>SISTEMA COMPROMETIDO</span>
+      <span>¡GAME OVER!</span>
+      <span>ERROR CRÍTICO</span>
+    </div>
+    <div class="jumpscare-bloqueo">
+      <img class="jumpscare-img jumpscare-img-bloqueo" src="{% static 'batalla/img/jumpscare_bloqueo.gif' %}" alt="">
+      <div class="jumpscare-contenido">
+        <p class="jumpscare-aviso">EL KERNEL RESISTE</p>
+        <p class="jumpscare-sub" id="jumpscare-motivo"></p>
+      </div>
+    </div>
+  </div>
+
+  <script src="{% static 'comun/js/recode.js' %}"></script>
+  <script src="{% static 'batalla_final/js/juego.js' %}"></script>
+</body>
+</html>
