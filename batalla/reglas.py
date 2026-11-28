@@ -1,11 +1,10 @@
 from mapa.temas import MATERIAS
 from progreso import servicios
-
-from .preguntas import EXAMENES
+from reto_examen_final_materia.ejercicios import EJERCICIOS as EXAMENES_MATERIA
 
 
 def tiene_examen(slug):
-    return slug in EXAMENES and slug != "final"
+    return slug in EXAMENES_MATERIA
 
 
 def final_disponible(alumno):

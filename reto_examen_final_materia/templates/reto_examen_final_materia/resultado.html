@@ -1,0 +1,52 @@
+{% load static %}<!DOCTYPE html>
+{% comment %}
+Resultado del examen (CU-12: postcondiciones de éxito/fracaso, FA-2, FA-3).
+Mismo lenguaje visual que reto.html: .card oscura con --accent de la
+materia, _topbar.html compartida. Siempre se llega aquí por un POST real
+(nunca por tiempo agotado ni por abandono, ver views.py y examen.js), así
+que aquí sí hubo un intento calificado de verdad.
+{% endcomment %}
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resultado - {{ examen.agente }} - Re:Code</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'comun/css/recode.css' %}">
+    <link rel="stylesheet" href="{% static 'comun/css/topbar.css' %}">
+    <link rel="stylesheet" href="{% static 'comun/css/reto.css' %}">
+    <link rel="stylesheet" href="{% static 'reto_examen_final_materia/css/examen.css' %}">
+</head>
+<body class="pantalla-reto" style="--accent: {{ color_acento }};">
+    {% url 'mapa:materia' materia.slug as volver_url %}
+    {% include "comun/_topbar.html" with topbar_marca="RE:CODE — EXAMEN" topbar_titulo=examen.agente topbar_volver_url=volver_url topbar_volver_tip="Regresar a los retos" %}
+
+    <main class="body">
+        <div class="card examen-card resultado-examen">
+            <p class="qnum">{{ materia.nombre|upper }} · RESULTADO</p>
+            <h1 class="qtext">{{ aciertos }} de {{ total }} correctas</h1>
+
+            {% if aprobado %}
+            <p class="resultado-mensaje exito">
+                Derrotaste a {{ examen.agente }}.
+                {% if otorgados %}<br>+₿ {{ otorgados }} bitcoins.{% else %}<br>Ya habías aprobado este examen antes: no se otorgan bitcoins de nuevo.{% endif %}
+            </p>
+            {% else %}
+            <p class="resultado-mensaje falla">
+                {{ examen.agente }} te venció. Necesitas al menos {{ examen.aciertos_minimos }} correctas para aprobar.
+                No se guardó ningún bitcoin.
+            </p>
+            {% endif %}
+
+            <div class="examen-acciones resultado-acciones">
+                <a class="boton secundario" href="{{ volver_url }}">Volver a los retos</a>
+                {% if not aprobado %}
+                <a class="boton" href="{% url 'reto_examen_final_materia:jugar' materia.slug %}">Intentar de nuevo</a>
+                {% endif %}
+            </div>
+        </div>
+    </main>
+</body>
+</html>

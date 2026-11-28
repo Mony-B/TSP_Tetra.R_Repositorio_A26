@@ -1,0 +1,138 @@
+{% load static %}<!DOCTYPE html>
+{% comment %}
+Examen final de materia (CU-12, antes CU-04). Reutiliza el lenguaje visual
+de los retos (comun/reto_base.html): .card oscura, --accent con el color de
+la materia, _topbar.html compartida. No extiende reto_base.html porque su
+flujo es distinto (un solo formulario con 15 preguntas y un envío, no pasos
+revisados uno a uno contra el servidor) y porque, a diferencia de un reto
+normal, aquí sí hay temporizador, boot de "EXAM SYSTEM" y jumpscare
+(requisito especial del CU).
+
+Las 15 preguntas (de las que el servidor nunca manda la respuesta correcta,
+ver views.py) viven TODAS en el DOM desde que carga la página -por si JS
+falla, sigue siendo un formulario normal de una sola pantalla con todo
+visible-; examen.js es quien las muestra de una en una ("Q.0X/15", como en
+la maqueta) ocultando las demás con [hidden].
+{% endcomment %}
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ examen.agente }} - Re:Code</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'comun/css/recode.css' %}">
+    <link rel="stylesheet" href="{% static 'comun/css/topbar.css' %}">
+    <link rel="stylesheet" href="{% static 'comun/css/reto.css' %}">
+    <link rel="stylesheet" href="{% static 'reto_examen_final_materia/css/examen.css' %}">
+</head>
+<body class="pantalla-reto examen-sistema" style="--accent: {{ color_acento }};">
+    {% url 'mapa:materia' materia.slug as volver_url %}
+    {% include "comun/_topbar.html" with topbar_marca="RE:CODE — EXAMEN" topbar_titulo=examen.agente topbar_volver_url=volver_url topbar_volver_tip="Regresar a los retos" %}
+
+    <!-- Boot de "EXAM SYSTEM" (ambientación del examen) antes de poder
+         contestar. Se salta solo si el navegador pide menos movimiento
+         (ver examen.css, prefers-reduced-motion). -->
+    <div class="examen-boot" id="examen-boot" aria-hidden="true">
+        <div class="examen-boot-ventana">
+            <p class="examen-boot-titulo">Re:Code <span>EXAM SYSTEM v3.9.7</span></p>
+            <p class="examen-boot-linea" style="--d: 0">&gt; EXAM INITIALIZING...</p>
+            <p class="examen-boot-linea" style="--d: 1">&gt; INTEGRITY CHECK... <span class="ok">OK</span></p>
+            <p class="examen-boot-linea" style="--d: 2">&gt; SYSTEM STATUS... <span class="ok">OK</span></p>
+            <p class="examen-boot-linea" style="--d: 3">&gt; CARGANDO: {{ examen.agente|upper }}...</p>
+        </div>
+    </div>
+
+    <main class="body">
+        <div class="card examen-card con-badge">
+            <div class="examen-badge">
+                <span class="examen-badge-tag">[ EXAMEN ]</span>
+                <span class="examen-badge-contador">Q.<span id="preg-actual">01</span>/<span id="preg-total">{{ preguntas|length|stringformat:"02d" }}</span></span>
+            </div>
+
+            <p class="qnum">{{ materia.nombre|upper }} · EXAMEN FINAL</p>
+            <h1 class="qtext">{{ examen.agente }}</h1>
+
+            <div class="examen-cabecera">
+                <div class="examen-reloj" id="reloj" data-limite="{{ examen.tiempo_limite }}">0:00</div>
+                <div class="examen-info">Aprueba con {{ examen.aciertos_minimos }} de {{ preguntas|length }} correctas</div>
+            </div>
+
+            <form method="post" id="form-examen">
+                {% csrf_token %}
+                <div class="examen-preguntas" id="examen-preguntas">
+                    {% for p in preguntas %}
+                    <fieldset class="pregunta" data-indice="{{ forloop.counter0 }}"{% if not forloop.first %} hidden{% endif %}>
+                        <legend>{{ forloop.counter }}. {{ p.texto }}</legend>
+                        {% for opcion in p.opciones %}
+                        <label class="opt opt-check">
+                            <input type="radio" name="pregunta_{{ p.indice }}" value="{{ opcion }}">
+                            <span class="check"></span>{{ opcion }}
+                        </label>
+                        {% endfor %}
+                    </fieldset>
+                    {% endfor %}
+                </div>
+
+                <div class="examen-nav">
+                    <button type="button" class="boton secundario" id="btn-anterior">← Anterior</button>
+                    <button type="button" class="boton" id="btn-siguiente">Siguiente →</button>
+                    <button type="submit" class="boton" id="btn-enviar" hidden>Enviar respuestas</button>
+                </div>
+                <div class="examen-acciones">
+                    <button type="button" class="boton peligro" id="btn-abandonar">Abandonar examen</button>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <!-- FE-1: abandono voluntario, con confirmación (requisito especial del CU). -->
+    <dialog class="confirmar" id="dialogo-abandonar">
+        <p>Se perderá el progreso de este examen y no obtendrás bitcoins. ¿Seguro que quieres abandonarlo?</p>
+        <div class="dialogo-acciones">
+            <button type="button" class="boton secundario" id="btn-cancelar-abandono">Seguir con el examen</button>
+            <button type="button" class="boton peligro" id="btn-confirmar-abandono">Abandonar</button>
+        </div>
+    </dialog>
+
+    <!-- FA-1: tiempo agotado. Nunca se manda el formulario: no se guarda
+         nada ni se otorgan bitcoins. Dos fases (ver examen.js/examen.css):
+         "impacto" (destello + texto de glitch, con sacudida de pantalla) y,
+         medio segundo después, "bloqueo" (la imagen fija con el aviso y los
+         botones de Reintentar/Volver). Hay 6 jumpscares distintos
+         (jumpscare_1..6.gif/.jpg en static/img); examen.js elige uno al
+         azar cada vez que se agota el tiempo, así no se repite siempre el
+         mismo. El elemento #jumpscare entero sigue [hidden] hasta entonces. -->
+    <div class="jumpscare" id="jumpscare" hidden
+         data-img-base="{% static 'reto_examen_final_materia/img/' %}"
+         data-total-jumpscares="6">
+        <div class="jumpscare-flash"></div>
+        <img class="jumpscare-img jumpscare-img-impacto" id="jumpscare-img-impacto" src="" alt="" aria-hidden="true">
+        <div class="jumpscare-glitchtext" aria-hidden="true">
+            <span>ERROR_12: TIME_HALT</span>
+            <span>SISTEMA COMPROMETIDO</span>
+            <span>¡GAME OVER!</span>
+            <span>ERROR CRÍTICO</span>
+        </div>
+        <div class="jumpscare-bloqueo" id="jumpscare-bloqueo">
+            <img class="jumpscare-img jumpscare-img-bloqueo" id="jumpscare-img-bloqueo" src="" alt="">
+            <div class="jumpscare-contenido">
+                <p class="jumpscare-aviso">SISTEMA BLOQUEADO</p>
+                <p class="jumpscare-sub">{{ examen.agente }} cortó la conexión. No se guardó tu progreso ni ganaste bitcoins.</p>
+                <div class="dialogo-acciones">
+                    <a class="boton secundario" href="{{ volver_url }}">Volver a los retos</a>
+                    <button type="button" class="boton" id="btn-reintentar">Reintentar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="{% static 'comun/js/recode.js' %}"></script>
+    <script src="{% static 'comun/js/reto_dialogos.js' %}"></script>
+    <script>
+        window.Examen = { volverUrl: "{{ volver_url }}" };
+    </script>
+    <script src="{% static 'reto_examen_final_materia/js/examen.js' %}"></script>
+</body>
+</html>

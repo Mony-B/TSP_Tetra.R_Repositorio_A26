@@ -36,7 +36,7 @@
                     <span class="name">Examen final — {{ materia.nombre }}</span>
                     <span class="st">Disponible en cualquier momento</span>
                 </span>
-                <a class="go{% if examen_aprobado %} hecho{% endif %}" href="{% url 'batalla:examen' materia.slug %}">
+                <a class="go{% if examen_aprobado %} hecho{% endif %}" href="{% url 'reto_examen_final_materia:jugar' materia.slug %}">
                     {% if examen_aprobado %}Repetir examen{% else %}Presentar examen{% endif %}
                 </a>
             </div>

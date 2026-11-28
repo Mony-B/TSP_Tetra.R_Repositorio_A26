@@ -12,7 +12,9 @@ from .reglas import final_disponible
 
 @login_required
 def examen(request, slug):
-    """Examen de una materia o batalla final (slug = "final").
+    """Batalla Final contra el Kernel (slug = "final"; caso de uso aparte,
+    todavía sin desarrollar). Los exámenes finales por materia (CU-12) ya
+    no se sirven aquí: ver reto_examen_final_materia.
     Las respuestas se califican aquí, nunca en el navegador."""
     datos = EXAMENES.get(slug)
     if not datos:

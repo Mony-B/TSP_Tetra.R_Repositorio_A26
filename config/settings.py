@@ -50,10 +50,11 @@ INSTALLED_APPS = [
     'progreso',     # único con modelos: avance del alumno, registro y Mi Perfil (API JSON)
     'mapa',         # mapa de materias y subtemas
     'novela',       # novela visual (Monogatari)
-    'batalla',      # exámenes por materia y batalla final
+    'batalla',      # batalla final contra el Kernel (todavía sin desarrollar)
     'red_corrupta', # catálogo de pistas y Snake (CU03)
 
     # Retos: cada uno revisa sus respuestas en el servidor
+    'reto_examen_final_materia',  # CU-12: examen final de materia (antes CU-04)
     'reto_algebra_booleana',  # CU-05
     'reto_comandos_linux',    # CU-06
     'reto_ecuaciones',        # CU-07
